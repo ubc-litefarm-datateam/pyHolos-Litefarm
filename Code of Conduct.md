@@ -1,4 +1,3 @@
-
 # Contributor Covenant Code of Conduct
 
 ## Our Pledge
@@ -8,6 +7,7 @@ In the interest of fostering an open and welcoming environment in the DSCI-591 c
 ## Our Standards
 
 ### Expected Behavior
+
 Examples of behavior that contributes to a positive environment for our
 community include:
 
@@ -20,6 +20,7 @@ community include:
   community
 
 ### Unacceptable Behavior
+
 Examples of unacceptable behavior include:
 
 * The use of sexualized language or imagery, and sexual attention or advances of
@@ -53,13 +54,9 @@ representative at an online or offline event.
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement at
-[INSERT CONTACT METHOD].
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the [project team](https://github.com/yhan178/LiteFarm-MDS-Capstone/graphs/contributors).
 All complaints will be reviewed and investigated promptly and fairly.
-
-All community leaders are obligated to respect the privacy and security of the
-reporter of any incident.
+All community leaders are obligated to respect the privacy and security of the reporter of any incident.
 
 ## Enforcement Guidelines
 
@@ -109,5 +106,4 @@ community.
 
 ## Attribution
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage],
-version 2.1, available at [https://www.contributor-covenant.org/version/2/1/code_of_conduct.html][v2.1].
+This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/), version 2.1, available at  [https://www.contributor-covenant.org/version/2/1/code_of_conduct.html](https://www.contributor-covenant.org/version/2/1/code_of_conduct.html).
