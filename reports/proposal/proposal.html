@@ -7509,22 +7509,35 @@ a.anchor-link {
 <h2 id="2.-Data-Science-Techniques">2. Data Science Techniques<a class="anchor-link" href="#2.-Data-Science-Techniques">¶</a></h2><h3 id="2.1-Data-description">2.1 Data description<a class="anchor-link" href="#2.1-Data-description">¶</a></h3><p>The GHG modeling framework employed by LiteFarm is derived from the Holos project [1], an open source software developed for estimating GHG emissions in Canadian farming systems. This model requires 22 distinct parameters for estimating $N_2O$ emissions, including farm-specific, crop-specific, and climatic and soil parameters as detailed in Appendix Table A1.</p>
 <p>To enhance the existing modeling framework, we have identified three key data sources:</p>
 <p>First, farm data collected by the LiteFarm team covers 124 farms throughout Canada, providing details such as geographic locations, farm sizes, type of crop planted, and estimated yield (Fig.1 and Appendix Table A1).</p>
-<p><img alt="" src="../../img/Canada_Farm_Map.png"/>
-Fig 1. The 124 farms in Canada from the LiteFarm database.</p>
+
+<p><img alt="" src="../../img/Canada_Farm_Map.png"/></p>
+<h4><center>Fig 1. The 124 farms in Canada from the LiteFarm database.</center></h4>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9aa46e75-ae48-4cb9-b0bc-885bd94c1783">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0eccef33-d0a0-4ef7-ba0c-3c1998200145">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>Second, based on farms’ geographic locations, we will integrate high-quality soil and climate parameters from external databases (identified in Fig. 2).</p>
-<p><img alt="" src="../../img/fig_2.png"/>
-Fig 2. The external data sources.</p>
+
+<p><img alt="" src="../../img/fig_2.png"/></p>
+<h4><center>Fig 2. The external data sources.</center></h4>
 <p>Third, the Holos frame limits crop-specific parameters to a limited set of crop types, excluding many crop varieties found in LiteFarm data. These parameters are also static and lack specified ranges, limiting our ability to assess their variability. To address these limitations, we plan to expand and refine the crop-specific parameters using data from peer-reviewed articles and government reports.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3c92f764-a6b8-4136-b1fb-ebd5cf2a1750">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+
 <h4 id="Data-Management-Plan">Data Management Plan<a class="anchor-link" href="#Data-Management-Plan">¶</a></h4><ul>
 <li>Climate Data: Scripts will be provided to automate NASA POWER Project API calls and data download.</li>
 <li>Soil data: Due to their large size, scripts for downloading and setting up these datasets will be provided.</li>
@@ -7554,6 +7567,19 @@ Fig 2. The external data sources.</p>
 </div>
 </div>
 </div>
+
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=98cbb1b9-1be3-4413-aacc-9a573157d6b6">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+</div>
+
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5683b54d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -7628,6 +7654,19 @@ Fig 2. The external data sources.</p>
 </div>
 </div>
 </div>
+
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d22f174b-345a-4a0f-8fac-115e6abd557f">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+</div>
+
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b30a7b91">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
