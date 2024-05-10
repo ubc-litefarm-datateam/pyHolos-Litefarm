@@ -2,12 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="He Ma, Hancheng Qin, Yi Han">
 
-<title>LiteFarm Project Proposal</title>
+<title>Capstone Project Proposal</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +21,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="proposal_files/libs/clipboard/clipboard.min.js"></script>
@@ -37,51 +58,112 @@ ul.task-list li input[type="checkbox"] {
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link active" data-scroll-target="#executive-summary"><span class="header-section-number">1</span> Executive Summary</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">2</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#enhanced-modeling" id="toc-enhanced-modeling" class="nav-link" data-scroll-target="#enhanced-modeling"><span class="header-section-number">2.1</span> Enhanced Modeling</a></li>
+  <li><a href="#sensitivity-analysis" id="toc-sensitivity-analysis" class="nav-link" data-scroll-target="#sensitivity-analysis"><span class="header-section-number">2.2</span> Sensitivity Analysis</a></li>
+  <li><a href="#deliverables" id="toc-deliverables" class="nav-link" data-scroll-target="#deliverables"><span class="header-section-number">2.3</span> Deliverables</a></li>
+  </ul></li>
+  <li><a href="#data-science-techniques" id="toc-data-science-techniques" class="nav-link" data-scroll-target="#data-science-techniques"><span class="header-section-number">3</span> Data Science Techniques</a>
+  <ul class="collapse">
+  <li><a href="#data-description" id="toc-data-description" class="nav-link" data-scroll-target="#data-description"><span class="header-section-number">3.1</span> Data description</a>
+  <ul class="collapse">
+  <li><a href="#data-management-plan" id="toc-data-management-plan" class="nav-link" data-scroll-target="#data-management-plan"><span class="header-section-number">3.1.1</span> Data Management Plan</a></li>
+  </ul></li>
+  <li><a href="#method-and-techniques" id="toc-method-and-techniques" class="nav-link" data-scroll-target="#method-and-techniques"><span class="header-section-number">3.2</span> Method and techniques</a></li>
+  <li><a href="#partners-expectation" id="toc-partners-expectation" class="nav-link" data-scroll-target="#partners-expectation"><span class="header-section-number">3.3</span> Partner’s expectation:</a></li>
+  <li><a href="#success-criteria" id="toc-success-criteria" class="nav-link" data-scroll-target="#success-criteria"><span class="header-section-number">3.4</span> Success criteria</a></li>
+  </ul></li>
+  <li><a href="#timeline" id="toc-timeline" class="nav-link" data-scroll-target="#timeline"><span class="header-section-number">4</span> Timeline</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">5</span> References</a></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix"><span class="header-section-number">6</span> Appendix</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="proposal.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">LiteFarm Project Proposal</h1>
+<h1 class="title">Capstone Project Proposal</h1>
+<p class="subtitle lead">Empowering Agriculture: Enhanced GHG Emissions Modeling</p>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>He Ma, Hancheng Qin, Yi Han </p>
+          </div>
+  </div>
     
   
     
   </div>
   
 
+
 </header>
 
-<p>Authors: He Ma, Hanchang Qin, Yi Han</p>
-<p>Project Mentor: Simon Goring</p>
-<section id="executive-summary" class="level2">
-<h2 class="anchored" data-anchor-id="executive-summary">Executive Summary</h2>
+
+<section id="executive-summary" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Executive Summary</h1>
 <p>The project aims to refine and enhance existing GHG modeling for the LiteFarm platform, specifically focusing on nitrous oxide (<span class="math inline">\(N_2O\)</span>) emissions. The project has two main objectives. First, the initiative aims to improve existing modeling framework to incorporate dynamic global data for greater accuracy and broader applicability. Second, the project will conduct sensitivity analysis to identify influential factors on emissions estimation to guide targeted data collection. Deliverables will feature an updated dashboard for visualizing emissions and a Python script for automated data integration and GHG calculation. The broader goal is to provide actionable insights for stakeholders, aiding decision-making in sustainable agricultural practices.</p>
 </section>
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">1. Introduction</h2>
+<section id="introduction" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Introduction</h1>
 <p>Climate change poses a critical challenge to the sustainability of our planet, largely due to rising greenhouse gas (GHG) emissions. Agriculture is a major contributor, with activities such as livestock rearing, fertilizer use, and land management practices contributing heavily to GHG emissions. Quantifying agricultural GHG emissions can help optimize farming practices from crop selection to tillage methods, thereby reducing emissions. Our broader objective is to empower stakeholders, including farmers, researchers, and policymakers to make data-driven decisions, transforming sustainability into a measurable and actionable goal.</p>
 <p>This project focuses on a potent greenhouse gas, nitrous oxide (<span class="math inline">\(N_2O\)</span>); and we propose to refine the broad problem into two objectives: (1) enhance the existing GHG emissions modeling framework by integrating comprehensive global data; and (2) conduct sensitivity analyses to determine how changes in input parameters affect GHG emission estimates</p>
-<section id="enhanced-modeling" class="level3">
-<h3 class="anchored" data-anchor-id="enhanced-modeling">1.1 Enhanced Modeling</h3>
+<section id="enhanced-modeling" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="enhanced-modeling"><span class="header-section-number">2.1</span> Enhanced Modeling</h2>
 <p>The agricultural GHG model HOLOS uses static model parameters from a Canadian context. Enhanced modeling will incorporate dynamic datasets that reflect global soil, climate, and crop characteristics. Our model aims to be more robust and adaptable to global agricultural practices.</p>
 </section>
-<section id="sensitivity-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="sensitivity-analysis">1.2 Sensitivity Analysis</h3>
+<section id="sensitivity-analysis" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="sensitivity-analysis"><span class="header-section-number">2.2</span> Sensitivity Analysis</h2>
 <p>Sensitivity analysis will pinpoint the most significant factors influencing emissions. Gaining insights from these analyses can help refine our data gathering methods, improving both the accuracy and dependability of our models. It is worth noting that future analysis plans to expand to carbon dioxide (<span class="math inline">\(CO_2\)</span>) and methane (<span class="math inline">\(CH_4\)</span>) as more data become available from our partner.</p>
 </section>
-<section id="deliverables" class="level3">
-<h3 class="anchored" data-anchor-id="deliverables">1.3 Deliverables</h3>
+<section id="deliverables" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="deliverables"><span class="header-section-number">2.3</span> Deliverables</h2>
 <p>Our project will deliver a comprehensive data product suite tailored for the LiteFarm platform.</p>
 <ul>
 <li>An updated module in the LiteFarm dashboard that allows users to calculate and visualize GHG emissions under various farming scenarios. This feature will support decision-making processes by providing actionable insights to the users.</li>
@@ -91,30 +173,37 @@ ul.task-list li input[type="checkbox"] {
 <p>By delivering these components, our project will provide LiteFarm and its users with a tool to address the pressing issue of GHG emissions in agriculture, thereby contributing to the global effort to combat climate change.</p>
 </section>
 </section>
-<section id="data-science-techniques" class="level2">
-<h2 class="anchored" data-anchor-id="data-science-techniques">2. Data Science Techniques</h2>
-<section id="data-description" class="level3">
-<h3 class="anchored" data-anchor-id="data-description">2.1 Data description</h3>
-<p>The GHG modeling framework employed by LiteFarm is derived from the Holos project [1], an open source software developed for estimating GHG emissions in Canadian farming systems. This model requires 22 distinct parameters for estimating <span class="math inline">\(N_2O\)</span> emissions, including farm-specific, crop-specific, and climatic and soil parameters as detailed in Appendix Table A1.</p>
+<section id="data-science-techniques" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Data Science Techniques</h1>
+<section id="data-description" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="data-description"><span class="header-section-number">3.1</span> Data description</h2>
+<p>The GHG modeling framework employed by LiteFarm is derived from the Holos project <span class="citation" data-cites="Holos2022">(<a href="#ref-Holos2022" role="doc-biblioref">Agriculture &amp; Agri-Food Canada 2022</a>)</span>, an open source software developed for estimating GHG emissions in Canadian farming systems. This model requires 22 distinct parameters for estimating <span class="math inline">\(N_2O\)</span> emissions, including farm-specific, crop-specific, and climatic and soil parameters as detailed in Appendix <a href="#tbl-params" class="quarto-xref">Table&nbsp;2</a>.</p>
 <p>To enhance the existing modeling framework, we have identified three key data sources:</p>
-<p>First, farm data collected by the LiteFarm team covers 124 farms throughout Canada, providing details such as geographic locations, farm sizes, type of crop planted, and estimated yield (Fig.1 and Appendix Table A1).</p>
-<img src="../../img/Canada_Farm_Map.png" class="img-fluid"><br>
-
-<h4 class="anchored">
-<center>
-Fig 1. The 124 farms in Canada from the LiteFarm database.
-</center>
-</h4>
-<p>Second, based on farms’ geographic locations, we will integrate high-quality soil and climate parameters from external databases (identified in Fig. 2).</p>
-<img src="../../img/fig_2.png" class="img-fluid">
-<h4 class="anchored">
-<center>
-Fig 2. The external data sources.
-</center>
-</h4>
+<p>First, farm data collected by the LiteFarm team covers 124 farms throughout Canada, providing details such as geographic locations, farm sizes, type of crop planted, and estimated yield (<a href="#fig-farms" class="quarto-xref">Figure&nbsp;1</a> and Appendix <a href="#tbl-params" class="quarto-xref">Table&nbsp;2</a>).</p>
+<div id="fig-farms" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-farms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../img/Canada_Farm_Map.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-farms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<strong>Figure</strong>&nbsp;1: Distribution of 123 farms across Canada from the LiteFarm Database. The map displays farm locations with red stars: 78 in Western Canada (left, “Western Canada Focus”) and 45 in Eastern Canada (right, “Eastern Canada Focus”)
+</figcaption>
+</figure>
+</div>
+<p>Second, based on farms’ geographic locations, we will integrate high-quality soil and climate parameters from external databases (identified in <a href="#fig-databases" class="quarto-xref">Figure&nbsp;2</a>).</p>
+<div id="fig-databases" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-databases-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../../img/fig_2.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-databases-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<strong>Figure</strong>&nbsp;2: Overview of External Databases - Detailing databases from the FAO, Canadian SLC, and NASA, including their names, data types, and data formats.
+</figcaption>
+</figure>
+</div>
 <p>Third, the Holos frame limits crop-specific parameters to a limited set of crop types, excluding many crop varieties found in LiteFarm data. These parameters are also static and lack specified ranges, limiting our ability to assess their variability. To address these limitations, we plan to expand and refine the crop-specific parameters using data from peer-reviewed articles and government reports.</p>
-<section id="data-management-plan" class="level4">
-<h4 class="anchored" data-anchor-id="data-management-plan">Data Management Plan</h4>
+<section id="data-management-plan" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="data-management-plan"><span class="header-section-number">3.1.1</span> Data Management Plan</h3>
 <ul>
 <li>Climate Data: Scripts will be provided to automate NASA POWER Project API calls and data download.</li>
 <li>Soil data: Due to their large size, scripts for downloading and setting up these datasets will be provided.</li>
@@ -122,17 +211,17 @@ Fig 2. The external data sources.
 </ul>
 </section>
 </section>
-<section id="method-and-techniques" class="level3">
-<h3 class="anchored" data-anchor-id="method-and-techniques">2.2 Method and techniques</h3>
+<section id="method-and-techniques" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="method-and-techniques"><span class="header-section-number">3.2</span> Method and techniques</h2>
 <p>The project aims to enhance the LiteFarm dashboard by integrating a GHG emission (nitrous oxide from crop residual nitrogen) estimation feature. Our initial task is to develop a Python script replicating the Holos model to serve as a baseline. This model will retrieve farm data from the LiteFarm database. Next, we will enhance the model to support multiple input variables. Data from external sources will be retrieved through API calls. In parallel, we will conduct sensitivity analyses to identify key drivers of GHG emission changes across different conditions.</p>
 <p>The dashboard will be updated with a Farmer tab and a Scientist tab. The Farmer tab displays GHG emission data for selected farms, and the Scientist tab provides sensitivity analysis results, highlighting influential factors for emissions estimates.</p>
 </section>
-<section id="partners-expectation" class="level3">
-<h3 class="anchored" data-anchor-id="partners-expectation">2.3 Partner’s expectation:</h3>
+<section id="partners-expectation" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="partners-expectation"><span class="header-section-number">3.3</span> Partner’s expectation:</h2>
 <p>LiteFarm expects the setup of an emission tab on the dashboard to showcase emission data for crop residual nitrogen direct emissions of selected farms. A successful outcome would include validating LiteFarm’s GHG model against the Holos desktop version to ensure that the estimations are reasonable and reliable.</p>
 </section>
-<section id="success-criteria" class="level3">
-<h3 class="anchored" data-anchor-id="success-criteria">2.4 Success criteria</h3>
+<section id="success-criteria" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="success-criteria"><span class="header-section-number">3.4</span> Success criteria</h2>
 <p>To meet partner’s expectation, we have set the following success criteria:</p>
 <ol type="1">
 <li>Precision in GHG Estimation: A more precise GHG estimation will be assessed by comparing GHG estimates against those produced by Holos software.</li>
@@ -145,9 +234,15 @@ Fig 2. The external data sources.
 </div>
 </section>
 </section>
-<section id="timeline" class="level2">
-<h2 class="anchored" data-anchor-id="timeline">3. Timeline</h2>
-<table class="table">
+<section id="timeline" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Timeline</h1>
+<div id="tbl-timeline" class="striped quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-timeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Timeline of the project
+</figcaption>
+<div aria-describedby="tbl-timeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table-striped table">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 66%">
@@ -193,18 +288,33 @@ Fig 2. The external data sources.
 </tr>
 </tbody>
 </table>
+</div>
+</figure>
+</div>
 </section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">4. References</h2>
-<p>[1] Minister of Agriculture &amp; Agri-Food Canada. (2022). Holos [Computer software]. GitHub. https://github.com/holos-aafc/Holos</p>
+<section id="references" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Holos2022" class="csl-entry" role="listitem">
+Agriculture &amp; Agri-Food Canada. 2022. <span>“Holos.”</span> <a href="https://github.com/holos-aafc/Holos" class="uri">https://github.com/holos-aafc/Holos</a>; GitHub.
+</div>
+</div>
 <div style="page-break-after: always;">
 
 </div>
 </section>
-<section id="appendix" class="level2">
-<h2 class="anchored" data-anchor-id="appendix">5. Appendix</h2>
-<p>Table A1: Input requirements for Holos GHG model</p>
-<table class="table">
+<section id="appendix" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Appendix</h1>
+<div class="appendix">
+
+</div>
+<div id="tbl-params" class="striped quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-params-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Input requirements for Holos GHG model
+</figcaption>
+<div aria-describedby="tbl-params-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table-striped table">
 <colgroup>
 <col style="width: 25%">
 <col style="width: 25%">
@@ -360,6 +470,9 @@ Fig 2. The external data sources.
 </tr>
 </tbody>
 </table>
+</div>
+</figure>
+</div>
 </section>
 
 </main>
@@ -443,10 +556,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -456,8 +586,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -469,7 +608,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -513,6 +775,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -538,6 +801,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -598,6 +887,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+
 
 
 

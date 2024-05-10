@@ -1,0 +1,10 @@
+project:
+  output-dir: reports/proposal/
+
+toc: true
+number-sections: true
+bibliography: references.bib  
+  
+format:
+  html: default
+  pdf: default
