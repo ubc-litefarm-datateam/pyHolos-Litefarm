@@ -1,0 +1,6 @@
+crop_common_name,farm_id,province,total_area_ha,moisture_%,estimated_yield_kg/ha,N_p,N_s,N_r,N_e,R_p,R_s,R_r,R_e,lifecycle,tillage,Lignin Content,P_i,PE,FR_Topo,RF_TX,RF_NS,RF_till,RF_CS,RF_AM
+Soybean,F1,BC,10,14,3500,67,6,10,10,0.304,0.455,0.146,0.095,ANNUAL,conventional,0.085,10,20,0.5,1,0.84,1,1,1
+Soybean,F2,BC,100,14,3500,67,6,10,10,0.304,0.455,0.146,0.095,ANNUAL,conventional,0.085,10,20,0.5,1,0.84,1,1,1
+Soybean,F3,MB,10,14,10000,67,6,10,10,0.304,0.455,0.146,0.095,ANNUAL,conventional,0.085,10,20,0.5,1,0.84,1,1,1
+Soybean,F4,MB,100,14,10000,67,6,10,10,0.304,0.455,0.146,0.095,ANNUAL,conventional,0.085,10,20,0.5,1,0.84,1,1,1
+Soybean,M1,BC,10,14,3500,0.067,0.006,0.01,0.01,0.304,0.455,0.146,0.095,ANNUAL,conventional,0.085,159,678,7.57,1,0.84,1,1,1
