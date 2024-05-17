@@ -1,0 +1,9 @@
+region,soil_texture,value
+eastern_canada,coarse,0.49
+eastern_canada,medium,1
+eastern_canada,fine,2.55
+eastern_canada,unknown,1
+western_canada,coarse,1
+western_canada,medium,1
+western_canada,fine,1
+western_canada,unknown,1

@@ -1,0 +1,11 @@
+holos_crop_name,crop,group
+Barley,barley,Annual
+Beans (dry field),beans_dry_field,Annual
+Dry pea,dry_pea,Cover
+Grain corn,grain_corn,Annual
+Mustard,mustard,Cover
+Oats,oats,Annual
+Potato,potato,Root
+Soybean,soybean,Annual
+Sugar beets,sugar_beets,Root
+(Fall) Rye,fall_rye,Cover
