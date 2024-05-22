@@ -13,55 +13,53 @@ class CropResidueCalculator:
         N_p, N_s, N_r, N_e (float): Nitrogen content for various parts of the crop (kg/ha).
     """
 
-    def __init__(self, farm_data):
+    def __init__(self, data):
         """
         Initializes the CropResidueCalculator with the provided farm data.
 
         Args:
             farm_data (dict): A dictionary containing farm data.
-
         """
-        self.validate_input(farm_data)
-        self.data = farm_data
-        self.area = farm_data["area"]
-        self.group = farm_data["group"]
-        self.crop_yield = farm_data["yield"]
-        self.moisture = farm_data["moisture"]
-        self.carbon_concentration = farm_data["carbon_concentration"]
-        # self.method = farm_data["method"]
+        
+        self.validate_input(data)
+        self.data = data
+        self.area = data["farm_data"]["area"]
+        self.group = data["crop_group_params"]["group"].lower()
+        self.crop_yield = data["farm_data"]["yield"]
+        self.moisture = data["crop_parameters"]["moisture"]
+        self.carbon_concentration = data["crop_group_params"]["carbon_concentration"]
 
-        self.S_p = farm_data["S_p"]
-        self.S_s = farm_data["S_s"]
-        self.S_r = farm_data["S_r"]
+        self.S_p = data["crop_group_params"]["S_p"]
+        self.S_s = data["crop_group_params"]["S_s"]
+        self.S_r = data["crop_group_params"]["S_r"]
 
-        self.R_p = farm_data["R_p"]
-        self.R_s = farm_data["R_s"]
-        self.R_r = farm_data["R_r"]
-        self.R_e = farm_data["R_e"]
+        self.R_p = data["crop_parameters"]["R_p"]
+        self.R_s = data["crop_parameters"]["R_s"]
+        self.R_r = data["crop_parameters"]["R_r"]
+        self.R_e = data["crop_parameters"]["R_e"]
 
-        self.N_p = farm_data["N_p"]
-        self.N_s = farm_data["N_s"]
-        self.N_r = farm_data["N_r"]
-        self.N_e = farm_data["N_e"]
+        self.N_p = data["crop_parameters"]["N_p"]
+        self.N_s = data["crop_parameters"]["N_s"]
+        self.N_r = data["crop_parameters"]["N_r"]
+        self.N_e = data["crop_parameters"]["N_e"]
     
     
-    def validate_input(self, farm_data):
+    def validate_input(self, data):
         """ Validates the input farm data to ensure all required fields are present and have the correct types and values. """
         
-        if not isinstance(farm_data["group"], str):
+        if not isinstance(data["crop_group_params"]["group"], str):
             raise TypeError("group must be a string")
-        if farm_data["group"] not in ["annual", "perennial", "root", "cover", "silage"]:
+       
+        if data["crop_group_params"]["group"].lower() not in ["annual", "perennial", "root", "cover", "silage"]:
             raise ValueError("group must be one of 'annual', 'perennial', 'root', 'cover', 'silage'")
         
-        
-        for key in ["yield", "carbon_concentration", "moisture", "area", "S_p", "S_s", "S_r", "R_p", "R_s", "R_r", "R_e", "N_p", "N_s", "N_r", "N_e"]:
-            if not isinstance(farm_data[key], (int, float)):
-                raise TypeError(f"{key} must be a number")
-        if farm_data["area"] < 0:
+        if data["farm_data"]["area"] < 0:
             raise ValueError("Area must be non-negative")
-        if farm_data["yield"] < 0:
+        
+        if data["farm_data"]["yield"] < 0:
             raise ValueError("Yield must be non-negative")
-        if not (0 <= farm_data["moisture"] <= 100):
+        
+        if not (0 <= data["crop_parameters"]["moisture"] <= 100):
             raise ValueError("Moisture must be between 0 and 100")
 
             
@@ -72,22 +70,27 @@ class CropResidueCalculator:
         Returns:
             float: The carbon input to the soil. 
         """
+       
         if abs(self.S_p - 100) < 1e-5:
-            return self.crop_yield * (1 - self.moisture / 100) * self.carbon_concentration      
-        # if self.method in ["swathing", "greenmanure"]:
-        #     return self.crop_yield * (1 - self.moisture / 100) * self.carbon_concentration
-        return (self.crop_yield + self.crop_yield * self.S_p / 100) * (1 - self.moisture / 100) * self.carbon_concentration
+            self.C_p = self.crop_yield * (1 - self.moisture / 100) * self.carbon_concentration
+        else:
+            self.C_p = (self.crop_yield + self.crop_yield * self.S_p / 100) * (1 - self.moisture / 100) * self.carbon_concentration
+        
+        return self.C_p
 
    
     def c_p_to_soil(self):
         """
         Calculates the carbon input to the soil from the product.
-        Formula: C_p_to_soil = C_p * S_p / 100
+        Formula: C_p_to_soil = C_p * S_p / 100  
 
         Returns:
             float: Carbon input to the soil from the product.
         """
-        return self.c_p() * (self.S_p / 100)
+       
+        self.C_p_to_soil = self.c_p() * (self.S_p / 100)
+        
+        return self.C_p_to_soil
    
     def c_s(self):
         """
@@ -97,7 +100,13 @@ class CropResidueCalculator:
         Returns:
             float: Carbon input to the soil from the straw.
         """
-        return self.c_p() * (self.R_s / self.R_p) * (self.S_s / 100)
+        
+        if abs(self.R_p) < 1e-6:
+            self.C_s = 0
+        else:
+            self.C_s = self.c_p() * (self.R_s / self.R_p) * (self.S_s / 100)
+        
+        return self.C_s
 
     def c_r(self):
         """
@@ -107,7 +116,13 @@ class CropResidueCalculator:
         Returns:
             float: Carbon input to the soil from the root.
         """
-        return self.c_p() * (self.R_r / self.R_p) * (self.S_r / 100)
+        
+        if abs(self.R_p) < 1e-6:
+            self.C_r = 0
+        else:
+            self.C_r = self.c_p() * (self.R_r / self.R_p) * (self.S_r / 100)
+        
+        return self.C_r
     
     def c_e(self):
         """
@@ -117,7 +132,13 @@ class CropResidueCalculator:
         Returns:
             float: Carbon input to the soil from the extra-roots.
         """
-        return self.c_p() * (self.R_e / self.R_p)
+        
+        if abs(self.R_p) < 1e-6:
+            self.C_e = 0
+        else:
+            self.C_e = self.c_p() * (self.R_e / self.R_p)
+        
+        return self.C_e
     
     def grain_n(self):
         """
@@ -127,7 +148,10 @@ class CropResidueCalculator:
         Returns:
             float: The nitrogen content of the grain (kg N/ha).
         """
-        return (self.c_p_to_soil() / 0.45) * (self.N_p / 1000)
+        
+        self.Grain_N = (self.c_p_to_soil() / 0.45) * (self.N_p / 1000)
+        
+        return self.Grain_N
 
     def straw_n(self):
         """
@@ -137,7 +161,10 @@ class CropResidueCalculator:
         Returns:
             float: The nitrogen content of the straw (kg N/ha).
         """
-        return (self.c_s() / 0.45) * (self.N_s / 1000)
+        
+        self.Straw_N = (self.c_s() / 0.45) * (self.N_s / 1000)
+        
+        return self.Straw_N
 
     def root_n(self):
         """
@@ -148,7 +175,9 @@ class CropResidueCalculator:
             float: The nitrogen content of the roots (kg N/ha).
         """
         
-        return (self.c_r() / 0.45) * (self.N_r / 1000)
+        self.Root_N = (self.c_r() / 0.45) * (self.N_r / 1000)
+        
+        return self.Root_N
 
     def exudate_n(self):
         """
@@ -158,8 +187,10 @@ class CropResidueCalculator:
         Returns:
             float: The nitrogen content of the exudates (kg N/ha).
         """
+       
+        self.Exudate_N = (self.c_e() / 0.45) * (self.N_e / 1000)
         
-        return (self.c_e() / 0.45) * (self.N_e / 1000)
+        return self.Exudate_N
 
     def above_ground_residue_n(self):
         """
@@ -168,14 +199,17 @@ class CropResidueCalculator:
         Returns:
             float: The nitrogen content of the above-ground residue (kg N/ha).
         """
+       
         if self.group in ["annual", "perennial"]:
-            return self.grain_n() + self.straw_n()
+            self.Above_Ground_Residue_N = self.grain_n() + self.straw_n()
         elif self.group == "root":
-            return self.straw_n()
+            self.Above_Ground_Residue_N = self.straw_n()
         elif self.group in ["cover", "silage"]:
-            return self.grain_n()
+            self.Above_Ground_Residue_N = self.grain_n()
         else:
-            return 0
+            self.Above_Ground_Residue_N = 0
+        
+        return self.Above_Ground_Residue_N
 
     def below_ground_residue_n(self):
         """
@@ -184,16 +218,19 @@ class CropResidueCalculator:
         Returns:
             float: The nitrogen content of the below-ground residue (kg N/ha).
         """
+       
         if self.group == "annual":
-            return self.root_n() + self.exudate_n()
+            self.Below_Ground_Residue_N = self.root_n() + self.exudate_n()
         elif self.group == "perennial":
-            return self.root_n() * (self.S_r / 100) + self.exudate_n()
+            self.Below_Ground_Residue_N = self.root_n() * (self.S_r / 100) + self.exudate_n()
         elif self.group == "root":
-            return self.grain_n() + self.exudate_n()
+            self.Below_Ground_Residue_N = self.grain_n() + self.exudate_n()
         elif self.group in ["cover", "silage"]:
-            return self.root_n() + self.exudate_n()
+            self.Below_Ground_Residue_N = self.root_n() + self.exudate_n()
         else:
-            return 0
+            self.Below_Ground_Residue_N = 0
+        
+        return self.Below_Ground_Residue_N
 
     def n_crop_residue(self):
         """
@@ -205,7 +242,10 @@ class CropResidueCalculator:
         Returns:
             float: The total nitrogen content of the crop residue (kg N).
         """
-        return (self.above_ground_residue_n() + self.below_ground_residue_n()) * self.area
+        
+        self.N_Crop_Residue = (self.above_ground_residue_n() + self.below_ground_residue_n()) * self.area
+        
+        return self.N_Crop_Residue
 
 
     def above_ground_carbon_input(self):
@@ -215,13 +255,13 @@ class CropResidueCalculator:
         Returns:
             float: Above ground carbon input.
         """
-        # if self.method in ["greenmanure", "swathing"]:
-        #     return self.c_p_to_soil()
 
         if self.group == "root":
-            return self.c_s()
-
-        return self.c_p_to_soil() + self.c_s()
+            self.Above_Ground_Carbon_Input = self.c_s()
+        else:
+            self.Above_Ground_Carbon_Input = self.c_p_to_soil() + self.c_s()
+        
+        return self.Above_Ground_Carbon_Input
 
 
         
@@ -232,9 +272,10 @@ class CropResidueCalculator:
         Returns:
             float: Below ground carbon input.
         """
+        
         if self.group == "root":
-            return self.c_p_to_soil() + self.c_e()
+            self.Below_Ground_Carbon_Input = self.c_p_to_soil() + self.c_e()
         else:
-            return self.c_r() + self.c_e()
-
-
+            self.Below_Ground_Carbon_Input = self.c_r() + self.c_e()
+        
+        return self.Below_Ground_Carbon_Input
