@@ -279,3 +279,30 @@ class CropResidueCalculator:
             self.Below_Ground_Carbon_Input = self.c_r() + self.c_e()
         
         return self.Below_Ground_Carbon_Input
+
+    def get_crop_residue(self):
+        """
+        Returns a dictionary containing crop residue results.
+
+        Calculates and returns the following results:
+        - 'C_p': Carbon input to the soil.
+        - 'above_ground_carbon_input': Above-ground carbon input.
+        - 'below_ground_carbon_input': Below-ground carbon input.
+        - 'above_ground_residue_n': Nitrogen content of above-ground residue.
+        - 'below_ground_residue_n': Nitrogen content of below-ground residue.
+        - 'n_crop_residue': Total nitrogen content of the crop residue.
+
+    Returns:
+        dict: A dictionary containing the calculated crop residue metrics.
+        
+        """
+        
+        all_data = {
+            'C_p': self.c_p(),
+            'above_ground_carbon_input': self.above_ground_carbon_input(),
+            'below_ground_carbon_input': self.below_ground_carbon_input(),
+            'above_ground_residue_n': self.above_ground_residue_n(),
+            'below_ground_residue_n': self.below_ground_residue_n(),
+            'n_crop_residue': self.n_crop_residue()
+        }
+        return all_data
