@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 class CropGroupManager:
-    def __init__(self, farm_data, climate_data):
+    def __init__(self, farm_data):
         self.farm_data = farm_data  
         self.dir = os.path.dirname(__file__)
         self.crop_group = self.get_crop_group()

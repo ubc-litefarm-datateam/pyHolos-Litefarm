@@ -1,8 +1,8 @@
-from get_farm_data import FarmData
-from get_modifers import Modifiers
-from get_crop_group_params import CropGroupManager
-from get_crop_params import CropParametersManager
-from get_climate_params import ClimateDataExtractor
+from data_loader.get_farm_data import FarmData
+from data_loader.get_modifers import Modifiers
+from data_loader.get_crop_group_params import CropGroupManager
+from data_loader.get_crop_params import CropParametersManager
+from data_loader.get_climate_params import ClimateDataExtractor
 
 class FarmDataManager:
     def __init__(self, farm_id):
