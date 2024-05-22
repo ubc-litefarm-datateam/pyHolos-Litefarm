@@ -22,7 +22,7 @@ class EvapotranspirationCalculator:
         Returns:
         float: Reference evapotranspiration in mm day^-1.
         """
-        # Holos Technical Report, Page 22:
+        # Holos Technical Report V4, Page 22:
             # Eq. 1.6.2-1
             # Eq. 1.6.2-2
                 # Turc equation
