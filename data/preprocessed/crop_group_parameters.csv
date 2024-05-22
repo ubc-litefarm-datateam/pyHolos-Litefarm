@@ -1,0 +1,6 @@
+group,carbon_concentration,S_s,S_r,S_p
+Annual,0.45,100,100,2
+Silage,0.45,0,100,2
+Cover,0.45,100,100,100
+Root,0.45,100,0,0
+Perennial,0.45,0,100,35

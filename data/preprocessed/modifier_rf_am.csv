@@ -1,0 +1,6 @@
+method,value
+controlled_release,0.86
+nitrification_inhibitor,0.72
+urease_inhibitor,1.04
+both_inhibitors,0.69
+default,1

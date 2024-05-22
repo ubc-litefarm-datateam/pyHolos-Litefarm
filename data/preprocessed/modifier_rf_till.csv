@@ -1,0 +1,9 @@
+region,tillage,value
+eastern_canada,reduced_tillage,1.05
+eastern_canada,no_tillage,1.05
+eastern_canada,intensive_tillage,1
+eastern_canada,unknown,1
+western_canada,reduced_tillage,0.73
+western_canada,no_tillage,0.73
+western_canada,intensive_tillage,1
+western_canada,unknown,1
