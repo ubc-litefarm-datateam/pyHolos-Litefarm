@@ -25,13 +25,15 @@
 
 #-----------------------------------------------------------#
 # from get_full_params import FarmDataManager
+
 # farm_id = '0369f026-1f90-11ee-b788-0242ac150004'
 # farm_data_manager = FarmDataManager(farm_id)
 # all_data = farm_data_manager.gather_all_data()
 # print(all_data)
 
 #-----------------------------------------------------------#
-from evapotranspiration_calculator import EvapotranspirationCalculator
-calculator = EvapotranspirationCalculator(20, 5, 45)
-et = calculator.calculate()
-print(f"Reference Evapotranspiration: {et} mm/day")
+# from evapotranspiration_calculator import EvapotranspirationCalculator
+
+# calculator = EvapotranspirationCalculator(20, 5, 45)
+# et = calculator.calculate()
+# print(f"Reference Evapotranspiration: {et} mm/day")
