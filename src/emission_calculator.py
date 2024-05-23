@@ -1,3 +1,5 @@
+import numpy as np
+
 class EmissionCalculator:
     def __init__(self, ef_data, n_data):
         ## validate input data
@@ -15,14 +17,14 @@ class EmissionCalculator:
         for key in required_ef_key:
             if key not in ef_data:
                 raise ValueError(f"Missing required key: {key}")
-            if not isinstance(ef_data[key], (int, float)):
+            if not isinstance(ef_data[key], (int, float, np.number)):
                 raise TypeError(f"Value for {key} must be a number (int or float)")
             
         required_n_keys = ['n_crop_residue']
         for key in required_n_keys:
             if key not in n_data:
                 raise ValueError(f"Missing required key: {key}")
-            if not isinstance(n_data[key], (int, float)):
+            if not isinstance(n_data[key], (int, float, np.number)):
                 raise TypeError(f"Value for {key} must be a number (int or float)")     
             
     def calculate_n_crn_direct(self):

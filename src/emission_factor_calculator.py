@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 class EmissionFactorCalculator:
 
@@ -19,17 +20,19 @@ class EmissionFactorCalculator:
     def validate_input(self, farm_data):
         ## data should include all required fields and should be numbers
         required_climate_keys = ['P', 'PE', 'FR_Topo']
+        
         for key in required_climate_keys:
             if key not in farm_data['climate_data']:
                 raise ValueError(f"Missing required climate data key: {key}")
-            if not isinstance(farm_data['climate_data'][key], (int, float)):
+                print(key)
+            if not isinstance(farm_data['climate_data'][key], (int, float, np.number)):
                 raise TypeError(f"Value for climate_data[{key}] must be a number (int or float)")
     
         required_modifiers_keys = ['RF_TX', 'RF_NS', 'RF_Till', 'RF_CS', 'RF_AM']
         for key in required_modifiers_keys:
             if key not in farm_data['modifiers']:
                 raise ValueError(f"Missing required modifiers key: {key}")
-            if not isinstance(farm_data['modifiers'][key], (int, float)):
+            if not isinstance(farm_data['modifiers'][key], (int, float, np.number)):
                 raise TypeError(f"Value for modifiers[{key}] must be a number (int or float)")    
 
     def calculate_ef_ct(self):

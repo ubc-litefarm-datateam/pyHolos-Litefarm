@@ -46,11 +46,13 @@ class ClimateDataManager:
         }
 
     def initialize_fetcher(self):
-        location = self.farm_data.farm_data['location'][0]
-        self.latitude = location.y
-        self.longitude = location.x
+        # location = self.farm_data.farm_data['location'][0]
+        # self.latitude = self.farm_data.farm_data['latitude']
+        # self.longitude = self.farm_data.farm_data['longitude']
         year = self.farm_data.farm_data['year']
-        self.fetcher = GrowingSeasonExternalDataFetcher(self.latitude, self.longitude, year)
+        self.fetcher = GrowingSeasonExternalDataFetcher(self.farm_data.farm_data['latitude'], 
+                                                        self.farm_data.farm_data['longitude'], 
+                                                        year)
 
     def get_climate_data(self):
         if self.mode == 'default':

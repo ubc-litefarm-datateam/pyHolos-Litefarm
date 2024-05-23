@@ -18,22 +18,42 @@ class FarmData:
         df = df.query(f"farm_id == '{self.farm_id}'")
         if df.empty:
             raise ValueError(f"No farm data found for farm_id {self.farm_id}")
-        farm = df.iloc[0]
+
+        df['area_in_m2'] = df['area_in_m2'].astype(float).map(lambda x: x * 0.0001)  # Convert and scale area
+        df['yield_kg_per_m2'] = df['yield_kg_per_m2'].astype(float).map(lambda x: x * 10000)  # Convert and scale yield
+        df['year'] = df['year'].astype(int)  # Ensure year is an integer
+
+        farm = df.iloc[0].to_dict()
+
+        farm['area'] = float(farm['area_in_m2'])
+        farm['yield'] = float(farm['yield_kg_per_m2'])
+        farm['year'] = int(farm['year'])
         
-        location = [Point(x, y) for x, y in zip(df['lon'], df['lat'])]
-        farm_dict = {'area': farm["area_in_m2"] * 0.0001,
-                     'location': location,
-                     'crop': farm["common_crop_name"],
-                     'yield': farm["yield_kg"] / (farm["area_in_m2"] * 0.0001),
-                     'year': farm["year"]}
-        return farm_dict
+        return {
+            'area': farm['area'],
+            'latitude': float(farm['lat']),
+            'longitude': float(farm['lon']),
+            'crop': farm['common_crop_name'],
+            'yield': farm['yield'],
+            'year': farm['year']
+        }
 
     def get_farm_gdf(self):
-        farm_point = gpd.GeoDataFrame({'geometry': self.farm_data["location"]}, crs="EPSG:4326")
+        # Convert single values to lists if necessary
+        if isinstance(self.farm_data['longitude'], (int, float)):
+            longitudes = [self.farm_data['longitude']]
+            latitudes = [self.farm_data['latitude']]
+        else:
+            longitudes = self.farm_data['longitude']
+            latitudes = self.farm_data['latitude']
+        
+        locations = [Point(x, y) for x, y in zip(longitudes, latitudes)]
+        farm_point = gpd.GeoDataFrame({'geometry': locations}, crs="EPSG:4326")
         province_shp_path = os.path.join(self.dir, '../../data/external/province_500m')
         provinces = gpd.read_file(province_shp_path).to_crs("EPSG:4326")
         farm_province = gpd.sjoin(farm_point, provinces[["PRENAME", "geometry"]],
                                   how='left', predicate='within').drop(columns=['index_right'])
+        
         farm_province.rename(columns={'PRENAME': 'province'}, inplace=True)
         return farm_province
 

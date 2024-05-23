@@ -10,7 +10,6 @@
 # farm_data = FarmData(farm_id)
 # print(farm_data.farm_data)
 
-
 # climate_manager2 = ClimateDataManager(farm_data, mode='default')
 # climate_data2 = climate_manager2.get_climate_data()
 # print("Get ecodistrict P and PE: ", climate_data2)
@@ -29,18 +28,32 @@
 # print(group_params.crop_group)
 # print(group_params.crop_group_params)
 
-# -----------------------------------------------------------#
-from data_loader.get_full_params import FarmDataManager
-from crop_residue_calculator import CropResidueCalculator
+# # -----------------------------------------------------------#
+# from data_loader.get_full_params import FarmDataManager
+# from crop_residue_calculator import CropResidueCalculator
+# from emission_factor_calculator import EmissionFactorCalculator
+# from emission_calculator import EmissionCalculator
 
-farm_id = '0369f026-1f90-11ee-b788-0242ac150004'
-farm_data_manager = FarmDataManager(farm_id)
-all_data = farm_data_manager.gather_all_data()
-print('Default mode:', all_data)
+# farm_id = '0369f026-1f90-11ee-b788-0242ac150004'
+# farm_data_manager = FarmDataManager(farm_id)
+# all_data = farm_data_manager.gather_all_data()
+# print('Default mode:', all_data)
 
-farm_data_manager2 = FarmDataManager(farm_id)
-all_data2 = farm_data_manager.gather_all_data()
-print('Precise mode:', all_data2)
+# # farm_data_manager2 = FarmDataManager(farm_id)
+# # all_data2 = farm_data_manager.gather_all_data()
+# # print('Precise mode:', all_data2)
+
+# crop_resid = CropResidueCalculator(all_data)
+# crop_residue = crop_resid.get_crop_residue()
+# print(crop_residue)
+
+# emission_factor_calc = EmissionFactorCalculator(all_data)
+# emission_factor = emission_factor_calc.get_ef()
+# print(emission_factor)
+
+# emission_calc = EmissionCalculator(emission_factor, crop_residue)
+# N_emission = emission_calc.get_emission()
+# print(N_emission)
 
 # # -----------------------------------------------------------#
 # from data_loader.get_external_climate_params import GrowingSeasonExternalDataFetcher
