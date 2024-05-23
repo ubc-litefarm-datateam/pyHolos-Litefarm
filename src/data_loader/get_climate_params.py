@@ -40,8 +40,8 @@ class ClimateDataManager:
 
         self.climate_dict = {
             "soil_texture": farm_ecodistrict_climate["SoilTexture"].iloc[0].lower(),
-            "P": farm_ecodistrict_climate["PMayToOct"].iloc[0],
-            "PE": farm_ecodistrict_climate["PEMayToOct"].iloc[0],
+            "P": float(farm_ecodistrict_climate["PMayToOct"].iloc[0]),
+            "PE": float(farm_ecodistrict_climate["PEMayToOct"].iloc[0]),
             "FR_Topo": farm_ecodistrict_climate["Ftopo"].iloc[0]
         }
 
