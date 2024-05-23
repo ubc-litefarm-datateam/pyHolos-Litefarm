@@ -1,0 +1,72 @@
+holos_crop_name,crop,Group
+Small grain cereals,small_grain_cereals,Annual
+Wheat,wheat,Annual
+Barley,barley,Annual
+Undersown Barley,undersown_barley,Annual
+Oats,oats,Annual
+Triticale,triticale,Annual
+Sorghum,sorghum,Annual
+Canary seed,canary_seed,Annual
+Buckwheat,buckwheat,Annual
+Mixed grains,mixed_grains,Annual
+Grain corn,grain_corn,Annual
+Corn Silage,corn_silage,Silage
+Barley Silage,barley_silage,Silage
+Oat Silage,oat_silage,Silage
+Triticale Silage,triticale_silage,Silage
+Wheat Silage,wheat_silage,Silage
+Grass Silage,grass_silage,Silage
+Oilseeds,oilseeds,Annual
+Camelina,camelina,Annual
+Canola,canola,Annual
+Mustard,mustard,Annual
+Flax,flax,Annual
+Pulse crops,pulse_crops,Annual
+Soybean,soybean,Annual
+Beans (dry field),beans_dry_field,Annual
+Chickpea,chickpea,Annual
+Dry Pea,dry_pea,Annual
+Lentil,lentil,Annual
+Potato,potato,Root
+Sugar Beets,sugar_beets,Root
+Safflower,safflower,Other
+Sunflower seed,sunflower_seed,Other
+Tobacco,tobacco,Other
+Vegetables,vegetables,Other
+Berries & grapes,berries_grapes,Other
+Other field crops,other_field_crops,Other
+Winter weeds,winter_weeds,Cover
+Red clover (Trifolium pratense L.),red_clover,Cover
+Berseem clover (Trifolium alexandrium L.),berseem_clover,Cover
+Sweet clover (Melilotus officinalis),sweet_clover,Cover
+Crimson clover (Trifolium incarnatum),crimson_clover,Cover
+Hairy Vetch (Vicia villosa roth),hairy_vetch,Cover
+Alfalfa (Medicago sativa L.),alfalfa,Cover
+Faba bean/broad bean (Vicia faba),Faba bean/broad bean ,Cover
+Cowpea (Vigna unguiculata),cowpea,Cover
+Austrian winter pea,austrian_winter_pea,Cover
+Rapeseed (Brassica Napus L.),rapeseed,Cover
+"Winter turnip rape [Brassica Rapa spp. oleifera L. (cv. ""Largo"")]",winter_turnip_rape,Cover
+Phacelia [Phacelia tanacetifolia (cv. 'Phaci')],phacelia,Cover
+Forage radish (Raphanus sativus L.),forage_radish,Cover
+Mustard (Sinapus alba L. subsp. Mairei (H. Lindb.) Maire),mustard,Cover
+Barley (Hordeum vulgare),barley_cover,Cover
+Oat (Avena sativa),oat_cover,Cover
+Rye (Secale cereale) / Winter rye / Cereal rye,rye,Cover
+Sesame (Sesamum indicum),sesame,Cover
+Flax (Linum usitatissimum),flax_cover,Cover
+Ryegrass (Lolium Perenne L.),ryegrass,Cover
+Annual Ryegrass (Lolium multiflorum),annual_ryegrass,Cover
+Sorghum (Sorghum bicolour),sorghum,Cover
+Pigeon Bean,pigeon_bean,Cover
+Shepherd's purse,shepherds_purse,Cover
+Winter wheat (Triticum aestivum),winter_wheat,Cover
+(Fall) Rye,fall_rye,Cover
+Rangeland (native),rangeland ,Perennial
+Perennial forages,perennial_forages,Perennial
+Tame grass,tame_grass,Perennial
+Tame legume,tame_legume,Perennial
+Tame mixed,tame_mixed,Perennial
+Seeded grassland,seeded_grassland,Perennial
+Forage for seed,forage_for_seed,Perennial
+Total tree fruits & nuts,tree_ruits_nuts,Trees

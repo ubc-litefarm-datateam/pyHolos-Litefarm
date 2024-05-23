@@ -1,11 +1,72 @@
 holos_crop_name,crop,group
-Barley,barley,Annual
-Beans (dry field),beans_dry_field,Annual
-Dry pea,dry_pea,Cover
-Grain corn,grain_corn,Annual
-Mustard,mustard,Cover
-Oats,oats,Annual
-Potato,potato,Root
-Soybean,soybean,Annual
-Sugar beets,sugar_beets,Root
-(Fall) Rye,fall_rye,Cover
+Small grain cereals,Small_grain_cereals,Annual
+Wheat,Wheat,Annual
+Barley,Barley,Annual
+Undersown Barley,Undersown_barley,Annual
+Oats,Oats,Annual
+Triticale,Triticale,Annual
+Sorghum,Sorghum,Annual
+Canary seed,Canary_seed,Annual
+Buckwheat,Buckwheat,Annual
+Mixed grains,Mixed_grains,Annual
+Grain corn,Grain_corn,Annual
+Corn Silage,Corn_silage,Silage
+Barley Silage,Barley_silage,Silage
+Oat Silage,Oat_silage,Silage
+Triticale Silage,Triticale_silage,Silage
+Wheat Silage,Wheat_silage,Silage
+Grass Silage,Grass_silage,Silage
+Oilseeds,Oilseeds,Annual
+Camelina,Camelina,Annual
+Canola,Canola,Annual
+Mustard,Mustard,Annual
+Flax,Flax,Annual
+Pulse crops,Pulse_crops,Annual
+Soybean,Soybean,Annual
+Beans (dry field),Beans_dry_field,Annual
+Chickpea,Chickpea,Annual
+Dry Pea,Dry_pea,Annual
+Lentil,Lentil,Annual
+Potato,Potato,Root
+Sugar Beets,Sugar_beets,Root
+Safflower,Safflower,Other
+Sunflower seed,Sunflower_seed,Other
+Tobacco,Tobacco,Other
+Vegetables,Vegetables,Other
+Berries & grapes,Berries_grapes,Other
+Other field crops,Other_field_crops,Other
+Winter weeds,Winter_weeds,Cover
+Red clover (Trifolium pratense L.),Red_clover,Cover
+Berseem clover (Trifolium alexandrium L.),Berseem_clover,Cover
+Sweet clover (Melilotus officinalis),Sweet_clover,Cover
+Crimson clover (Trifolium incarnatum),Crimson_clover,Cover
+Hairy Vetch (Vicia villosa roth),Hairy_vetch,Cover
+Alfalfa (Medicago sativa L.),Alfalfa,Cover
+Faba bean/broad bean (Vicia faba),Faba bean,Cover
+Cowpea (Vigna unguiculata),Cowpea,Cover
+Austrian winter pea,Austrian_winter_pea,Cover
+Rapeseed (Brassica Napus L.),Rapeseed,Cover
+"Winter turnip rape [Brassica Rapa spp. oleifera L. (cv. ""Largo"")]",Winter_turnip_rape,Cover
+Phacelia [Phacelia tanacetifolia (cv. 'Phaci')],Phacelia,Cover
+Forage radish (Raphanus sativus L.),Forage_radish,Cover
+Mustard (Sinapus alba L. subsp. Mairei (H. Lindb.) Maire),Mustard,Cover
+Barley (Hordeum vulgare),Barley,Cover
+Oat (Avena sativa),Oat,Cover
+Rye (Secale cereale) / Winter rye / Cereal rye,Rye,Cover
+Sesame (Sesamum indicum),Sesame,Cover
+Flax (Linum usitatissimum),Flax,Cover
+Ryegrass (Lolium Perenne L.),Ryegrass,Cover
+Annual Ryegrass (Lolium multiflorum),Annual_ryegrass,Cover
+Sorghum (Sorghum bicolour),Sorghum,Cover
+Pigeon Bean,Pigeon_bean,Cover
+Shepherd's purse,Shepherd's_purse,Cover
+Winter wheat (Triticum aestivum),Winter_wheat,Cover
+(Fall) Rye,Fall_rye,Cover
+Rangeland (native),Rangeland ,Perennial
+Perennial forages,Perennial_forages,Perennial
+Tame grass,Tame_grass,Perennial
+Tame legume,Tame_legume,Perennial
+Tame mixed,Tame_mixed,Perennial
+Seeded grassland,Seeded_grassland,Perennial
+Forage for seed,Forage_for_seed,Perennial
+Total tree fruits & nuts,Total_tree_fruits_nuts,Trees
