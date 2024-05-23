@@ -9,7 +9,7 @@ class CropGroupManager:
         self.crop_group_params = self.get_crop_group_parameters()
 
     def get_crop_group(self):
-        crop = self.farm_data.farm_data['crop'].lower()
+        crop = self.farm_data.farm_data['crop']
         crop_to_group_map_path = os.path.join(self.dir, 
                                               '../../data/preprocessed/crop_to_group.csv')
         crop_to_group_map_df = pd.read_csv(crop_to_group_map_path)
