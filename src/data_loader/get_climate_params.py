@@ -1,15 +1,19 @@
 import os
 import pandas as pd
 import geopandas as gpd
+from data_loader.get_external_climate_params import GrowingSeasonExternalDataFetcher
 
-class ClimateDataExtractor:
-    def __init__(self, farm_data):
+class ClimateDataManager:
+    def __init__(self, farm_data, mode='default'):
         self.farm_data = farm_data
+        self.mode = mode
         self.dir = os.path.dirname(__file__)
-        self.climate_dict = None
+        self.fetcher = None  # Initialize as None
+        self.climate_dict = None  # Initialize the climate data dictionary as None
 
     def load_climate_data(self):
-        climate_path = os.path.join(self.dir, '../../data/raw/Holos/ecodistrict_to_ecozone_mapping.csv')
+        climate_path = os.path.join(self.dir,
+                                    '../../data/raw/Holos/ecodistrict_to_ecozone_mapping.csv')
         return pd.read_csv(climate_path)
     
     def load_slc_polygons(self):
@@ -18,7 +22,7 @@ class ClimateDataExtractor:
         slc_polygons.set_crs('EPSG:4269', inplace=True)
         return slc_polygons.to_crs('EPSG:4326')
         
-    def extract_climate_data(self):
+    def extract_default_climate_data(self):
         slc_polygons = self.load_slc_polygons()
         default_climate_df = self.load_climate_data()
         
@@ -40,5 +44,35 @@ class ClimateDataExtractor:
             "PE": farm_ecodistrict_climate["PEMayToOct"].iloc[0],
             "FR_Topo": farm_ecodistrict_climate["Ftopo"].iloc[0]
         }
+
+    def initialize_fetcher(self):
+        location = self.farm_data.farm_data['location'][0]
+        self.latitude = location.y
+        self.longitude = location.x
+        year = self.farm_data.farm_data['year']
+        self.fetcher = GrowingSeasonExternalDataFetcher(self.latitude, self.longitude, year)
+
+    def get_climate_data(self):
+        if self.mode == 'default':
+            self.extract_default_climate_data()
+            return self.climate_dict
+
+        # Initialize fetcher if not already done and in 'precise' mode
+        if self.fetcher is None:
+            self.initialize_fetcher()
+
+        result = self.fetcher.calculate_growing_season_totals()
+        if result and 'success' in result and result['success']:
+            # Replace P and PE with calculated values while keeping other data
+            self.extract_default_climate_data()
+            self.climate_dict['P'] = result['data']['P']
+            self.climate_dict['PE'] = result['data']['PE']
+            return self.climate_dict
+
+        # On error or in any other case, return default data
+        print("Error fetching or calculating precise data. Using default data.")
+        self.extract_default_climate_data()
         return self.climate_dict
+
+
 
