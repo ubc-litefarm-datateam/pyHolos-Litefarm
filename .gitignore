@@ -1,2 +1,3 @@
 /.quarto/
 outputs/*
+!outputs/.gitkeep
