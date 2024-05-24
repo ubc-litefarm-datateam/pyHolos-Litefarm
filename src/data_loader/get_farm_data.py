@@ -5,16 +5,16 @@ from shapely.geometry import Point
 from datetime import datetime
 
 class FarmData:
-    def __init__(self, farm_id):
+    def __init__(self, input_file, farm_id):
         self.farm_id = farm_id
         self.dir = os.path.dirname(__file__)
+        self.input_file_path = os.path.join(self.dir, '..', '..', input_file)
         self.farm_data = self.get_farm_data()
         self.farm_gdf = self.get_farm_gdf()
         self.province = self.get_province()
 
     def get_farm_data(self):
-        farm_data_path = os.path.join(self.dir, '../../data/test/litefarm_test.csv')
-        df = pd.read_csv(farm_data_path)
+        df = pd.read_csv(self.input_file_path)
         df = df.query(f"farm_id == '{self.farm_id}'")
         if df.empty:
             raise ValueError(f"No farm data found for farm_id {self.farm_id}")
