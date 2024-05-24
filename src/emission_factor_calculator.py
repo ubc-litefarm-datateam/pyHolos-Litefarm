@@ -2,11 +2,34 @@ import math
 import numpy as np
 
 class EmissionFactorCalculator:
+    """
+    A calculator for emission factors based on climatic and modifiers for selected farm.
+    
+    Attributes
+    ----------
+    data (dict): The validated input data containing necessary climate and modifier parameters.
+    P (float): Precipitation data from climate data.
+    PE (float): Potential evapotranspiration from climate data.
+    FR_Topo (float): Fractional contribution from topographical data.
+    RF_TX (float): Regional factor for temperature extremes.
+    RF_NS (float): Regional factor for nitrogen stress.
+    RF_till (float): Reduction factor due to tillage practices.
+    RF_CS (float): Reduction factor for crop sequence.
+    RF_AM (float): Adjustment factor for management practices.
+    """
 
     def __init__(self ,farm_data):
-        ## validate input data
+        """
+        Initializes EmissionFactorCalculator with the provided farm data.
+        
+        Args:
+            farm_data (dict): Farm data containing climate data and modifiers.
+        
+        Raises:
+            ValueError: If essential keys are missing in the input data.
+            TypeError: If the values under climate data or modifiers are not of type int or float.
+        """
         self.validate_input(farm_data)
-        ## initialize instance variables with validated data
         self.data = farm_data
         self.P = farm_data['climate_data']['P']
         self.PE = farm_data['climate_data']['PE']
@@ -18,7 +41,16 @@ class EmissionFactorCalculator:
         self.RF_AM = farm_data['modifiers']['RF_AM']
 
     def validate_input(self, farm_data):
-        ## data should include all required fields and should be numbers
+        """
+        Validates input data to ensure all required fields are present and correctly formatted.
+        
+        Args:
+            farm_data (dict): The input data to validate.
+        
+        Raises:
+            ValueError: If required keys are missing from the climate data or modifiers.
+            TypeError: If the values under climate data or modifiers are not of type int or float.
+        """
         required_climate_keys = ['P', 'PE', 'FR_Topo']
         
         for key in required_climate_keys:
@@ -36,17 +68,26 @@ class EmissionFactorCalculator:
                 raise TypeError(f"Value for modifiers[{key}] must be a number (int or float)")    
 
     def calculate_ef_ct(self):
-        ## calculate EF_CT_P and EF_CT_PE based on P and PE 
-        ## equation 2.5.1-1 and 2.5.1-2
+        """
+        Calculates EF_CT_P and EF_CT_PE based on precipitation (P) and evapotranspiration (PE).
+        Equation 2.5.1-1 and 2.5.1-2
+
+        Returns:
+            tuple: A tuple containing EF_CT_P and EF_CT_PE values.
+        """
         self.EF_CT_P = math.exp(0.00558 * self.P - 7.7)
         self.EF_CT_PE = math.exp(0.00558 * self.PE - 7.7)
 
         return self.EF_CT_P, self.EF_CT_PE
     
     def calculate_ef_topo(self):
-        ## calculate EF_Topo
-        ## equation 2.5.2-1, 2.5.2-2, and 2.5.2-3
-        ## ensure EF_CT_P and EF_CT_PE are calculated
+        """
+        Calculates topographical emission factor (EF_Topo) considering both climatic and topographical modifiers.
+        Equation 2.5.2-1, 2.5.2-2, and 2.5.2-3
+
+        Returns:
+            float: The calculated EF_Topo.
+        """
         if not hasattr(self, 'EF_CT_P') or not hasattr(self, 'EF_CT_PE'):
             self.calculate_ef_ct()
 
@@ -62,9 +103,13 @@ class EmissionFactorCalculator:
         return self.EF_Topo
     
     def calculate_emission_factor(self):
-        ## calculate emission factor
-        ## equation 2.5.3-2 and 2.5.4-1
-        ## ensure EF_CT_P and EF_CT_PE are calculated
+        """
+        Calculates the overall emission factor (EF) based on climatic and modifiers.
+        Equation 2.5.3-2 and 2.5.4-1
+
+        Returns:
+            float: The calculated EF.
+        """
         if not hasattr(self, 'EF_Topo'):
             self.calculate_ef_topo()
         
@@ -75,6 +120,12 @@ class EmissionFactorCalculator:
         return self.EF
     
     def get_ef(self):
+        """
+        Retrieves calculated emission factors if available, or calculates them if not.
+        
+        Returns:
+            dict: A dictionary containing all calculated emission factors.
+        """
         if not hasattr(self, 'EF'):
             self.calculate_emission_factor()
 

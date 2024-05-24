@@ -1,10 +1,29 @@
 import numpy as np
 
 class EmissionCalculator:
+    """
+    A calculator for deriving nitrogen-based emissions and their equivalent CO2 impact from crop nitrogen residue and emission factor.
+
+    Attributes:
+        ef_data (dict): Validated input data containing emission factors.
+        n_data (dict): Validated input data containing crop nitrogen residue.
+        EF (float): Emission factor from validated input data.
+        n_crop_residue (float): Crop nitrogen residue (CRN) value from validated input data.
+    """
+
     def __init__(self, ef_data, n_data):
-        ## validate input data
+        """
+        Initializes EmissionCalculator with the provided emission factor data and nitrogen data.
+
+        Args:
+            ef_data (dict): Input data containing emission factors.
+            n_data (dict): Input data containing nitrogen values.
+
+        Raises:
+            ValueError: If essential keys are missing in the input data.
+            TypeError: If the values under emission factor data or nitrogen data are not of type int or float.
+        """
         self.validate_input(ef_data, n_data)
-        ## initialize instance variables with validated data
         self.ef_data = ef_data
         self.n_data = n_data
         self.EF = ef_data['EF']
@@ -12,7 +31,17 @@ class EmissionCalculator:
         
     
     def validate_input(self, ef_data, n_data):
-        ## data should include all required fields and should be numbers
+        """
+        Validates the input data to ensure all required fields are present and correctly formatted.
+        
+        Args:
+            ef_data (dict): The emission factor data to validate.
+            n_data (dict): The nitrogen data to validate.
+
+        Raises:
+            ValueError: If required keys are missing from the emission factor data or nitrogen data.
+            TypeError: If the values under emission factor data or nitrogen data are not of type int or float.
+        """
         required_ef_key = ['EF']
         for key in required_ef_key:
             if key not in ef_data:
@@ -28,22 +57,32 @@ class EmissionCalculator:
                 raise TypeError(f"Value for {key} must be a number (int or float)")     
             
     def calculate_n_crn_direct(self):
-        ## calculate n_crn_direct
-        ## equation 2.6.5-2
+        """
+        Calculates the direct nitrogen emission from crop residue (n_crn_direct).
+        Equation 2.6.5-2
+
+        Returns:
+            float: The direct nitrogen emission from crop residue.
+        """
         self.n_crn_direct = self.n_crop_residue * self.EF
 
         return self.n_crn_direct
     
     def calculate_n_other_direct(self):
-        ## set values for other sources of n_direct
-        ## currently set to 0, cen be modified to include other sources
+        """
+        Sets the values for other sources of direct nitrogen emissions, currently set to 0. Can be modified to include other sources.
+        """
         self.n_sn_direct = 0
         self.n_crnmin_direct = 0
         self.n_on_direct = 0
     
     def calculate_n_crop_direct(self):
-        ## calculate n_crop_direct
-        ## equation 2.6.9-1
+        """
+        Calculates the total direct nitrogen emission from all crop sources (n_crop_direct).
+        Equation 2.6.9-1
+        Returns:
+            float: The total direct nitrogen emission from crops.
+        """
         if not hasattr(self, 'n_sn_direct') or not hasattr(self, 'n_crnmin_direct') or not hasattr(self, 'n_on_direct'):
             self.calculate_n_other_direct()
         if not hasattr(self, 'n_crn_direct'):
@@ -54,8 +93,13 @@ class EmissionCalculator:
         return self.n_crop_direct
     
     def convert_n_crop_direct_to_n2o(self):
-        ## calculate n02_crop_direct using n_crop_direct
-        ## using constant 44/28
+        """
+        Converts the total direct nitrogen emission from crops to N2O emissions.
+        Using constant 44/28
+
+        Returns:
+            float: The N2O emissions derived from direct nitrogen emissions.
+        """
         if not hasattr(self, 'n_crop_direct'):
             self.calculate_n_crop_direct()
 
@@ -66,8 +110,13 @@ class EmissionCalculator:
         return self.no2_crop_direct
     
     def calculate_n2o_crop_direct_to_co2e(self):
-        ## calculate co2 equavilent for n2o_crop_direct
-        ## using constant 273, the same value used by Holos
+        """
+        Calculates the CO2 equivalent of the N2O emissions from crop nitrogen emissions.
+        Using constant 273, the same value used by Holos
+
+        Returns:
+            float: The CO2 equivalent of N2O emissions.
+        """
         if not hasattr(self, 'no2_crop_direct'):
             self.convert_n_crop_direct_to_n2o()
 
@@ -78,6 +127,12 @@ class EmissionCalculator:
         return self.co2_crop_direct
     
     def get_emission(self):
+        """
+        Retrieves the calculated emissions if available, or calculates them if not.
+
+        Returns:
+            dict: A dictionary containing all calculated emissions including nitrogen, N2O, and CO2 equivalent values.
+        """
         if not hasattr(self, 'co2_crop_direct'):
             self.calculate_n2o_crop_direct_to_co2e()
 
