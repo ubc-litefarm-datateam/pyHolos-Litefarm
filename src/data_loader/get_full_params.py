@@ -5,10 +5,10 @@ from data_loader.get_crop_group_params import CropGroupManager
 from data_loader.get_crop_params import CropParametersManager
 
 class FarmDataManager:
-    def __init__(self, input_file, farm_id, mode = 'default'):
+    def __init__(self, input_file, farm_id, source = 'default'):
         # self.mode = mode
         self.farm_data = FarmData(input_file=input_file, farm_id=farm_id)
-        self.climate_data_extractor = ClimateDataManager(self.farm_data, mode=mode)
+        self.climate_data_extractor = ClimateDataManager(self.farm_data, source=source)
         self.climate_data = self.climate_data_extractor.get_climate_data()
         self.modifiers = Modifiers(self.farm_data, self.climate_data['soil_texture'])
         self.crop_parameters_manager = CropParametersManager(self.farm_data, self.climate_data)

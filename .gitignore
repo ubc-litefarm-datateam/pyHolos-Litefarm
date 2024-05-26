@@ -1,3 +1,5 @@
 /.quarto/
 outputs/*
 !outputs/.gitkeep
+data/external/HWSD2/
+data/external/HWSD2_RASTER/

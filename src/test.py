@@ -10,13 +10,21 @@
 # farm_data = FarmData(input_file=input_file, farm_id=farm_id)
 # print(farm_data.farm_data)
 
-# climate_manager2 = ClimateDataManager(farm_data, mode='default')
+# climate_manager2 = ClimateDataManager(farm_data, source='default')
 # climate_data2 = climate_manager2.get_climate_data()
 # print("Get ecodistrict P and PE: ", climate_data2)
 
-# climate_manager = ClimateDataManager(farm_data, mode='precise')
+# climate_manager = ClimateDataManager(farm_data, source='external')
 # climate_data = climate_manager.get_climate_data()
 # print("Get farm location specific P and PE: ", climate_data)
+
+# climate_manager = ClimateDataManager(farm_data, source='external', operation_mode='farmer')
+# climate_data = climate_manager.get_climate_data()
+# print("Get farm location specific P and PE: ", climate_data)
+
+# climate_manager3 = ClimateDataManager(farm_data, source='external', operation_mode='scientific')
+# climate_data3 = climate_manager3.get_climate_data()
+# print("Get farm location specific P and PE, random points in ecodistrict: ", climate_data3)
 
 # modifiers = Modifiers(farm_data, climate_data["soil_texture"])
 # print(modifiers.modifiers)
@@ -29,20 +37,20 @@
 # print(group_params.crop_group_params)
 
 # # -----------------------------------------------------------#
-from data_loader.get_full_params import FarmDataManager
+# from data_loader.get_full_params import FarmDataManager
 # from crop_residue_calculator import CropResidueCalculator
 # from emission_factor_calculator import EmissionFactorCalculator
 # from emission_calculator import EmissionCalculator
 
-input_file = 'data/test/litefarm_test.csv'
-farm_id = '0369f026-1f90-11ee-b788-0242ac150004'
-farm_data_manager = FarmDataManager(input_file=input_file, farm_id=farm_id)
-all_data = farm_data_manager.gather_all_data()
-print('Default mode:', all_data)
+# input_file = 'data/test/litefarm_test.csv'
+# farm_id = '0369f026-1f90-11ee-b788-0242ac150004'
+# farm_data_manager = FarmDataManager(input_file=input_file, farm_id=farm_id)
+# all_data = farm_data_manager.gather_all_data()
+# print('Default mode:', all_data)
 
-farm_data_manager2 = FarmDataManager(input_file=input_file, farm_id=farm_id, mode='precise')
-all_data2 = farm_data_manager2.gather_all_data()
-print('Precise mode:', all_data2)
+# farm_data_manager2 = FarmDataManager(input_file=input_file, farm_id=farm_id, mode='precise')
+# all_data2 = farm_data_manager2.gather_all_data()
+# print('Precise mode:', all_data2)
 
 # crop_resid = CropResidueCalculator(all_data)
 # crop_residue = crop_resid.get_crop_residue()
