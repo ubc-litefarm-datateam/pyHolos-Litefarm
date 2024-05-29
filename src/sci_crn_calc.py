@@ -14,6 +14,7 @@ class SensitivityCrnCalculator:
         """
         self.data = data
         self.mode = operation_mode
+        self.target_data_group = ['crop_group_params', 'crop_parameters']
         self.validate_mode_data_compatibility()
         self.baseline_data = self.get_baseline_data()
         self.calculator = CropResidueCalculator(self.baseline_data)
@@ -24,7 +25,9 @@ class SensitivityCrnCalculator:
         Raises an error or warning if there is a mismatch.
         """
         all_single_value = True
-        for params in self.data.values():
+
+        for data_group in self.target_data_group:
+            params = self.data[data_group]
             for values in params.values():
                 if isinstance(values, np.ndarray) and len(values) > 1:
                     all_single_value = False
@@ -34,7 +37,8 @@ class SensitivityCrnCalculator:
             warnings.warn("All parameters have only one value. Switching to farmer mode.", UserWarning)
             self.mode = 'farmer'  # Change mode to farmer
 
-        for params in self.data.values():
+        for data_group in self.target_data_group:
+            params = self.data[data_group]
             for values in params.values():
                 if isinstance(values, np.ndarray):
                     if self.mode == 'farmer' and len(values) != 1:
@@ -45,40 +49,35 @@ class SensitivityCrnCalculator:
     def get_baseline_data(self):
         """
         Creates baseline data by taking the first element of each numpy array in nested dictionaries.
-
-        Example:
-        From:
-        {
-            'farm_data': {
-                'area': np.array([100, 150, 200]),
-                'yield': np.array([5000, 6000, 7000])
-            },
-            'crop_parameters': {
-                'moisture': np.array([14, 15, 16]),
-                'carbon_concentration': np.array([0.4, 0.5, 0.6])
-            }
-        }
-        To:
-        {
-            'farm_data': {
-                'area': 100,
-                'yield': 5000
-            },
-            'crop_parameters': {
-                'moisture': 14,
-                'carbon_concentration': 0.4
-            }
-        }
+        Specifically, extracts 'area' and 'yield' from 'farm_data' and the first element from 'crop_group_params' 
+        and 'crop_parameters'.
         """
         baseline = {}
-        for data_type, params in self.data.items():
-            baseline[data_type] = {}
-            for parameter, value in params.items():
+        farm_data = self.data.get('farm_data', {})
+        baseline['farm_data'] = {
+            'area': farm_data.get('area', np.array([None]))[0],
+            'yield': farm_data.get('yield', np.array([None]))[0]
+        }
+        
+        for key, value in farm_data.items():
+            if key not in ['area', 'yield']:
                 if isinstance(value, np.ndarray):
-                    baseline[data_type][parameter] = value[0]
+                    baseline['farm_data'][key] = value[0]
                 else:
-                    baseline[data_type][parameter] = value
+                    baseline['farm_data'][key] = value
+    
+        for data_group in self.target_data_group:
+            if data_group in self.data:
+                params = self.data[data_group]
+                baseline[data_group] = {}
+                for parameter, value in params.items():
+                    if isinstance(value, np.ndarray):
+                        baseline[data_group][parameter] = value[0]
+                    else:
+                        baseline[data_group][parameter] = value
+    
         return baseline
+
 
     def crop_analysis(self):
             """
@@ -95,12 +94,12 @@ class SensitivityCrnCalculator:
         """
         results = {}
         calculator = CropResidueCalculator(self.baseline_data)
-        results['C_p'] = [calculator.c_p()]
-        results['above_ground_carbon_input'] = [calculator.above_ground_carbon_input()]
-        results['below_ground_carbon_input'] = [calculator.below_ground_carbon_input()]
-        results['above_ground_residue_n'] = [calculator.above_ground_residue_n()]
-        results['below_ground_residue_n'] = [calculator.below_ground_residue_n()]
-        results['n_crop_residue'] = [calculator.n_crop_residue()]
+        results['C_p'] = np.array([calculator.c_p()])
+        results['above_ground_carbon_input'] = np.array([calculator.above_ground_carbon_input()])
+        results['below_ground_carbon_input'] = np.array([calculator.below_ground_carbon_input()])
+        results['above_ground_residue_n'] = np.array([calculator.above_ground_residue_n()])
+        results['below_ground_residue_n'] = np.array([calculator.below_ground_residue_n()])
+        results['n_crop_residue'] = np.array([calculator.n_crop_residue()])
         return results
 
     def scientific_mode(self):
@@ -108,93 +107,133 @@ class SensitivityCrnCalculator:
         Handles the 'scientific' mode where variations for parameters with more than one value are calculated.
         """
         results = {}
-        for data_type, params in self.data.items():
+        target_data_group = ['crop_group_params', 'crop_parameters']
+
+
+        for data_group in target_data_group:
+            params = self.data[data_group]
             for parameter, values in params.items():
                 if isinstance(values, np.ndarray):
-                    results[parameter] = {
-                        'C_p': [],
-                        'above_ground_carbon_input': [],
-                        'below_ground_carbon_input': [],
-                        'above_ground_residue_n': [],
-                        'below_ground_residue_n': [],
-                        'n_crop_residue': []
-                    }
+                    cp_list = []
+                    agci_list = []
+                    bgci_list = []
+                    agrn_list = []
+                    bgrn_list = []
+                    ncr_list = []
 
                     for value in values:
                         temp_data = copy.deepcopy(self.baseline_data)
-                        temp_data[data_type][parameter] = value
+                        temp_data[data_group][parameter] = value
                         calculator = CropResidueCalculator(temp_data)
-                        results[parameter]['C_p'].append(calculator.c_p())
-                        results[parameter]['above_ground_carbon_input'].append(calculator.above_ground_carbon_input())
-                        results[parameter]['below_ground_carbon_input'].append(calculator.below_ground_carbon_input())
-                        results[parameter]['above_ground_residue_n'].append(calculator.above_ground_residue_n())
-                        results[parameter]['below_ground_residue_n'].append(calculator.below_ground_residue_n())
-                        results[parameter]['n_crop_residue'].append(calculator.n_crop_residue())
+                        cp_list.append(calculator.c_p())
+                        agci_list.append(calculator.above_ground_carbon_input())
+                        bgci_list.append(calculator.below_ground_carbon_input())
+                        agrn_list.append(calculator.above_ground_residue_n())
+                        bgrn_list.append(calculator.below_ground_residue_n())
+                        ncr_list.append(calculator.n_crop_residue())
+
+                   
+                    results[parameter] = {
+                        'C_p': np.array(cp_list),
+                        'above_ground_carbon_input': np.array(agci_list),
+                        'below_ground_carbon_input': np.array(bgci_list),
+                        'above_ground_residue_n': np.array(agrn_list),
+                        'below_ground_residue_n': np.array(bgrn_list),
+                        'n_crop_residue': np.array(ncr_list)
+                    }
         return results
 
 if __name__ == "__main__":
+    data_farm = {'farm_data': {'area':np.array([0.1409]), 
+                          'latitude': np.array([46.4761852]),
+                          'longitude': np.array([-71.5189528]), 
+                          'crop': np.array(['Soybean'], dtype='<U7'), 
+                          'yield': np.array([2700.]), 
+                          'start_year': np.array([2021]),
+                          'end_year': np.array([2021]), 
+                          'province': np.array(['Quebec'], dtype='<U6'),
+                          'group': np.array(['annual'])},
 
-    data_sci = {
-        'farm_data': {
-            'area': np.array([100]),  
-            'yield': np.array([5000]), 
-        },
-        'crop_group_params': {
-            'group': np.array(['annual', 'perennial', 'cover']),  
-            'S_p': np.array([90, 85, 80]),
-            'S_s': np.array([70, 75, 80]),
-            'S_r': np.array([60, 65, 70]),
-            'carbon_concentration': np.array([0.4, 0.5, 0.6]), 
-        },
-        'crop_parameters': {
-            'moisture': np.array([14, 15, 16]),
-            'R_p': np.array([0.1, 0.2, 0.3]),
-            'R_s': np.array([0.1, 0.15, 0.2]),
-            'R_r': np.array([0.05, 0.1, 0.15]),
-            'R_e': np.array([0.01, 0.02, 0.03]),
-            'N_p': np.array([1, 2, 3]),
-            'N_s': np.array([1.5, 2.5, 3.5]),
-            'N_r': np.array([1, 1.5, 2]),
-            'N_e': np.array([0.5, 0.75, 1])
-        }
-    }
-
-    data_farm = {
+            'crop_group_params': {
+                                  'carbon_concentration': np.array([0.45]), 
+                                  'S_s': np.array([100.]), 
+                                  'S_r': np.array([100.]), 
+                                  'S_p': np.array([2.])}, 
+            'crop_parameters': {'moisture': np.array([14.]), 
+                                'R_p': np.array([0.304]),
+                                'R_s': np.array([0.455]), 
+                                'R_r': np.array([0.146]), 
+                                'R_e': np.array([0.095]), 
+                                'N_p': np.array([67.]),
+                                'N_s': np.array([6.]), 'N_r': np.array([10.]), 'N_e': np.array([10.])},
+            'climate_data': {'P': np.array([652.]), 
+                             'PE': np.array([556.]), 
+                             'FR_Topo': np.array([11.71]),
+                             'locations': np.array([[-71.5189528,  46.4761852]]),
+                             'soil_texture': np.array([0.49])}, 
+            'modifiers': {'RF_AM': np.array([1.]), 
+                          'RF_CS': np.array([1.]), 
+                          'RF_NS': np.array([0.84]), 
+                          'RF_Till': np.array([1.])}}
+    data_sci  = {
     'farm_data': {
-        'area': np.array([100]),  
-        'yield': np.array([5000]),  # Yield in kg/ha
+        'area': np.array([0.1409]),
+        'latitude': np.array([46.4761852]),
+        'longitude': np.array([-71.5189528]),
+        'crop': np.array(['Soybean'], dtype='<U7'),
+        'yield': np.array([2700.]),
+        'start_year': np.array([2021]),
+        'end_year': np.array([2021]),
+        'province': np.array(['Quebec'], dtype='<U6'),
+        'group': np.array(['annual'])
     },
     'crop_group_params': {
-        'group': np.array(['annual']), 
-        'S_p': np.array([90]),
-        'S_s': np.array([70]),
-        'S_r': np.array([60]),
-        'carbon_concentration': np.array([0.4]), 
+        'carbon_concentration': np.array([0.45, 0.50, 0.55]),
+        'S_s': np.array([100., 105., 110.]),
+        'S_r': np.array([100., 105., 110.]),
+        'S_p': np.array([2., 2.5, 3.])
     },
     'crop_parameters': {
-        'moisture': np.array([14]),
-        'R_p': np.array([0.1]),
-        'R_s': np.array([0.1]),
-        'R_r': np.array([0.05]),
-        'R_e': np.array([0.01]),
-        'N_p': np.array([1]),
-        'N_s': np.array([1.5]),
-        'N_r': np.array([1]),
-        'N_e': np.array([0.5])
+        'moisture': np.array([14., 15., 16.]),
+        'R_p': np.array([0.304, 0.314, 0.324]),
+        'R_s': np.array([0.455, 0.465, 0.475]),
+        'R_r': np.array([0.146, 0.156, 0.166]),
+        'R_e': np.array([0.095, 0.105, 0.115]),
+        'N_p': np.array([67., 70., 73.]),
+        'N_s': np.array([6., 7., 8.]),
+        'N_r': np.array([10., 11., 12.]),
+        'N_e': np.array([10., 11., 12.])
+    },
+    'climate_data': {
+        'P': np.array([652.]),
+        'PE': np.array([556.]),
+        'FR_Topo': np.array([11.71]),
+        'locations': np.array([[-71.5189528,  46.4761852]]),
+        'soil_texture': np.array([0.49])
+    },
+    'modifiers': {
+        'RF_AM': np.array([1.]),
+        'RF_CS': np.array([1.]),
+        'RF_NS': np.array([0.84]),
+        'RF_Till': np.array([1.])
     }
 }
 
-    print('If operation mode is farmer and lengths of the parameters are 1:')
-    farmer_calc = SensitivityCrnCalculator(data_farm, 'farmer')
-    print(farmer_calc.crop_analysis())
-    print("-"*50)
-    print("\n"*2)
-    print('If operation mode is scientific but the lengths of the parameters are 1:')
-    sci_calc = SensitivityCrnCalculator(data_farm, 'scientific')
-    print(sci_calc.crop_analysis())
-    print("-"*50)
-    print("\n"*2)
-    print('If operation mode is scientific and the lengths of the parameters are more than 1:')
-    sci_calc = SensitivityCrnCalculator(data_sci, 'scientific')
-    print(sci_calc.crop_analysis())
+    sci_calc1 = SensitivityCrnCalculator(data_farm, 'farmer')
+    print('Results of Farmer Mode:')
+    print(sci_calc1.crop_analysis())
+    print('#'*50)
+    print('\n'*2)
+    sci_calc2 = SensitivityCrnCalculator(data_farm, 'scientific')
+    print('Results of Scientific Mode with length 1:')
+    print(sci_calc2.crop_analysis())
+    print('#'*50)
+    print('\n'*2)
+    sci_calc3 = SensitivityCrnCalculator(data_sci, 'scientific')
+    print('Results of Scientific Mode:')
+    results = sci_calc3.crop_analysis()
+    for key, value in results.items():
+        print(key, value)
+        print('\n')
+
     
