@@ -45,6 +45,14 @@ class FarmDataManager:
                 'climate_data': climate_data,
                 'modifiers': modifiers
             }
+            
+            for params_group, group_dict in all_params.items():
+                for param, value in group_dict.items():
+                    if len(value) == 1:
+                        pass
+                    else:
+                        raise ValueError(f"Invalid parameter length for {param}. Halted.")
+                        
             return all_params
         
         elif self.source == 'external' and self.operation_mode=='farmer':
@@ -66,6 +74,14 @@ class FarmDataManager:
                 'climate_data': climate_data,
                 'modifiers': modifiers
             }
+
+            for params_group, group_dict in all_params.items():
+                for param, value in group_dict.items():
+                    if len(value) == 1:
+                        pass
+                    else:
+                        raise ValueError(f"Invalid parameter length for {param}. Halted.")
+                        
             return all_params
         
         elif self.source == 'external' and self.operation_mode=='scientific':
@@ -95,8 +111,23 @@ class FarmDataManager:
                 'climate_data': climate_data,
                 'modifiers': modifiers
             }
-            return all_params
 
+            for params_group, group_dict in all_params.items():
+                if params_group == 'farm_data':
+                    for param, value in group_dict.items():
+                        if len(value) == 1:
+                            pass
+                        else:
+                            raise ValueError(f"Invalid parameter length for {param}. Halted.")
+                else:
+                    for param, value in group_dict.items():
+                        if len(value) == self.num_runs + 1:
+                            pass
+                        else:
+                            raise ValueError(f"Invalid parameter length for {param}. Halted.")
+                
+            return all_params
+        
         else:
             raise ValueError("Scientific mode cannot be run. Excution Halted.")
 
