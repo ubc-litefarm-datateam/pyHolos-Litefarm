@@ -167,6 +167,7 @@ class ClimateSoilDataManager:
             # Sampling FR topo
             farm_ecod_fr_topo = self.climate_soil_dict["FR_Topo"]
             fr_topo_values = sampling_fr_topo(farm_ecod_fr_topo, self.num_runs)
+            fr_topo_values = np.insert(fr_topo_values, 0, farm_ecod_fr_topo)
             
             # Convert lists to NumPy arrays
             self.climate_soil_dict['locations'] = np.array(points_array)

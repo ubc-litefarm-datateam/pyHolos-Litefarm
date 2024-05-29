@@ -68,7 +68,7 @@ class FarmDataManager:
             }
             return all_params
         
-        elif self.operation_mode=='scientific':
+        elif self.source == 'external' and self.operation_mode=='scientific':
             climate_data_extractor = ClimateSoilDataManager(
                 farm, source=self.source, operation_mode=self.operation_mode, num_runs=self.num_runs
                 )
@@ -96,7 +96,10 @@ class FarmDataManager:
                 'modifiers': modifiers
             }
             return all_params
-    
+
+        else:
+            raise ValueError("Scientific mode cannot be run. Excution Halted.")
+
 # Example usage
 if __name__ == '__main__':
     input_file = 'data/test/litefarm_test.csv'
