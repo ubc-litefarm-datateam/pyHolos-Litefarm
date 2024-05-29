@@ -136,8 +136,8 @@ if __name__ == "__main__":
 
     data_sci = {
         'farm_data': {
-            'area': np.array([100, 150, 200]),  
-            'yield': np.array([5000, 6000, 7000]), 
+            'area': np.array([100]),  
+            'yield': np.array([5000]), 
         },
         'crop_group_params': {
             'group': np.array(['annual', 'perennial', 'cover']),  
@@ -184,17 +184,17 @@ if __name__ == "__main__":
     }
 }
 
-print('If operation mode is farmer and lengths of the parameters are 1:')
-farmer_calc = SensitivityCrnCalculator(data_farm, 'farmer')
-print(farmer_calc.crop_analysis())
-print("-"*50)
-print("\n"*2)
-print('If operation mode is scientific but the lengths of the parameters are 1:')
-sci_calc = SensitivityCrnCalculator(data_farm, 'scientific')
-print(sci_calc.crop_analysis())
-print("-"*50)
-print("\n"*2)
-print('If operation mode is scientific and the lengths of the parameters are more than 1:')
-sci_calc = SensitivityCrnCalculator(data_sci, 'scientific')
-print(sci_calc.crop_analysis())
+    print('If operation mode is farmer and lengths of the parameters are 1:')
+    farmer_calc = SensitivityCrnCalculator(data_farm, 'farmer')
+    print(farmer_calc.crop_analysis())
+    print("-"*50)
+    print("\n"*2)
+    print('If operation mode is scientific but the lengths of the parameters are 1:')
+    sci_calc = SensitivityCrnCalculator(data_farm, 'scientific')
+    print(sci_calc.crop_analysis())
+    print("-"*50)
+    print("\n"*2)
+    print('If operation mode is scientific and the lengths of the parameters are more than 1:')
+    sci_calc = SensitivityCrnCalculator(data_sci, 'scientific')
+    print(sci_calc.crop_analysis())
     

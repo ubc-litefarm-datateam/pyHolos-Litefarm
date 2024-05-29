@@ -1,4 +1,4 @@
-from src.emission_calculator import EmissionCalculator
+from emission_calculator import EmissionCalculator
 import numpy as np
 class SensitivityEmission:
     def __init__(self, ef_data, n_data, operation_mode = 'farmer'):

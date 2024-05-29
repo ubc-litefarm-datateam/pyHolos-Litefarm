@@ -11,9 +11,13 @@ class FarmData:
         self.dir = os.path.dirname(__file__)
         self.input_file_path = os.path.join(self.dir, '..', '..', input_file)
         # self.province = None
+        self.crop_to_group_map_path = os.path.join(
+            self.dir, '../../data/preprocessed/crop_to_group.csv'
+            )
         self.farm_data = self.get_farm_data()
         self.farm_gdf = self.get_farm_gdf()
         self.province = self.get_province()
+        self.crop_group = self.get_crop_group()
         self.update_farm_dict()
 
     def get_farm_data(self):
@@ -70,9 +74,15 @@ class FarmData:
             raise ValueError("Selected location is not in Canada, select a new location in Canada")
         return province
     
+    def get_crop_group(self):
+        crop_to_group_map_df = pd.read_csv(self.crop_to_group_map_path)
+        crop_group = crop_to_group_map_df.query(f"crop == '{self.farm_data['crop']}'")['group'].iloc[0]
+        return crop_group
+    
     def update_farm_dict(self):
         # Update the farm data dictionary with province after it's available
         self.farm_data['province'] = self.province
+        self.farm_data['group'] = self.crop_group
 
     def validate_data(self):
     # Check if yield, area, and year are numeric

@@ -1,5 +1,5 @@
 import numpy as np
-from src.emission_factor_calculator import EmissionFactorCalculator
+from emission_factor_calculator import EmissionFactorCalculator
 class SensitivityEmissionFactor:
     def __init__(self, farm_data, operation_mode = 'farmer'):
         self.farm_data = farm_data

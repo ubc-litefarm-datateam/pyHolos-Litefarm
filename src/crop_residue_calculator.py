@@ -24,7 +24,7 @@ class CropResidueCalculator:
         self.validate_input(data)
         self.data = data
         self.area = data["farm_data"]["area"]
-        self.group = data["crop_group_params"]["group"].lower()
+        self.group = data["farm_data"]["group"].lower()
         self.crop_yield = data["farm_data"]["yield"]
         self.moisture = data["crop_parameters"]["moisture"]
         self.carbon_concentration = data["crop_group_params"]["carbon_concentration"]
@@ -47,10 +47,10 @@ class CropResidueCalculator:
     def validate_input(self, data):
         """ Validates the input farm data to ensure all required fields are present and have the correct types and values. """
         
-        if not isinstance(data["crop_group_params"]["group"], str):
+        if not isinstance(data["farm_data"]["group"], str):
             raise TypeError("group must be a string")
        
-        if data["crop_group_params"]["group"].lower() not in ["annual", "perennial", "root", "cover", "silage"]:
+        if data["farm_data"]["group"].lower() not in ["annual", "perennial", "root", "cover", "silage"]:
             raise ValueError("group must be one of 'annual', 'perennial', 'root', 'cover', 'silage'")
         
         if data["farm_data"]["area"] < 0:
