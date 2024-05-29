@@ -3,7 +3,7 @@ from emission_factor_calculator import EmissionFactorCalculator
 class SensitivityEmissionFactor:
     def __init__(self, farm_data, operation_mode = 'farmer'):
         self.farm_data = farm_data
-        self.variables = list(farm_data['climate_data'].keys()) + list(farm_data['modifiers'].keys())
+        self.variables = [x for x in list(farm_data['climate_data'].keys()) + list(farm_data['modifiers'].keys()) if x not in ['locations']]
         self.mode = operation_mode
         self.results = {}
         self.output = {}
@@ -14,7 +14,17 @@ class SensitivityEmissionFactor:
             # Initialize dictionary for each variable to store lists of results
             self.results[variable] = {}
             # Extract array values for the current variable
-            values_array = self.farm_data['climate_data'].get(variable, []) + self.farm_data['modifiers'].get(variable, [])
+            # values_array = list(self.farm_data['climate_data'].get(variable, [])) + list(self.farm_data['modifiers'].get(variable, []))
+            climate_data = np.array(self.farm_data['climate_data'].get(variable, []))
+            modifiers = np.array(self.farm_data['modifiers'].get(variable, []))
+            if climate_data.size == 0 and modifiers.size == 0:
+                values_array = np.array([])  # Both are empty
+            elif climate_data.size == 0:
+                values_array = modifiers  # Only modifiers is non-empty
+            elif modifiers.size == 0:
+                values_array = climate_data  # Only climate data is non-empty
+            else:
+                values_array = np.concatenate((climate_data, modifiers))  # Both are non-empty
             
             # Initialize results storage for this variable
             init_dict = {}

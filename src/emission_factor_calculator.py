@@ -34,7 +34,7 @@ class EmissionFactorCalculator:
         self.P = farm_data['climate_data']['P']
         self.PE = farm_data['climate_data']['PE']
         self.FR_Topo = farm_data['climate_data']['FR_Topo']
-        self.RF_TX = farm_data['modifiers']['RF_TX']
+        self.RF_TX = farm_data['climate_data']['soil_texture']
         self.RF_NS = farm_data['modifiers']['RF_NS']
         self.RF_till = farm_data['modifiers']['RF_Till']
         self.RF_CS = farm_data['modifiers']['RF_CS']
@@ -51,7 +51,7 @@ class EmissionFactorCalculator:
             ValueError: If required keys are missing from the climate data or modifiers.
             TypeError: If the values under climate data or modifiers are not of type int or float.
         """
-        required_climate_keys = ['P', 'PE', 'FR_Topo']
+        required_climate_keys = ['P', 'PE', 'FR_Topo', 'soil_texture']
         
         for key in required_climate_keys:
             if key not in farm_data['climate_data']:
@@ -60,7 +60,7 @@ class EmissionFactorCalculator:
             if not isinstance(farm_data['climate_data'][key], (int, float, np.number)):
                 raise TypeError(f"Value for climate_data[{key}] must be a number (int or float)")
     
-        required_modifiers_keys = ['RF_TX', 'RF_NS', 'RF_Till', 'RF_CS', 'RF_AM']
+        required_modifiers_keys = ['RF_NS', 'RF_Till', 'RF_CS', 'RF_AM']
         for key in required_modifiers_keys:
             if key not in farm_data['modifiers']:
                 raise ValueError(f"Missing required modifiers key: {key}")
