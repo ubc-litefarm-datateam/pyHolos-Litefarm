@@ -23,11 +23,13 @@ def main(input_file, farm_id, source='default', operation_mode='farmer', num_run
     crop_residue = crop_resid.crop_analysis()
     print(crop_residue)
 
-    # emission_factor_calc = SensitivityEmissionFactor(all_data, operation_mode=operation_mode)
-    # emission_factor = emission_factor_calc.get_result()
+    emission_factor_calc = SensitivityEmissionFactor(all_data, operation_mode=operation_mode)
+    emission_factor = emission_factor_calc.get_result()
+    print(emission_factor)
 
-    # emission_calc = SensitivityEmission(emission_factor, crop_residue, operation_mode=operation_mode)
-    # N_emission = emission_calc.get_result()
+    emission_calc = SensitivityEmission(emission_factor, crop_residue, operation_mode=operation_mode)
+    N_emission = emission_calc.get_result()
+    print(N_emission)
 
     # output = {
     #     'Input Parameters': all_data,
