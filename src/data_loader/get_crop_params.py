@@ -26,7 +26,7 @@ class CropParametersManager:
             selected_params.pop('condition', None)
             selected_params.pop('holos_crop_name', None)
 
-            return {k: np.array([v]) for k, v in selected_params.items()}
+            return {k: np.array([float(v)], dtype=np.float64) for k, v in selected_params.items()}
 
         selected_params = None  # This will store the selected row's dictionary
 
@@ -69,20 +69,20 @@ class CropParametersManager:
             selected_params.pop('condition', None)
             selected_params.pop('holos_crop_name', None)
 
-        return {k: np.array([v]) for k, v in selected_params.items()}
+        return {k: np.array([float(v)], dtype=np.float64) for k, v in selected_params.items()}
     
     def load_user_distributions(self):
         with open(self.user_distributions_path, 'r') as file:
             return json.load(file)
 
-    def sample_parameters(self, crop_sampling_mode='default', num_runs=10):
+    def sample_crop_parameters(self, sampling_mode='default', num_samples=10):
         sampled_parameters = {}
-        if crop_sampling_mode == 'default':
+        if sampling_mode == 'default':
             for param, value in self.crop_parameters.items():
                 value = value[0] 
-                sampled_array = np.random.uniform(value * 0.75, value * 1.25, num_runs)
+                sampled_array = np.random.uniform(value * 0.75, value * 1.25, num_samples)
                 sampled_parameters[param] = np.insert(sampled_array, 0, value)
-        elif crop_sampling_mode == 'user_define':
+        elif sampling_mode == 'user_define':
             user_distributions = self.load_user_distributions().get(self.crop, None)
         
             if user_distributions is None:
@@ -92,13 +92,13 @@ class CropParametersManager:
                 distribution_type = specs[0]
                 if distribution_type == 'uniform':
                     low, high = specs[1], specs[2]
-                    sampled_array = np.random.uniform(low, high, num_runs)
+                    sampled_array = np.random.uniform(low, high, num_samples)
                 elif distribution_type == 'normal':
                     mean, sd = specs[1], specs[2]
-                    sampled_array = np.random.normal(mean, sd, num_runs)
+                    sampled_array = np.random.normal(mean, sd, num_samples)
                 elif distribution_type == 'lognormal':
                     mean, sigma = specs[1], specs[2]
-                    sampled_array = np.random.lognormal(mean, sigma, num_runs)
+                    sampled_array = np.random.lognormal(mean, sigma, num_samples)
                 # Add more distribution types as needed in future
                 value = self.crop_parameters[param][0]
                 sampled_parameters[param] = np.insert(sampled_array, 0, value)
@@ -119,11 +119,12 @@ if __name__ == '__main__':
     # Fetch and print the crop parameters
     crop_parameters = manager.crop_parameters
     print("Crop Parameters:", crop_parameters)
+    print(crop_parameters['moisture'].dtype)
 
     # Sample parameters with default settings
-    default_samples = manager.sample_parameters()
+    default_samples = manager.sample_crop_parameters()
     print("Default Sampled Parameters:", default_samples)
 
     # Sample parameters with user-defined settings
-    sampled_parameters = manager.sample_parameters(crop_sampling_mode='user_define')
+    sampled_parameters = manager.sample_crop_parameters(sampling_mode='user_define')
     print("Sampled Parameters:", sampled_parameters)

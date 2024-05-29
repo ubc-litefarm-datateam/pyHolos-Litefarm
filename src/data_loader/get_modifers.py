@@ -5,14 +5,17 @@ import pandas as pd
 # import geopandas as gpd
 
 class Modifiers:
-    def __init__(self, farm_data):
+    def __init__(self, farm_data, rf_am='default', rf_cs='Annual', rf_ns='RF_NS_CRN', tillage='unknown'):
         self.farm_data = farm_data
+        self.rf_am  = rf_am
+        self.rf_cs = rf_cs
+        self.rf_ns = rf_ns
+        self.tillage = tillage
         self.dir = os.path.dirname(__file__)
         self.modifiers = self.get_modifiers()
         self.user_distributions_path = os.path.join(self.dir, '../../data/params_sampling_range/rf_params_dist.json')
 
-
-    def get_modifiers(self, rf_am='default', rf_cs='Annual', rf_ns='RF_NS_CRN', tillage='unknown'):
+    def get_modifiers(self):
         region = self.get_region()
         modifiers = {}
         # Define the list of modifiers and the relevant files
@@ -29,13 +32,13 @@ class Modifiers:
             df = pd.read_csv(path)
             
             if key == 'RF_AM':
-                value = df.query(f"method == '{rf_am}'")['value'].iloc[0]
+                value = float(df.query(f"method == '{self.rf_am}'")['value'].iloc[0])
             elif key == 'RF_CS':
-                value = df.query(f"group == '{rf_cs}'")['value'].iloc[0]
+                value = float(df.query(f"group == '{self.rf_cs}'")['value'].iloc[0])
             elif key == 'RF_NS':
-                value = df.query(f"N_source == '{rf_ns}'")['value'].iloc[0]
+                value = float(df.query(f"N_source == '{self.rf_ns}'")['value'].iloc[0])
             elif key == 'RF_Till':
-                value = df.query(f"region == '{region}' & tillage == '{tillage}'")['value'].iloc[0]
+                value = float(df.query(f"region == '{region}' & tillage == '{self.tillage}'")['value'].iloc[0])
 
             modifiers[key] = value
 
@@ -92,7 +95,7 @@ class Modifiers:
 
 # Example usage
 if __name__ == '__main__':
-    farm_data = {'Province': 'Alberta'}
+    farm_data = {'province': 'Alberta'}
     mod = Modifiers(farm_data)
     print("Calculated Modifiers:", mod.modifiers)
     

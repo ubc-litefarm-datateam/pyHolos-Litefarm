@@ -1,0 +1,105 @@
+{
+    "farm_data": {
+        "area": [
+            0.1409
+        ],
+        "latitude": [
+            46.4761852
+        ],
+        "longitude": [
+            -71.5189528
+        ],
+        "crop": [
+            "Soybean"
+        ],
+        "yield": [
+            2700.0
+        ],
+        "start_year": [
+            2021
+        ],
+        "end_year": [
+            2021
+        ],
+        "province": [
+            "Quebec"
+        ]
+    },
+    "crop_group_params": {
+        "carbon_concentration": [
+            0.45
+        ],
+        "S_s": [
+            100.0
+        ],
+        "S_r": [
+            100.0
+        ],
+        "S_p": [
+            2.0
+        ]
+    },
+    "crop_parameters": {
+        "moisture": [
+            14.0
+        ],
+        "R_p": [
+            0.304
+        ],
+        "R_s": [
+            0.455
+        ],
+        "R_r": [
+            0.146
+        ],
+        "R_e": [
+            0.095
+        ],
+        "N_p": [
+            67.0
+        ],
+        "N_s": [
+            6.0
+        ],
+        "N_r": [
+            10.0
+        ],
+        "N_e": [
+            10.0
+        ]
+    },
+    "climate_data": {
+        "P": [
+            652.0
+        ],
+        "PE": [
+            556.0
+        ],
+        "FR_Topo": [
+            11.71
+        ],
+        "locations": [
+            [
+                -71.5189528,
+                46.4761852
+            ]
+        ],
+        "soil_texture": [
+            0.49
+        ]
+    },
+    "modifiers": {
+        "RF_AM": [
+            1.0
+        ],
+        "RF_CS": [
+            1.0
+        ],
+        "RF_NS": [
+            0.84
+        ],
+        "RF_Till": [
+            1.0
+        ]
+    }
+}

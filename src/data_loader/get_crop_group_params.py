@@ -28,7 +28,7 @@ class CropGroupManager:
         crop_group_params_df = pd.read_csv(self.crop_group_params_path)
         crop_group_params = crop_group_params_df[crop_group_params_df['group'] == self.crop_group].iloc[0].to_dict()
         crop_group_params.pop('group', None)
-        return {k: np.array([v]) for k, v in crop_group_params.items()}
+        return {k: np.array([float(v)]) for k, v in crop_group_params.items()}
     
     def load_user_distributions(self):
         with open(self.user_distributions_path, 'r') as file:
@@ -70,7 +70,7 @@ class CropGroupManager:
 
         return sampled_parameters
 
-# Test the CropGroupManager class
+# Example usage
 if __name__ == '__main__':
     # Example farm_data containing 'crop' information
     farm_data = {'crop': 'Wheat'}
