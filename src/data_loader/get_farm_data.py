@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 import geopandas as gpd
 from shapely.geometry import Point
 from datetime import datetime
@@ -9,9 +10,11 @@ class FarmData:
         self.farm_id = farm_id
         self.dir = os.path.dirname(__file__)
         self.input_file_path = os.path.join(self.dir, '..', '..', input_file)
+        # self.province = None
         self.farm_data = self.get_farm_data()
         self.farm_gdf = self.get_farm_gdf()
         self.province = self.get_province()
+        self.update_farm_dict()
 
     def get_farm_data(self):
         df = pd.read_csv(self.input_file_path)
@@ -31,7 +34,7 @@ class FarmData:
         farm['start_year'] = int(farm['start_year'])
         farm['end_year'] = int(farm['end_year'])
         
-        return {
+        farm_dict = {
             'area': farm['area'],
             'latitude': float(farm['lat']),
             'longitude': float(farm['lon']),
@@ -40,6 +43,7 @@ class FarmData:
             'start_year': farm['start_year'],
             'end_year': farm['end_year']
         }
+        return farm_dict
 
     def get_farm_gdf(self):
         # Convert single values to lists if necessary
@@ -65,6 +69,10 @@ class FarmData:
         if province is None:
             raise ValueError("Selected location is not in Canada, select a new location in Canada")
         return province
+    
+    def update_farm_dict(self):
+        # Update the farm data dictionary with province after it's available
+        self.farm_data['province'] = self.province
 
     def validate_data(self):
     # Check if yield, area, and year are numeric
@@ -83,7 +91,14 @@ class FarmData:
         if self.farm_data['area'] <= 0:
             raise ValueError("Area must be larger than 0")
         
-        # # Check if year is within the valid range
-        # if not (1984 <= self.farm_data['year'] <= datetime.now().year):
-        #     raise ValueError("Year must be larger than 1984 and less than the current year")
+        # Check if year is within the valid range
+        if not (1984 <= self.farm_data['year'] <= datetime.now().year):
+            raise ValueError("Year must be larger than 1984 and less than the current year")
+
+# Example usage
+if __name__ == '__main__':
+    input_file = 'data/test/litefarm_test.csv'
+    farm_id = '0369f026-1f90-11ee-b788-0242ac150004'
+    farm = FarmData(input_file=input_file, farm_id=farm_id)
+    print(farm.farm_data)
 

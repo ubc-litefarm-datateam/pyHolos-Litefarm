@@ -1,4 +1,5 @@
 import os
+import json
 import rasterio
 import pandas as pd
 import numpy as np
@@ -62,21 +63,36 @@ class ExternalSoilTextureDataFetcher:
         self.texture_csv_path = os.path.join(
             self.dir, '../../data/external/HWSD2/D_TEXTURE_USDA.csv'
         )
-        # self.texture_mapped_path = os.path.join(
-        #     self.dir, '../../data/preprocessed/soil_texture_mapped_values.csv'
-        # )
         self.raster_path = os.path.join(
             self.dir, '../../data/external/HWSD2_RASTER/HWSD2.bil'
         )
+        self.texture_mapped_path = os.path.join(
+            self.dir, '../../data/params_sampling_range/rf_tx_params_dist.json'
+        )
         self.src = None
         self.load_data()
-
+        
     def load_data(self):
         """Loads CSV data into pandas DataFrames from specified paths."""
         self.smu_df = pd.read_csv(self.smu_csv_path)
         self.texture_df = pd.read_csv(self.texture_csv_path)
         # self.mapped_value_df = pd.read_csv(self.texture_mapped_path)
-
+    
+    def load_user_rf_tx_distributions(self):
+        with open(self.texture_mapped_path, 'r') as file:
+            return json.load(file)
+    
+    def sampling_rf_tx(self, soil_type):
+        rf_tx_distributions = self.load_user_rf_tx_distributions()
+        if rf_tx_distributions is None:
+            raise ValueError("No user-defined RF soil texture distributions found.")
+        elif soil_type == "missing texture type" or soil_type == "no matching SMU ID":
+            return np.nan
+        else:
+            low, high = rf_tx_distributions.get(soil_type)
+            sampled_rf_tx = np.random.uniform(low, high, 1)
+            return sampled_rf_tx[0]
+    
     def open_raster(self):
         """Opens the raster data file for geographical data extraction."""
         self.src = rasterio.open(self.raster_path)
@@ -127,17 +143,14 @@ class ExternalSoilTextureDataFetcher:
             texture_code = query_result.iloc[0]            
             if not np.isnan(texture_code):
                 texture_type = self.texture_df[self.texture_df['CODE'] == texture_code]['VALUE'].iloc[0]
+                print(f"The soil texture type for SMU_ID {smu_id} is {texture_type}.")
                 return texture_type
             else:
-                print(f"No texture type found for SMU_ID {smu_id}. Using 'missing texture type'.")
+                print(f"No texture type found for SMU_ID {smu_id}; texture_type: 'missing texture type'.")
                 return "missing texture type"
         else:
-            print(f"No matching SMU_ID for the selected point. Using 'no matching SMU ID'.")
+            print(f"No matching SMU_ID for the selected point; texture_type: 'no matching SMU ID'.")
             return "no matching SMU ID"
-        
-        # texture_mapped_value = self.mapped_value_df[self.mapped_value_df['VALUE'] == texture_type]['AWC'].iloc[0]
-
-        return texture_type 
 
     def get_soil_texture(self):
         """
@@ -149,18 +162,23 @@ class ExternalSoilTextureDataFetcher:
             Soil texture values for each specified point.
         """
         self.open_raster()
-        texture_types = {}
+        rf_tx_values = {}
         for lon, lat in self.points:
             smu_id = self.get_raster_value(lon, lat)
             texture_type = self.lookup_texture_and_value(smu_id)
-            texture_types[(lon, lat)] = texture_type
-        # smu_ids = [self.get_raster_value(lon, lat) for lon, lat in self.points]
+            rf_tx = self.sampling_rf_tx(texture_type)
+            rf_tx_values[(lon, lat)] = rf_tx
         self.close_raster()
-        # texture_types = [self.lookup_texture_and_value(smu_id) for smu_id in smu_ids]
-        return texture_types
+
+        return rf_tx_values
 
 if __name__ == '__main__':
-    points = [(-93.6250, 42.0329), (-89.3985, 43.0731)]  # List of (lon, lat) tuples
+    # The first point has a match
+    # The second point, texture_type is missing. this is because in the database, there is no
+        # USDA_TEXTURE entry for this SMU 7001 (soil mapping unit). 
+    # The third point is Vancouver Harbor, we don't have a valid SMU since it is water surface
+        # HSWD2 has a high resolution 1km * 1km
+    points = [(-93.6250, 42.0329), (-89.3985, 43.0731), (-122.9618, 49.2957)]  
     soil_fetcher = ExternalSoilTextureDataFetcher(points)
     texture_mapped_values = soil_fetcher.get_soil_texture()
     print(texture_mapped_values)

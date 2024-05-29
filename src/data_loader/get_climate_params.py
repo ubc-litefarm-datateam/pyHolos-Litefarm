@@ -1,13 +1,17 @@
 import os
+import sys
 import numpy as np
 import pandas as pd
 import geopandas as gpd
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from data_loader.get_external_climate_params import ExternalClimateDataFetcher
 from data_loader.get_external_soil_params import ExternalSoilTextureDataFetcher
 from data_loader.generate_random_points import generate_random_points, extract_lon_lat
+from data_loader.get_default_soil_texture import ModifierSoilTexture
+from data_loader.sampling_fr_topo import sampling_fr_topo
 
 class ClimateSoilDataManager:
-    def __init__(self, farm_data, source='default', operation_mode='farmer', num_runs=5):
+    def __init__(self, farm_data, source='default', operation_mode='farmer', num_runs=10):
         self.farm_data = farm_data
         self.farm_point = (self.farm_data.farm_data['longitude'],
                            self.farm_data.farm_data['latitude'])
@@ -60,14 +64,18 @@ class ClimateSoilDataManager:
             columns=['ECO_ID', 'Ecozone', 'province', 'SoilType'])
 
         self.climate_soil_dict = {
-            "soil_texture": np.array([farm_ecoid_climate_soil["SoilTexture"].iloc[0].lower()]),
+            # "soil_texture": np.array([farm_ecoid_climate_soil["SoilTexture"].iloc[0].lower()]),
             "P": np.array([float(farm_ecoid_climate_soil["PMayToOct"].iloc[0])]),
             "PE": np.array([float(farm_ecoid_climate_soil["PEMayToOct"].iloc[0])]),
-            "FR_Topo": farm_ecoid_climate_soil["Ftopo"].iloc[0],
+            "FR_Topo": np.array([float(farm_ecoid_climate_soil["Ftopo"].iloc[0])]),
             "locations": np.array([self.farm_point])
         }
+        
+        soil_texture = farm_ecoid_climate_soil["SoilTexture"].iloc[0].lower()
+        rf_tx_fetcher = ModifierSoilTexture(self.farm_data.farm_data, soil_texture)
+        rf_tx_value = rf_tx_fetcher.get_rf_tx_modifier()
+        self.climate_soil_dict['soil_texture'] = np.array([rf_tx_value])
 
-    
     def get_climate_data(self):
         # if using `default` data source, operation_mode is default as `farmer`
         if self.source == 'default':
@@ -156,16 +164,37 @@ class ClimateSoilDataManager:
                 # Retrieve soil texture data
                 soil_textures.append(soil_results[point])
 
+            # Sampling FR topo
+            farm_ecod_fr_topo = self.climate_soil_dict["FR_Topo"]
+            fr_topo_values = sampling_fr_topo(farm_ecod_fr_topo, self.num_runs)
             
             # Convert lists to NumPy arrays
             self.climate_soil_dict['locations'] = np.array(points_array)
             self.climate_soil_dict['P'] = np.array(p_values)
             self.climate_soil_dict['PE'] = np.array(pe_values)
             self.climate_soil_dict['soil_texture'] = np.array(soil_textures)
+            self.climate_soil_dict['FR_Topo'] = np.array(fr_topo_values)
 
             return self.climate_soil_dict 
+        
+if __name__ == '__main__':
+    from data_loader.get_farm_data import FarmData
 
-
-
+    input_file = 'data/test/litefarm_test.csv'
+    farm_id = '0369f026-1f90-11ee-b788-0242ac150004'
+    farm_data = FarmData(input_file=input_file, farm_id=farm_id)
+    print(farm_data.farm_data)
+    
+    climate_manager = ClimateSoilDataManager(farm_data, source='default') # operation_mode is default to 'farmer'
+    climate_data = climate_manager.get_climate_data()
+    print("Farmer's mode, get default P, PE, and soil texture ", climate_data)
+    
+    climate_manager2 = ClimateSoilDataManager(farm_data, source='external')  # operation_mode is default to 'farmer'
+    climate_data2 = climate_manager2.get_climate_data()
+    print("Farmer's mode, get external P, PE and soil texture: ", climate_data2)
+    
+    climate_manager3 = ClimateSoilDataManager(farm_data, source='external', operation_mode='scientific', num_runs=10)
+    climate_data3 = climate_manager3.get_climate_data()
+    print("Scientific mode, external P, PE and soil texture for 10 runs: ", climate_data3)
 
 

@@ -2,7 +2,7 @@ from data_loader.get_farm_data import FarmData
 from data_loader.get_climate_params import ClimateSoilDataManager
 from data_loader.get_external_soil_params import ExternalSoilTextureDataFetcher
 
-if __name__ == '__main__':
+if __name__ == '__main__':    
     input_file = 'data/test/litefarm_test.csv'
     farm_id = '0369f026-1f90-11ee-b788-0242ac150004'
     farm_data = FarmData(input_file=input_file, farm_id=farm_id)

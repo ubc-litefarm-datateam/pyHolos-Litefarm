@@ -1,0 +1,24 @@
+{
+    "Annual": {
+        "carbon_concentration": [
+            "uniform",
+            0.4,
+            0.5
+        ],
+        "S_s": [
+            "normal",
+            100,
+            10
+        ],
+        "S_r": [
+            "lognormal",
+            4.6,
+            0.1
+        ],
+        "S_p": [
+            "uniform",
+            1.5,
+            2.5
+        ]
+    }
+}
