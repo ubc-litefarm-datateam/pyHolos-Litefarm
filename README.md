@@ -55,15 +55,26 @@ Once you have set up your environment and are ready to run the calculator, you c
 
 Below are detailed descriptions of each command-line argument you can use with the N<sub>2</sub>O Emission Calculator.
 
-- **-i, --input** (required): Path to the input CSV file that contains necessary farm data for calculation. Ensure that this path points to a valid CSV file containing the required data structure.
+- **-i, --input** (required): Specifies the path to the input file, which can be either a CSV or JSON file containing the necessary farm data for calculations.
+  - Additionally, if you need to create farm records interactively, you can use the `input_farm_record.py` script located in the `scripts` folder. This script allows you to manually enter new farm data, which will be saved to a JSON file as new records.
 
 - **--farm_id** (required): Unique identifier for the farm. This ID must correspond to one listed in the provided input CSV file. The program will use this ID to fetch relevant data from the file.
 
 - **-o, --output**  (optional): Name of the output JSON file where the results will be saved. If this argument is not specified, the program will default to saving the results in `output.json` in the `outputs` directory. 
 
-- **--mode** (optional): This argument defines the precision level of the climate parameters, specifically precipitation and evapotranspiration, used in the calculations. The operational modes available are:
-   - `default`: This mode uses climate data aggregated at the ecodistrict level. If not specified, the mode will default to `default` mode.
-   - `precise`: Select this mode to obtain climate data specific to the exact farm location. This setting provides potentially more accurate emissions calculations.
+- **--operation_mode** (optional): Choose between `farmer` and `scientific` operational modes:
+  - `farmer`: Standard operational mode, designed to provide definitive N<sub>2</sub>O emissions calculations based on specified farm data. This mode delivers clear, final results for each run, ideal for everyday farming decisions.
+  - `scientific`: Designed for research purposes, this mode facilitates a sensitivity analysis by performing multiple simulations (defined by `num_runs`) to explore how various parameters influence N<sub>2</sub>O emissions. This approach helps identify critical factors affecting emissions estimates.
+
+- **--source** (optional): This argument defines the precision level of the climate parameters, specifically precipitation, evapotranspiration, and soil texture, used in the calculations. The operational modes available are:
+  - `default`: This mode uses climate data aggregated at the ecodistrict level. If not specified, the mode will default to `default` mode.
+  - `external`: Select this mode to obtain climate data specific to the exact farm location as well (and the sampled points in `scientific` operation mode). This setting provides potentially more accurate emissions calculations. Mandatory for `scientific` mode.
+
+- **--num_runs** (optional): Number of simulation runs, applicable only in `scientific` mode.
+
+- **--sampl_modifier**, **--sampl_crop**, **--sampl_crop_group** (optional): Define how parameters are sampled in scientific mode, adjusting the variability and distribution of model inputs:
+  - 'default': Currently uses a uniform distribution ranging from 0.75 to 1.25 times the base value of each parameter, providing a balanced range of variability.
+  - 'user_define': Allows users to specify custom parameter distributions. Editable Python scripts for defining distribution of parameters are located in the `scripts` folder, and the generated distributions are stored as JSON files in folder `data/params_sampling_range`. Users should adjust these distributions as needed prior to executing this program to tailor the sensitivity analysis to research requirements.
  
 ##### Viewing Help Information
 You can also view the help message for details about the command-line arguments with the following command:
@@ -74,24 +85,26 @@ $ python src/main.py --help
 
 #### Usage Example
 
-To calculate emissions, specify the farm ID, input file path, output file name, and mode (`default` or `precise`). You can enter these parameters in any order. Ensure the input file path is relative to the root of the project. Here are two examples:
+#### Farmer's Mode
 
-Run the calculator with default output filename and mode:
+Run the calculator with default operation mode (farmer), source (default climate data at the ecodistrict level) and output filename:
 
 ```bash
 $ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee-b788-0242ac150004
 ```
 
-Run the calculator with default mode using climate data at the ecodistrict level:
-
-``` bash
-$ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee-b788-0242ac150004 -o my_farm_default_climate_data.json
-```
-
-Run the calculator with precise mode using climate data specific to farm location:
+Run the calculator with default operation mode (farmer) and external source (external sources for climate and soil data specific to farm location):
 
 ``` bash
 $ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee-b788-0242ac150004 --mode precise -o my_farm_precise_climate_data.json
+```
+
+#### Scientific Mode
+
+Run the calculator with sensitivity analysis settings:
+
+``` bash
+$ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee-b788-0242ac150004 -o my_farm_sci_mode.json --operation_mode scientific --source external --num_runs 100
 ```
 
 ## Developer's Guide  
