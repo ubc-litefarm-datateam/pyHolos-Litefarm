@@ -143,13 +143,13 @@ class ExternalSoilTextureDataFetcher:
             texture_code = query_result.iloc[0]            
             if not np.isnan(texture_code):
                 texture_type = self.texture_df[self.texture_df['CODE'] == texture_code]['VALUE'].iloc[0]
-                print(f"The soil texture type for SMU_ID {smu_id} is {texture_type}.")
+                # print(f"The soil texture type for SMU_ID {smu_id} is {texture_type}.")
                 return texture_type
             else:
-                print(f"No texture type found for SMU_ID {smu_id}; texture_type: 'missing texture type'.")
+                # print(f"No texture type found for SMU_ID {smu_id}; texture_type: 'missing texture type'.")
                 return "missing texture type"
         else:
-            print(f"No matching SMU_ID for the selected point; texture_type: 'no matching SMU ID'.")
+            # print(f"No matching SMU_ID for the selected point; texture_type: 'no matching SMU ID'.")
             return "no matching SMU ID"
 
     def get_soil_texture(self):

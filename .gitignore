@@ -4,3 +4,4 @@ outputs/*
 data/external/HWSD2/
 data/external/HWSD2_RASTER/
 data/temp/
+src/__pycache__/

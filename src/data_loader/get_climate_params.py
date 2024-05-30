@@ -71,6 +71,7 @@ class ClimateSoilDataManager:
             "locations": np.array([self.farm_point])
         }
         
+        # print(farm_ecoid_climate_soil["SoilTexture"])
         soil_texture = farm_ecoid_climate_soil["SoilTexture"].iloc[0].lower()
         rf_tx_fetcher = ModifierSoilTexture(self.farm_data.farm_data, soil_texture)
         rf_tx_value = rf_tx_fetcher.get_rf_tx_modifier()

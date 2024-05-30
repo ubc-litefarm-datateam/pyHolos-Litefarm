@@ -10,10 +10,11 @@ from data_loader.get_crop_group_params import CropGroupManager
 from data_loader.get_crop_params import CropParametersManager
 
 class FarmDataManager:
-    def __init__(self, input_file, farm_id, source='default', operation_mode='farmer', num_runs=10,
+    def __init__(self, input_file, farm_id, crop, source='default', operation_mode='farmer', num_runs=10,
                  sampl_modifier='default', sampl_crop='default', sampl_crop_group='default'):
         self.input_file = input_file
         self.farm_id = farm_id
+        self.crop = crop
         self.source = source
         self.operation_mode = operation_mode
         self.num_runs = num_runs
@@ -22,7 +23,7 @@ class FarmDataManager:
         self.sampl_crop_group = sampl_crop_group
 
     def gather_all_data(self):
-        farm = FarmData(input_file=self.input_file, farm_id=self.farm_id)
+        farm = FarmData(input_file=self.input_file, farm_id=self.farm_id, crop = self.crop)
         farm_data = farm.farm_data
 
         if self.source == 'default':
@@ -135,20 +136,21 @@ class FarmDataManager:
 if __name__ == '__main__':
     input_file = 'data/test/litefarm_test.csv'
     farm_id = '0369f026-1f90-11ee-b788-0242ac150004'
+    crop = 'Potato'
     farm_params = FarmDataManager(
-        input_file=input_file, farm_id=farm_id, source='default', operation_mode='farmer'
+        input_file=input_file, farm_id=farm_id, crop=crop, source='default', operation_mode='farmer'
         )
     farmer_holos_default_params = farm_params.gather_all_data()
     print("Farmer's mode with Holos default data:", farmer_holos_default_params)
 
     farm_params2 = FarmDataManager(
-        input_file=input_file, farm_id=farm_id, source='external', operation_mode='farmer'
+        input_file=input_file, farm_id=farm_id, crop=crop, source='external', operation_mode='farmer'
         )
     farmer_external_params = farm_params2.gather_all_data()
     print("Farmer's mode with external climate & soil data:", farmer_external_params)
 
     farm_params3 = FarmDataManager(
-        input_file=input_file, farm_id=farm_id, source='external', operation_mode='scientific'
+        input_file=input_file, farm_id=farm_id, crop=crop, source='external', operation_mode='scientific'
         )
     scientific_params = farm_params3.gather_all_data()
     print("Scientific mode:", scientific_params)

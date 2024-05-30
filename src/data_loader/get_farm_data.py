@@ -7,8 +7,9 @@ from shapely.geometry import Point
 from datetime import datetime
 
 class FarmData:
-    def __init__(self, input_file, farm_id):
+    def __init__(self, input_file, farm_id, crop):
         self.farm_id = farm_id
+        self.crop = crop
         self.dir = os.path.dirname(__file__)
         self.input_file_path = os.path.join(self.dir, '..', '..', input_file)
         # self.province = None
@@ -25,9 +26,9 @@ class FarmData:
         file_extension = os.path.splitext(self.input_file_path)[1]
         if file_extension == '.csv':
             df = pd.read_csv(self.input_file_path)
-            df = df.query(f"farm_id == '{self.farm_id}'")
+            df = df.query(f"farm_id == '{self.farm_id}' and common_crop_name == '{self.crop}'").copy()
             if df.empty:
-                raise ValueError(f"No farm data found for farm_id {self.farm_id}")
+                raise ValueError(f"No farm data found for farm_id {self.farm_id} with crop {self.crop}")
         elif file_extension == '.json':
             with open(self.input_file_path, 'r') as file:
                 data = json.load(file)
@@ -38,10 +39,10 @@ class FarmData:
         else:
             raise ValueError("Unsupported file format")
 
-        df['area_in_m2'] = df['area_in_m2'].astype(float).map(lambda x: x * 0.0001)  # Convert and scale area
-        df['yield_kg_per_m2'] = df['yield_kg_per_m2'].astype(float).map(lambda x: x * 10000)  # Convert and scale yield
-        df['start_year'] = df['start_year'].astype(int)  # Ensure year is an integer
-        df['end_year'] = df['end_year'].astype(int)
+        df.loc[:, 'area_in_m2'] = df['area_in_m2'].astype(float).map(lambda x: x * 0.0001)  # Convert and scale area
+        df.loc[:, 'yield_kg_per_m2'] = df['yield_kg_per_m2'].astype(float).map(lambda x: x * 10000)  # Convert and scale yield
+        df.loc[:, 'start_year'] = df['start_year'].astype(int)  # Ensure year is an integer
+        df.loc[:, 'end_year'] = df['end_year'].astype(int)
 
         farm = df.iloc[0].to_dict()
 
@@ -51,6 +52,7 @@ class FarmData:
         farm['end_year'] = int(farm['end_year'])
         
         farm_dict = {
+            'farm_id' : self.farm_id,
             'area': farm['area'],
             'latitude': float(farm['latitude']),
             'longitude': float(farm['longitude']),
@@ -127,11 +129,11 @@ class FarmData:
 if __name__ == '__main__':
     input_file = 'data/test/litefarm_test.csv'
     farm_id = '0369f026-1f90-11ee-b788-0242ac150004'
-    farm = FarmData(input_file=input_file, farm_id=farm_id)
+    farm = FarmData(input_file=input_file, farm_id=farm_id, crop = 'Potato')
     print(farm.farm_data)
 
-    input_file2 = 'data/test/user_input_farm.json'
-    farm_id2 = 'farm123'
-    farm2 = FarmData(input_file=input_file2, farm_id=farm_id2)
-    print(farm2.farm_data)
+    # input_file2 = 'data/test/user_input_farm.json'
+    # farm_id2 = 'farm123'
+    # farm2 = FarmData(input_file=input_file2, farm_id=farm_id2)
+    # print(farm2.farm_data)
 

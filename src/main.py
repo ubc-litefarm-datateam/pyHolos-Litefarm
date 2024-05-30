@@ -14,11 +14,11 @@ class NumpyEncoder(json.JSONEncoder):
             return obj.tolist()
         return json.JSONEncoder.default(self, obj)
     
-def main(input_file, farm_id, source='default', operation_mode='farmer', num_runs=10,
+def main(input_file, farm_id, crop, source='default', operation_mode='farmer', num_runs=10,
          sampl_modifier='default', sampl_crop='default', sampl_crop_group='default',
          output_file='output.json'):
     farm_data_manager = FarmDataManager(
-        input_file=input_file, farm_id=farm_id, source=source, 
+        input_file=input_file, farm_id=farm_id, crop=crop, source=source, 
         operation_mode=operation_mode, num_runs=num_runs,
         sampl_modifier=sampl_modifier, sampl_crop=sampl_crop, 
         sampl_crop_group=sampl_crop_group
@@ -71,6 +71,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Calculate Nitrogen Emissions")
     parser.add_argument("-i", "--input", type=str, required=True, help="Input file path is required")
     parser.add_argument("--farm_id", type=str, required=True, help="Farm ID is required")
+    parser.add_argument("--crop", type=str, required=True, help="Crop name is required")
     parser.add_argument("--mode", type=str, default="default", choices=['default', 'precise'], help="Mode of data fetching (default or precise)")
     parser.add_argument("-o", "--output", type=str, default="output.json", help="Output file name")
     parser.add_argument("--source", type=str, default="default", help="Data source type (default or external)")
@@ -81,5 +82,5 @@ if __name__ == "__main__":
     parser.add_argument("--sampl_crop_group", type=str, default="default", help="Sampling crop group type")
 
     args = parser.parse_args()
-    main(args.input, args.farm_id, args.source, args.operation_mode, args.num_runs,
+    main(args.input, args.farm_id, args.crop, args.source, args.operation_mode, args.num_runs,
          args.sampl_modifier, args.sampl_crop, args.sampl_crop_group, args.output)
