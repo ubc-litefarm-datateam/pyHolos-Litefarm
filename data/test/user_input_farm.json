@@ -1,0 +1,20 @@
+{
+    "farm123": {
+        "area_in_m2": 10000.0,
+        "latitude": 49.566,
+        "longitude": -122.778,
+        "common_crop_name": "Wheat",
+        "yield_kg_per_m2": 0.35,
+        "start_year": 2021,
+        "end_year": 2023
+    },
+    "farm456": {
+        "area_in_m2": 5000.0,
+        "latitude": 48.775,
+        "longitude": -72.688,
+        "common_crop_name": "Potato",
+        "yield_kg_per_m2": 10.0,
+        "start_year": 2020,
+        "end_year": 2021
+    }
+}

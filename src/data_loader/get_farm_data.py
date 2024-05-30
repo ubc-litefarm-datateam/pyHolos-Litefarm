@@ -1,4 +1,5 @@
 import os
+import json
 import pandas as pd
 import numpy as np
 import geopandas as gpd
@@ -21,10 +22,21 @@ class FarmData:
         self.update_farm_dict()
 
     def get_farm_data(self):
-        df = pd.read_csv(self.input_file_path)
-        df = df.query(f"farm_id == '{self.farm_id}'")
-        if df.empty:
-            raise ValueError(f"No farm data found for farm_id {self.farm_id}")
+        file_extension = os.path.splitext(self.input_file_path)[1]
+        if file_extension == '.csv':
+            df = pd.read_csv(self.input_file_path)
+            df = df.query(f"farm_id == '{self.farm_id}'")
+            if df.empty:
+                raise ValueError(f"No farm data found for farm_id {self.farm_id}")
+        elif file_extension == '.json':
+            with open(self.input_file_path, 'r') as file:
+                data = json.load(file)
+                if self.farm_id in data:
+                    df = pd.DataFrame([data[self.farm_id]])
+                else:
+                    raise ValueError(f"No farm data found for farm_id {self.farm_id}")
+        else:
+            raise ValueError("Unsupported file format")
 
         df['area_in_m2'] = df['area_in_m2'].astype(float).map(lambda x: x * 0.0001)  # Convert and scale area
         df['yield_kg_per_m2'] = df['yield_kg_per_m2'].astype(float).map(lambda x: x * 10000)  # Convert and scale yield
@@ -40,14 +52,17 @@ class FarmData:
         
         farm_dict = {
             'area': farm['area'],
-            'latitude': float(farm['lat']),
-            'longitude': float(farm['lon']),
+            'latitude': float(farm['latitude']),
+            'longitude': float(farm['longitude']),
             'crop': farm['common_crop_name'],
             'yield': farm['yield'],
             'start_year': farm['start_year'],
             'end_year': farm['end_year']
         }
-        return farm_dict
+
+        self.farm_data = farm_dict 
+        self.validate_data()
+        return self.farm_data
 
     def get_farm_gdf(self):
         # Convert single values to lists if necessary
@@ -102,8 +117,11 @@ class FarmData:
             raise ValueError("Area must be larger than 0")
         
         # Check if year is within the valid range
-        if not (1984 <= self.farm_data['year'] <= datetime.now().year):
-            raise ValueError("Year must be larger than 1984 and less than the current year")
+        if not (1984 <= self.farm_data['start_year'] <= datetime.now().year):
+            raise ValueError("Start year must be larger than 1984 and less than the current year")
+        
+        if not (1984 <= self.farm_data['end_year'] <= datetime.now().year):
+            raise ValueError("End year must be larger than 1984 and less than the current year")
 
 # Example usage
 if __name__ == '__main__':
@@ -111,4 +129,9 @@ if __name__ == '__main__':
     farm_id = '0369f026-1f90-11ee-b788-0242ac150004'
     farm = FarmData(input_file=input_file, farm_id=farm_id)
     print(farm.farm_data)
+
+    input_file2 = 'data/test/user_input_farm.json'
+    farm_id2 = 'farm123'
+    farm2 = FarmData(input_file=input_file2, farm_id=farm_id2)
+    print(farm2.farm_data)
 

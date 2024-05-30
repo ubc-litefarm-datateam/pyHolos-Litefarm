@@ -1,2 +1,2 @@
-﻿farm_id,common_crop_name,yield_kg_per_m2,area_in_m2,lat,lon,start_year,end_year
+﻿farm_id,common_crop_name,yield_kg_per_m2,area_in_m2,latitude,longitude,start_year,end_year
 0369f026-1f90-11ee-b788-0242ac150004,Soybean,0.27,1409,46.4761852,-71.5189528,2021,2021
