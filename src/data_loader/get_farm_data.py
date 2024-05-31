@@ -77,7 +77,7 @@ class FarmData:
         
         locations = [Point(x, y) for x, y in zip(longitudes, latitudes)]
         farm_point = gpd.GeoDataFrame({'geometry': locations}, crs="EPSG:4326")
-        province_shp_path = os.path.join(self.dir, '../../data/external/province_500m')
+        province_shp_path = os.path.join(self.dir, '../../data/external/province_100m')
         provinces = gpd.read_file(province_shp_path).to_crs("EPSG:4326")
         farm_province = gpd.sjoin(farm_point, provinces[["PRENAME", "geometry"]],
                                   how='left', predicate='within').drop(columns=['index_right'])
