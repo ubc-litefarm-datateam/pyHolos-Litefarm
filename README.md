@@ -58,7 +58,9 @@ Below are detailed descriptions of each command-line argument you can use with t
 - **-i, --input** (required): Specifies the path to the input file, which can be either a CSV or JSON file containing the necessary farm data for calculations.
   - Additionally, if you need to create farm records interactively, you can use the `input_farm_record.py` script located in the `scripts` folder. This script allows you to manually enter new farm data, which will be saved to a JSON file as new records.
 
-- **--farm_id** (required): Unique identifier for the farm. This ID must correspond to one listed in the provided input CSV file. The program will use this ID to fetch relevant data from the file.
+- **--farm_id** (required): Specifies the unique identifier for the farm. This identifier must match one listed in the input CSV or JSON file. The program uses this ID in conjunction with `--crop` to precisely locate and retrieve the farm's data.
+
+- **--crop** (required): Specifies the type of crop planted at the farm. This crop name must be one associated with the specified `farm_id` in the input CSV or JSON file. Together, the `farm_id` and `crop` serve as keys to fetch the detailed data needed for calculations.
 
 - **-o, --output**  (optional): Name of the output JSON file where the results will be saved. If this argument is not specified, the program will default to saving the results in `output.json` in the `outputs` directory. 
 
