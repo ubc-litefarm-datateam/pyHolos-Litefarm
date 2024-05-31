@@ -90,13 +90,13 @@ $ python src/main.py --help
 Run the calculator with default operation mode (farmer), source (default climate data at the ecodistrict level) and output filename:
 
 ```bash
-$ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee-b788-0242ac150004
+$ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee-b788-0242ac150004 --crop Soybean
 ```
 
 Run the calculator with default operation mode (farmer) and external source (external sources for climate and soil data specific to farm location):
 
 ``` bash
-$ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee-b788-0242ac150004 --mode precise -o my_farm_precise_climate_data.json
+$ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee-b788-0242ac150004 --crop Soybean --operation_mode farmer --source external -o my_farm_precise_climate_data.json
 ```
 
 #### Scientific Mode
@@ -104,7 +104,7 @@ $ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee
 Run the calculator with sensitivity analysis settings:
 
 ``` bash
-$ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee-b788-0242ac150004 -o my_farm_sci_mode.json --operation_mode scientific --source external --num_runs 100
+$ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee-b788-0242ac150004 --crop Soybean --operation_mode scientific --source external --num_runs 100 -o farm_100_run_sci_mode.json 
 ```
 
 ## Developer's Guide  
