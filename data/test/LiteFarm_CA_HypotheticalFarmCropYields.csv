@@ -1,4 +1,4 @@
-farm_id,latitude,longitude,crop_common_name,yield_kg_per_m2,area_in_m2,start_year,end_year
+farm_id,latitude,longitude,common_crop_name,yield_kg_per_m2,area_in_m2,start_year,end_year
 7a2e6fcc-ab78-11eb-a4ad-0242ac130002,49.0591916847449,-122.882004935956,Soybean,0.27,10000,2021,2021
 7a2e6fcc-ab78-11eb-a4ad-0242ac130002,49.0591916847449,-122.882004935956,Potato,3.58,10000,2021,2021
 7a2e6fcc-ab78-11eb-a4ad-0242ac130002,49.0591916847449,-122.882004935956,Wheat,0.28,10000,2021,2021
