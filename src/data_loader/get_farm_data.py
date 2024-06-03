@@ -59,7 +59,8 @@ class FarmData:
             'crop': farm['common_crop_name'],
             'yield': farm['yield'],
             'start_year': farm['start_year'],
-            'end_year': farm['end_year']
+            'end_year': farm['end_year'],
+            'eco_id': None
         }
 
         self.farm_data = farm_dict 

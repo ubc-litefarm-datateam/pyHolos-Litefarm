@@ -23,6 +23,7 @@ class ClimateSoilDataManager:
         self.dir = os.path.dirname(__file__)
         # self.fetcher = None  # Initialize as None
         self.climate_soil_dict = None  # Initialize the climate data dictionary as None
+        self.eco_id = None
 
     def load_climate_data(self):
         climate_path = os.path.join(
@@ -76,6 +77,7 @@ class ClimateSoilDataManager:
         rf_tx_fetcher = ModifierSoilTexture(self.farm_data.farm_data, soil_texture)
         rf_tx_value = rf_tx_fetcher.get_rf_tx_modifier()
         self.climate_soil_dict['soil_texture'] = np.array([rf_tx_value])
+        self.eco_id = farm_ecoid_climate_soil['Ecodistrict'].iloc[0]
 
     def get_climate_data(self):
         # if using `default` data source, operation_mode is default as `farmer`
@@ -184,19 +186,29 @@ if __name__ == '__main__':
 
     input_file = 'data/test/litefarm_test.csv'
     farm_id = '0369f026-1f90-11ee-b788-0242ac150004'
-    farm_data = FarmData(input_file=input_file, farm_id=farm_id)
+    crop='Soybean'
+    farm_data = FarmData(input_file=input_file, farm_id=farm_id, crop=crop)
     print(farm_data.farm_data)
     
     climate_manager = ClimateSoilDataManager(farm_data, source='default') # operation_mode is default to 'farmer'
     climate_data = climate_manager.get_climate_data()
+    eco_id = climate_manager.eco_id
+    farm_data.farm_data["eco_id"] = eco_id
+    print(farm_data.farm_data)
     print("Farmer's mode, get default P, PE, and soil texture ", climate_data)
     
     climate_manager2 = ClimateSoilDataManager(farm_data, source='external')  # operation_mode is default to 'farmer'
     climate_data2 = climate_manager2.get_climate_data()
+    eco_id = climate_manager2.eco_id
+    farm_data.farm_data["eco_id"] = eco_id
+    print(farm_data.farm_data)
     print("Farmer's mode, get external P, PE and soil texture: ", climate_data2)
     
     climate_manager3 = ClimateSoilDataManager(farm_data, source='external', operation_mode='scientific', num_runs=10)
     climate_data3 = climate_manager3.get_climate_data()
+    eco_id = climate_manager3.eco_id
+    farm_data.farm_data["eco_id"] = eco_id
+    print(farm_data.farm_data)
     print("Scientific mode, external P, PE and soil texture for 10 runs: ", climate_data3)
 
 

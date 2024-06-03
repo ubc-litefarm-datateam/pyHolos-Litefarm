@@ -31,6 +31,8 @@ class FarmDataManager:
                 farm, source=self.source,
             )
             climate_data = climate_data_extractor.get_climate_data()
+            eco_id = climate_data_extractor.eco_id
+            farm_data["eco_id"] = eco_id
             modifiers_manager = Modifiers(farm_data)
             modifiers = modifiers_manager.modifiers
             crop_parameters_manager = CropParametersManager(farm_data, climate_data)
@@ -61,6 +63,8 @@ class FarmDataManager:
                 farm, source=self.source, operation_mode=self.operation_mode
             )
             climate_data = climate_data_extractor.get_climate_data()
+            eco_id = climate_data_extractor.eco_id
+            farm_data["eco_id"] = eco_id
             modifiers_manager = Modifiers(farm_data)
             modifiers = modifiers_manager.modifiers
             crop_parameters_manager = CropParametersManager(farm_data, climate_data)
@@ -90,6 +94,9 @@ class FarmDataManager:
                 farm, source=self.source, operation_mode=self.operation_mode, num_runs=self.num_runs
                 )
             climate_data = climate_data_extractor.get_climate_data()
+
+            eco_id = climate_data_extractor.eco_id
+            farm_data["eco_id"] = eco_id
 
             modifiers_manager = Modifiers(farm_data)
             modifiers = modifiers_manager.sample_modifiers(
@@ -156,9 +163,9 @@ if __name__ == '__main__':
     print("Scientific mode:", scientific_params)
 
     files = {
-    'farmer_holos_default_params': farmer_holos_default_params,
-    'farmer_external_params': farmer_external_params,
-    'scientific_params': scientific_params
+        'farmer_holos_default_params': farmer_holos_default_params,
+        'farmer_external_params': farmer_external_params,
+        'scientific_params': scientific_params
     }
 
     class NumpyEncoder(json.JSONEncoder):

@@ -82,16 +82,19 @@ class ExternalSoilTextureDataFetcher:
         with open(self.texture_mapped_path, 'r') as file:
             return json.load(file)
     
-    def sampling_rf_tx(self, soil_type):
+    def sampling_rf_tx(self, soil_type, first_point=False):
         rf_tx_distributions = self.load_user_rf_tx_distributions()
         if rf_tx_distributions is None:
             raise ValueError("No user-defined RF soil texture distributions found.")
         elif soil_type == "missing texture type" or soil_type == "no matching SMU ID":
             return np.nan
         else:
-            low, high = rf_tx_distributions.get(soil_type)
-            sampled_rf_tx = np.random.uniform(low, high, 1)
-            return sampled_rf_tx[0]
+            if first_point:
+                return rf_tx_distributions["midpoint"].get(soil_type)
+            else:
+                low, high = rf_tx_distributions["range"].get(soil_type)
+                sampled_rf_tx = np.random.uniform(low, high, 1)
+                return sampled_rf_tx[0]
     
     def open_raster(self):
         """Opens the raster data file for geographical data extraction."""
@@ -163,22 +166,27 @@ class ExternalSoilTextureDataFetcher:
         """
         self.open_raster()
         rf_tx_values = {}
+        first_point = True
         for lon, lat in self.points:
             smu_id = self.get_raster_value(lon, lat)
             texture_type = self.lookup_texture_and_value(smu_id)
-            rf_tx = self.sampling_rf_tx(texture_type)
+            rf_tx = self.sampling_rf_tx(texture_type, first_point)
             rf_tx_values[(lon, lat)] = rf_tx
+            first_point = False
         self.close_raster()
 
         return rf_tx_values
 
 if __name__ == '__main__':
-    # The first point has a match
-    # The second point, texture_type is missing. this is because in the database, there is no
+    # The first and second points have a match
+    # The 3rd point, texture_type is missing. this is because in the database, there is no
         # USDA_TEXTURE entry for this SMU 7001 (soil mapping unit). 
-    # The third point is Vancouver Harbor, we don't have a valid SMU since it is water surface
+    # The 4th point is Vancouver Harbor, we don't have a valid SMU since it is water surface
         # HSWD2 has a high resolution 1km * 1km
-    points = [(-93.6250, 42.0329), (-89.3985, 43.0731), (-122.9618, 49.2957)]  
+    points = [(-93.6250, 42.0329), 
+              (-94.1110, 42.6329),
+              (-89.3985, 43.0731), 
+              (-122.9618, 49.2957)]  
     soil_fetcher = ExternalSoilTextureDataFetcher(points)
     texture_mapped_values = soil_fetcher.get_soil_texture()
     print(texture_mapped_values)

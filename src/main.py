@@ -47,7 +47,7 @@ def main(input_file, farm_id, crop, source='default', operation_mode='farmer', n
 
     # Get the directory of the current script
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    output_path = os.path.join(dir_path, '..', 'outputs', output_file)
+    output_path = os.path.join(dir_path, '..', 'data/outputs', output_file)
 
     # Write the JSON to the outputs folder
     with open(output_path, 'w') as f:

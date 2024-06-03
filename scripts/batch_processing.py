@@ -16,7 +16,7 @@ def run_batch_process(input_csv):
         farm_id = row['farm_id']
         crop = row['common_crop_name']
         # Define the output JSON file name based on farm_id and crop
-        output_file = f"{farm_id}_{crop}.json"
+        output_file = f"sensitivity_analysis/{farm_id}_{crop}.json"
 
         # Construct the command to run main.py
         command = [
