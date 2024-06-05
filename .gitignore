@@ -12,3 +12,14 @@ data/outputs/*
 
 # However, do track the content within the sensitivity_analysis subdirectory
 !data/outputs/sensitivity_analysis/*
+
+
+# Ignore all .pyc files
+*.pyc
+
+# Ignore __pycache__ directories
+__pycache__/
+
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
