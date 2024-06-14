@@ -1,74 +1,64 @@
-import unittest
+import pytest
 from src.emission_calculator import EmissionCalculator
 
-class TestEmissionCalculator(unittest.TestCase):
+@pytest.fixture
+def valid_ef_data():
+    return {'EF': 0.003286}
 
-    def setUp(self):
-        # Set up test data
-        self.valid_ef_data = {
-            'EF': 0.003286
-        }
-        self.valid_n_data = {
-            'n_crop_residue': 560
-        }
-        self.invalid_ef_data_missing_key = {
-            'EF_Topo': 0.0025
-            # Missing 'EF'
-        }
-        self.invalid_ef_data_wrong_type = {
-            'EF': '0.003286'  # Should be int/float
-        }
+@pytest.fixture
+def valid_n_data():
+    return {'n_crop_residue': 560}
 
-    def test_valid_data(self):
-        # Test with valid data
-        calculator = EmissionCalculator(self.valid_ef_data, self.valid_n_data)
-        n_crn_direct = calculator.calculate_n_crn_direct()
-        n_crop_direct = calculator.calculate_n_crop_direct()
-        no2_crop_direct = calculator.convert_n_crop_direct_to_n2o()
-        co2_crop_direct = calculator.calculate_n2o_crop_direct_to_co2e()
+@pytest.fixture
+def invalid_ef_data_missing_key():
+    return {'EF_Topo': 0.0025}
 
-        self.assertIsInstance(n_crn_direct, float)
-        self.assertIsInstance(n_crop_direct, float)
-        self.assertIsInstance(no2_crop_direct, float)
-        self.assertIsInstance(co2_crop_direct, float)
+@pytest.fixture
+def invalid_ef_data_wrong_type():
+    return {'EF': '0.003286'}
 
-    def test_missing_key(self):
-        # Test with missing key
-        with self.assertRaises(ValueError):
-            EmissionCalculator(self.invalid_ef_data_missing_key, self.valid_n_data)
+def test_valid_data(valid_ef_data, valid_n_data):
+    calculator = EmissionCalculator(valid_ef_data, valid_n_data)
+    n_crn_direct = calculator.calculate_n_crn_direct()
+    n_crop_direct = calculator.calculate_n_crop_direct()
+    no2_crop_direct = calculator.convert_n_crop_direct_to_n2o()
+    co2_crop_direct = calculator.calculate_n2o_crop_direct_to_co2e()
 
-    def test_wrong_type(self):
-        # Test with wrong data type
-        with self.assertRaises(TypeError):
-            EmissionCalculator(self.invalid_ef_data_wrong_type, self.valid_n_data)
+    assert isinstance(n_crn_direct, float)
+    assert isinstance(n_crop_direct, float)
+    assert isinstance(no2_crop_direct, float)
+    assert isinstance(co2_crop_direct, float)
 
-    def test_intermediate_steps(self):
-        # Test intermediate steps explicitly
-        calculator = EmissionCalculator(self.valid_ef_data, self.valid_n_data)
-        n_crn_direct = calculator.calculate_n_crn_direct()
-        self.assertAlmostEqual(n_crn_direct, self.valid_n_data['n_crop_residue'] * self.valid_ef_data['EF'], places=5)
+def test_missing_key(invalid_ef_data_missing_key, valid_n_data):
+    with pytest.raises(ValueError):
+        EmissionCalculator(invalid_ef_data_missing_key, valid_n_data)
 
-        calculator.calculate_n_other_direct()
-        self.assertEqual(calculator.n_sn_direct, 0)
-        self.assertEqual(calculator.n_crnmin_direct, 0)
-        self.assertEqual(calculator.n_on_direct, 0)
+def test_wrong_type(invalid_ef_data_wrong_type, valid_n_data):
+    with pytest.raises(TypeError):
+        EmissionCalculator(invalid_ef_data_wrong_type, valid_n_data)
 
-        n_crop_direct = calculator.calculate_n_crop_direct()
-        expected_n_crop_direct = 0 + 0 + 0 + n_crn_direct
-        self.assertAlmostEqual(n_crop_direct, expected_n_crop_direct, places=5)
+def test_intermediate_steps(valid_ef_data, valid_n_data):
+    calculator = EmissionCalculator(valid_ef_data, valid_n_data)
+    n_crn_direct = calculator.calculate_n_crn_direct()
+    assert abs(n_crn_direct - valid_n_data['n_crop_residue'] * valid_ef_data['EF']) < 1e-5
 
-    def test_final_emission_calculations(self):
-        # Test final emission calculations
-        calculator = EmissionCalculator(self.valid_ef_data, self.valid_n_data)
-        co2_crop_direct = calculator.calculate_n2o_crop_direct_to_co2e()
+    calculator.calculate_n_other_direct()
+    assert calculator.n_sn_direct == 0
+    assert calculator.n_crnmin_direct == 0
+    assert calculator.n_on_direct == 0
 
-        n_crop_direct = calculator.calculate_n_crop_direct()
-        no2_crop_direct = calculator.convert_n_crop_direct_to_n2o()
-        expected_no2_crop_direct = n_crop_direct * (44 / 28)
-        expected_co2_crop_direct = expected_no2_crop_direct * 273
+    n_crop_direct = calculator.calculate_n_crop_direct()
+    expected_n_crop_direct = 0 + 0 + 0 + n_crn_direct
+    assert abs(n_crop_direct - expected_n_crop_direct) < 1e-5
 
-        self.assertAlmostEqual(no2_crop_direct, expected_no2_crop_direct, places=5)
-        self.assertAlmostEqual(co2_crop_direct, expected_co2_crop_direct, places=5)
+def test_final_emission_calculations(valid_ef_data, valid_n_data):
+    calculator = EmissionCalculator(valid_ef_data, valid_n_data)
+    co2_crop_direct = calculator.calculate_n2o_crop_direct_to_co2e()
 
-if __name__ == '__main__':
-    unittest.main()
+    n_crop_direct = calculator.calculate_n_crop_direct()
+    no2_crop_direct = calculator.convert_n_crop_direct_to_n2o()
+    expected_no2_crop_direct = n_crop_direct * (44 / 28)
+    expected_co2_crop_direct = expected_no2_crop_direct * 273
+
+    assert abs(no2_crop_direct - expected_no2_crop_direct) < 1e-5
+    assert abs(co2_crop_direct - expected_co2_crop_direct) < 1e-5

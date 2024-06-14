@@ -143,3 +143,21 @@ class EmissionCalculator:
         }
 
         return self.data_dict
+    
+if __name__ == "__main__":
+
+    test_farm_n = {
+        'n_crop_residue': 560.2468642105264
+        }
+    test_farm_ef = {
+        'EF_CT_P': 0.001099631670775916,
+        'EF_CT_PE': 0.019905484145844587,
+        'EF_Topo': 0.0025232347031386142,
+        'EF': 0.0032860731017619158
+        }
+    
+    print('farm emission: ')
+    emission_calculator = EmissionCalculator(test_farm_ef, test_farm_n)
+    output = emission_calculator.get_emission()
+    print(output)
+    print("-"*50)

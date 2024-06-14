@@ -135,3 +135,28 @@ class EmissionFactorCalculator:
                           'EF': self.EF}
         
         return self.data_dict
+    
+    
+if __name__ == "__main__": 
+
+    test_data = {
+        'climate_data' : {
+            'P': 159,
+            'PE': 678,
+            'FR_Topo': 7.57,
+            'soil_texture': 1
+
+        },
+        'modifiers' : {
+            'RF_TX': 1,
+            'RF_NS': 0.84,
+            'RF_Till': 1,
+            'RF_CS': 1,
+            'RF_AM': 1
+        }}
+        
+    print('emission factor: ')
+    ef_calculator = EmissionFactorCalculator(test_data)
+    output = ef_calculator.get_ef()
+    print(output)
+    print("-"*50)

@@ -1,104 +1,70 @@
-import unittest
+import pytest
 import math
 from src.emission_factor_calculator import EmissionFactorCalculator
 
-class TestEmissionFactorCalculator(unittest.TestCase):
+@pytest.fixture
+def valid_data():
+    return {
+        'climate_data': {'P': 159, 'PE': 678, 'FR_Topo': 7.57, 'soil_texture': 1},
+        'modifiers': {'RF_NS': 0.84, 'RF_Till': 1, 'RF_CS': 1, 'RF_AM': 1}
+    }
 
-    def setUp(self):
-        # Set up test data
-        self.valid_data = {
-            'climate_data' : {
-                'P': 159,
-                'PE': 678,
-                'FR_Topo': 7.57
-            },
-            'modifiers' : {
-                'RF_TX': 1,
-                'RF_NS': 0.84,
-                'RF_Till': 1,
-                'RF_CS': 1,
-                'RF_AM': 1
-            }
-        }
-        self.invalid_data_missing_key = {
-            'climate_data' : {
-                'P': 159,
-                'PE': 678,
-                'FR_Topo': 7.57
-            },
-            'modifiers' : {
-                'RF_TX': 1,
-                'RF_NS': 0.84,
-                'RF_Till': 1,
-                'RF_AM': 1
-            ## missing RF_CS
-            }
-        }
-        self.invalid_data_wrong_type = {
-            'climate_data' : {
-                'P': '159', ## should be int/float
-                'PE': 678,
-                'FR_Topo': 7.57
-            },
-            'modifiers' : {
-                'RF_TX': 1,
-                'RF_NS': 0.84,
-                'RF_Till': 1,
-                'RF_CS': 1,
-                'RF_AM': 1
-            }
-        }
+@pytest.fixture
+def invalid_data_missing_key():
+    return {
+        'climate_data': {'P': 159, 'PE': 678, 'FR_Topo': 7.57, 'soil_texture': 1},
+        'modifiers': {'RF_NS': 0.84, 'RF_Till': 1, 'RF_AM': 1}  # missing 'RF_CS'
+    }
 
-    def test_valid_data(self):
-        # Test with valid data
-        calculator = EmissionFactorCalculator(self.valid_data)
-        ef_ct_p, ef_ct_pe = calculator.calculate_ef_ct()
-        ef_topo = calculator.calculate_ef_topo()
-        ef = calculator.calculate_emission_factor()
+@pytest.fixture
+def invalid_data_wrong_type():
+    return {
+        'climate_data': {'P': '159', 'PE': 678, 'FR_Topo': 7.57, 'soil_texture': 1},  # 'P' should be int/float
+        'modifiers': {'RF_NS': 0.84, 'RF_Till': 1, 'RF_CS': 1, 'RF_AM': 1}
+    }
 
-        self.assertIsInstance(ef_ct_p, float)
-        self.assertIsInstance(ef_ct_pe, float)
-        self.assertIsInstance(ef_topo, float)
-        self.assertIsInstance(ef, float)
+def test_valid_data(valid_data):
+    calculator = EmissionFactorCalculator(valid_data)
+    ef_ct_p, ef_ct_pe = calculator.calculate_ef_ct()
+    ef_topo = calculator.calculate_ef_topo()
+    ef = calculator.calculate_emission_factor()
 
-    def test_missing_key(self):
-        # Test with missing key
-        with self.assertRaises(ValueError):
-            EmissionFactorCalculator(self.invalid_data_missing_key)
+    assert isinstance(ef_ct_p, float)
+    assert isinstance(ef_ct_pe, float)
+    assert isinstance(ef_topo, float)
+    assert isinstance(ef, float)
 
-    def test_wrong_type(self):
-        # Test with wrong data type
-        with self.assertRaises(TypeError):
-            EmissionFactorCalculator(self.invalid_data_wrong_type)
+def test_missing_key(invalid_data_missing_key):
+    with pytest.raises(ValueError):
+        EmissionFactorCalculator(invalid_data_missing_key)
 
-    def test_intermediate_steps(self):
-        # Test intermediate steps explicitly
-        calculator = EmissionFactorCalculator(self.valid_data)
-        ef_ct_p, ef_ct_pe = calculator.calculate_ef_ct()
-        self.assertAlmostEqual(ef_ct_p, math.exp(0.00558 * self.valid_data['climate_data']['P'] - 7.7), places=5)
-        self.assertAlmostEqual(ef_ct_pe, math.exp(0.00558 * self.valid_data['climate_data']['PE'] - 7.7), places=5)
+def test_wrong_type(invalid_data_wrong_type):
+    with pytest.raises(TypeError):
+        EmissionFactorCalculator(invalid_data_wrong_type)
 
-        ef_topo = calculator.calculate_ef_topo()
-        intermediate_factor = self.valid_data['climate_data']['P'] / self.valid_data['climate_data']['PE']
-        if intermediate_factor > 1:
-            self.assertEqual(ef_topo, ef_ct_p)
-        elif self.valid_data['climate_data']['P'] == self.valid_data['climate_data']['PE']:
-            self.assertEqual(ef_topo, ef_ct_pe)
-        else:
-            expected_ef_topo = ((ef_ct_pe * self.valid_data['climate_data']['FR_Topo'] / 100) + 
-                                (ef_ct_p * (1 - self.valid_data['climate_data']['FR_Topo'] / 100)))
-            self.assertAlmostEqual(ef_topo, expected_ef_topo, places=5)
+def test_intermediate_steps(valid_data):
+    calculator = EmissionFactorCalculator(valid_data)
+    ef_ct_p, ef_ct_pe = calculator.calculate_ef_ct()
+    assert math.isclose(ef_ct_p, math.exp(0.00558 * valid_data['climate_data']['P'] - 7.7), abs_tol=1e-5)
+    assert math.isclose(ef_ct_pe, math.exp(0.00558 * valid_data['climate_data']['PE'] - 7.7), abs_tol=1e-5)
 
-    def test_final_emission_factor(self):
-        # Test final emission factor calculation
-        calculator = EmissionFactorCalculator(self.valid_data)
-        ef = calculator.calculate_emission_factor()
+    ef_topo = calculator.calculate_ef_topo()
+    intermediate_factor = valid_data['climate_data']['P'] / valid_data['climate_data']['PE']
+    if intermediate_factor > 1:
+        assert ef_topo == ef_ct_p
+    elif valid_data['climate_data']['P'] == valid_data['climate_data']['PE']:
+        assert ef_topo == ef_ct_pe
+    else:
+        expected_ef_topo = ((ef_ct_pe * valid_data['climate_data']['FR_Topo'] / 100) + 
+                            (ef_ct_p * (1 - valid_data['climate_data']['FR_Topo'] / 100)))
+        assert math.isclose(ef_topo, expected_ef_topo, abs_tol=1e-5)
 
-        ef_ct_p, ef_ct_pe = calculator.calculate_ef_ct()
-        ef_topo = calculator.calculate_ef_topo()
-        ef_base = (ef_topo * self.valid_data['modifiers']['RF_TX']) * (1 / 0.645)
-        expected_ef = ef_base * self.valid_data['modifiers']['RF_NS'] * self.valid_data['modifiers']['RF_Till'] * self.valid_data['modifiers']['RF_CS'] * self.valid_data['modifiers']['RF_AM']
-        self.assertAlmostEqual(ef, expected_ef, places=5)
+def test_final_emission_factor(valid_data):
+    calculator = EmissionFactorCalculator(valid_data)
+    ef = calculator.calculate_emission_factor()
 
-if __name__ == '__main__':
-    unittest.main()
+    ef_ct_p, ef_ct_pe = calculator.calculate_ef_ct()
+    ef_topo = calculator.calculate_ef_topo()
+    ef_base = (ef_topo * valid_data['climate_data']['soil_texture']) * (1 / 0.645)
+    expected_ef = ef_base * valid_data['modifiers']['RF_NS'] * valid_data['modifiers']['RF_Till'] * valid_data['modifiers']['RF_CS'] * valid_data['modifiers']['RF_AM']
+    assert math.isclose(ef, expected_ef, abs_tol=1e-5)

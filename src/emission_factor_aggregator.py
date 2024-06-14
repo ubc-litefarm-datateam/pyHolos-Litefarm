@@ -1,7 +1,25 @@
 import numpy as np
 from emission_factor_calculator import EmissionFactorCalculator
-class SensitivityEmissionFactor:
+class EmissionFactorAggregator:
+    """
+    A class to perform sensitivity analysis on emission factors.
+    
+    Attributes
+    ----------
+    farm_data (dict): Contains all necessary climate data and modifiers for the given farm.
+    variables (list): List of variable derived from climate data and modifiers for conducting sensitivity analysis.
+    mode (str): Operation mode which can be 'farmer' for simplified outputs or 'scientific' for detailed analysis.
+    results (dict): Stores the sensitivity analysis results for each variable, structured by emission factor types.
+    output (dict): Final output of the analysis depending on the operation mode.
+    """
     def __init__(self, farm_data, operation_mode = 'farmer'):
+        """
+        Initializes the SensitivityEmissionFactor with provided farm data and operation mode.
+        
+        Args:
+            farm_data (dict): The farm data including climate and modifier variables.
+            operation_log (str, optional): Mode of operation, defaults to 'farmer'. Can be 'farmer' or 'scientific'.
+        """
         self.farm_data = farm_data
         self.variables = [x for x in list(farm_data['climate_data'].keys()) + list(farm_data['modifiers'].keys()) if x not in ['locations']]
         self.mode = operation_mode
@@ -9,6 +27,12 @@ class SensitivityEmissionFactor:
         self.output = {}
 
     def perform_analysis(self):
+        """
+        Performs sensitivity analysis for each variable in the variables list by merging and analyzing climate and modifier data.
+        
+        Returns:
+            dict: A dictionary containing results of emission factor calculations for each variable.
+        """
         # Iterating over all variables
         for variable in self.variables:
             # Initialize dictionary for each variable to store lists of results
@@ -49,15 +73,31 @@ class SensitivityEmissionFactor:
         return self.results
     
     def get_result(self):
+        """
+        Compiles and returns results based on the operation mode. If mode is 'farmer', only returns unnested results.
+        
+        Returns:
+            dict: The result of the analysis according to the specified mode.
+        """
         output_temp = self.perform_analysis()
         if self.mode == 'farmer':
-            self.output = output_temp['P']
+            self.output = output_temp['P'] # All dictionary values are the same, can select other keys
         elif self.mode == 'scientific':
             self.output = output_temp
             
         return self.output
 
     def prepare_data_for_efc(self, selected_variable, value):
+        """
+        Prepares farm data and a specific variable used for emission factor calculation.
+        
+        Args:
+            selected_variable (str): The variable to modify in the data set.
+            value (float): The new value for the selected variable.
+        
+        Returns:
+            dict: Modified farm data with updated values for the selected variable.
+        """
         data = {'climate_data': {}, 'modifiers': {}}
         # Initialize all variables with their default values
         for var in self.variables:
@@ -143,14 +183,14 @@ if __name__ == "__main__":
     
 
     print('Farmers mode')
-    sci_ef_calc = SensitivityEmissionFactor(all_data_farmer)
+    sci_ef_calc = EmissionFactorAggregator(all_data_farmer)
     output = sci_ef_calc.get_result()
     print(output)
     print("-"*50)
     print("\n"*2)
 
     print('Scientific mode')
-    sci_ef_calc = SensitivityEmissionFactor(all_data_sci, operation_mode = 'scientific')
+    sci_ef_calc = EmissionFactorAggregator(all_data_sci, operation_mode = 'scientific')
     output = sci_ef_calc.get_result()
     print(output)
     print("-"*50)

@@ -1,89 +1,14 @@
-from emission_calculator import EmissionCalculator
+import pytest
 import numpy as np
-class SensitivityEmission:
-    def __init__(self, ef_data, n_data, operation_mode = 'farmer'):
-        self.ef_data = ef_data
-        self.n_data = n_data
-        self.variables = list(ef_data.keys()) + list(n_data.keys())
-        self.mode = operation_mode
-        self.results = {}
-        self.output = {}
+from src.emission_aggregator import EmissionAggregator
 
-    def perform_analysis(self):
-        # Iterating over all variables
-        for variable in self.variables:
-            # Initialize dictionary for each variable to store lists of results
-            self.results[variable] = {}
-            if self.mode == 'farmer':
-                if variable in self.ef_data.keys():
-                    values_array = self.ef_data.get('EF')
-                elif variable in self.n_data.keys():
-                    values_array = self.n_data.get('n_crop_residue')
-            # Extract array values for the current variable
-            elif self.mode == 'scientific':
-                if variable in self.ef_data.keys():
-                    values_array = self.ef_data.get(variable).get('EF')
-                elif variable in self.n_data.keys():
-                    values_array = self.n_data.get(variable).get('n_crop_residue')
-            
-            # Initialize results storage for this variable
-            init_dict = {}
-            for index in range(len(values_array)):
-                modified_ef = self.prepare_ef_input_for_ec(variable, values_array[index])
-                modified_n = self.prepare_n_input_for_ec(variable, values_array[index])
-                ec = EmissionCalculator(modified_ef, modified_n)
-                emission_results = ec.get_emission()
-                
-                # Initialize dictionary to collect results
-                if index == 0:  # Setup the dictionary with keys and empty lists
-                    for key in emission_results.keys():
-                        init_dict[key] = []
-                
-                # Append results to the corresponding key
-                for key, value in emission_results.items():
-                    init_dict[key].append(value)
-            
-            # Store aggregated results
-            for key, value_list in init_dict.items():
-                self.results[variable][key] = np.array(value_list)
-        
-        return self.results
-    
-    def get_result(self):
-        output_temp = self.perform_analysis()
-        if self.mode == 'farmer':
-            self.output = output_temp['EF']
-        elif self.mode == 'scientific':
-            self.output = output_temp
-            
-        return self.output
-    
-    def prepare_ef_input_for_ec(self, selected_variable, value):
+@pytest.fixture
+def ef_data_farmer():
+    return {'EF_CT_P': np.array([0.01721731]), 'EF_CT_PE': np.array([0.0100768]), 'EF_Topo': np.array([0.01721731]), 'EF': np.array([0.01098705])}
 
-        if self.mode == 'farmer':
-            ef_input = {'EF': self.ef_data.get('EF')[0]}
-        elif self.mode == 'scientific':
-            ef_input = {'EF': self.ef_data.get('P').get('EF')[0]}
-
-        if selected_variable in self.ef_data:
-            ef_input['EF'] = value
-        return ef_input
-
-
-    def prepare_n_input_for_ec(self, selected_variable, value):
-        if self.mode == 'farmer':
-            n_input = {'n_crop_residue': self.n_data.get('n_crop_residue')[0]}
-        if self.mode == 'scientific':
-            n_input = {'n_crop_residue': self.n_data.get('moisture').get('n_crop_residue')[0]}
-        
-        if selected_variable in self.n_data:
-            n_input['n_crop_residue'] = value
-        return n_input  
-    
-
-if __name__ == "__main__":
-    ef_data_farmer = {'EF_CT_P': np.array([0.01721731]), 'EF_CT_PE': np.array([0.0100768]), 'EF_Topo': np.array([0.01721731]), 'EF': np.array([0.01098705])}
-    ef_data_scientific = {
+@pytest.fixture
+def ef_data_scientific():
+    return {
         'P': {'EF_CT_P': np.array([0.01721731, 0.03008165, 0.05255789]), 
               'EF_CT_PE': np.array([0.0100768, 0.0100768, 0.0100768]), 
               'EF_Topo': np.array([0.01721731, 0.03008165, 0.05255789]), 
@@ -117,14 +42,19 @@ if __name__ == "__main__":
                     'EF_Topo': np.array([0.01721731, 0.01721731, 0.01721731]), 
                     'EF': np.array([0.01098705, 0.01098705, 0.01098705])}}
 
-    n_data_farmer = {'C_p': np.array([3268.0]), 
-                     'above_ground_carbon_input': np.array([5228.8]), 
-                     'below_ground_carbon_input': np.array([1307.1999999999998]), 
-                     'above_ground_residue_n': np.array([14.161333333333335]), 
-                     'below_ground_residue_n': np.array([2.5417777777777775]), 
-                     'n_crop_residue': np.array([1670.3111111111114])}
-    
-    n_data_scientific = {
+
+@pytest.fixture
+def n_data_farmer():
+    return {'C_p': np.array([3268.0]), 
+            'above_ground_carbon_input': np.array([5228.8]), 
+            'below_ground_carbon_input': np.array([1307.1999999999998]), 
+            'above_ground_residue_n': np.array([14.161333333333335]), 
+            'below_ground_residue_n': np.array([2.5417777777777775]), 
+            'n_crop_residue': np.array([1670.3111111111114])}
+
+@pytest.fixture
+def n_data_scientific():
+    return {
         'area':{'C_p': np.array([3268.0]), 
                 'above_ground_carbon_input': np.array([5228.8]), 
                 'below_ground_carbon_input': np.array([1307.1999999999998]), 
@@ -220,18 +150,26 @@ if __name__ == "__main__":
                 'below_ground_carbon_input': np.array([1307.1999999999998, 1307.1999999999998, 1307.1999999999998]), 
                 'above_ground_residue_n': np.array([14.161333333333335, 14.161333333333335, 14.161333333333335]), 
                 'below_ground_residue_n': np.array([2.5417777777777775, 2.723333333333333, 2.9048888888888884]), 
-                'n_crop_residue': np.array([1670.3111111111114, 1688.4666666666667, 1706.6222222222223])}}
-    
-    print('Farmers mode')
-    sci_emission_calc = SensitivityEmission(ef_data_farmer, n_data_farmer)
-    output = sci_emission_calc.get_result()
-    print(output)
-    print("-"*50)
-    print("\n"*2)
+                'n_crop_residue': np.array([1670.3111111111114, 1688.4666666666667, 1706.6222222222223])}
+        }
 
-    print('Scientific mode')
-    sci_emission_calc = SensitivityEmission(ef_data_scientific, n_data_scientific, operation_mode = 'scientific')
-    output = sci_emission_calc.get_result()
-    print(output)
-    print("-"*50)
-    print("\n"*2)
+def test_farmer_mode_output(ef_data_farmer, n_data_farmer):
+    aggregator = EmissionAggregator(ef_data_farmer, n_data_farmer)
+    output = aggregator.get_result()
+    assert isinstance(output, dict)
+    assert 'n_crop_direct' in output
+    assert len(output['n_crop_direct']) == 1
+
+def test_scientific_mode_output_structure(ef_data_scientific, n_data_scientific):
+    aggregator = EmissionAggregator(ef_data_scientific, n_data_scientific, operation_mode='scientific')
+    output = aggregator.get_result()
+    assert isinstance(output, dict)
+    assert 'P' in output
+    assert len(output['P']['n_crop_direct']) == 3
+
+def test_data_transformation(ef_data_farmer, n_data_farmer):
+    aggregator = EmissionAggregator(ef_data_farmer, n_data_farmer)
+    modified_ef = aggregator.prepare_ef_input_for_ec('EF_CT_P', 0.02)
+    modified_n = aggregator.prepare_n_input_for_ec('C_p', 3300)
+    assert modified_ef['EF'] == 0.02
+    assert modified_n['n_crop_residue'] == 3300
