@@ -2,23 +2,83 @@ class CropResidueCalculator:
     """
     Calculator for estimating crop residue nitrogen content based on farm data.
 
-    Attributes:
-        area (float): Area of the farm in hectares (ha).
-        group (str): Crop group (e.g., "annual", "perennial", "root", "cover", "silage").
-        crop_yield (float): Yield of the crop in kg/ha.
-        moisture (float): Moisture content of the crop as a percentage (%).
-        carbon_concentration (float): Carbon concentration in the crop (kg kg-1).
-        S_p, S_s, S_r (float): Percentage values for soil parameters (%).
-        R_p, R_s, R_r, R_e (float): Residue fractions for various parts of the crop.
-        N_p, N_s, N_r, N_e (float): Nitrogen content for various parts of the crop (kg/ha).
+    Attributes
+    ----------
+    area : float
+        Area of the farm in hectares (ha).
+    group : str
+        Crop group (e.g., "annual", "perennial", "root", "cover", "silage").
+    crop_yield : float
+        Yield of the crop in kg/ha.
+    moisture : float
+        Moisture content of the crop as a percentage (%).
+    carbon_concentration : float
+        Carbon concentration in the crop (kg kg-1).
+    S_p, S_s, S_r : float
+        Percentage of product/straw/roots yield returned to soil (%).
+    R_p, R_s, R_r, R_e : float
+        Relative biomass allocation coefficient for product/straw/roots/extra-root material.
+    N_p, N_s, N_r, N_e : float
+        Nitrogen content for various parts of the crop (kg/ha).
+
+    
+    Methods
+    -------
+    validate_input(data):
+        Validates the input farm data to ensure all required fields are present and have the correct types and values.
+    c_p():
+        Calculates the plant carbon in agricultural product (kg ha-1).
+    c_p_to_soil():
+        Calculates the carbon input from the product (kg ha-1).
+    c_s():
+        Calculates the carbon input from the straw (kg ha-1).
+    c_r():
+        Calculates the carbon input from the roots (kg ha-1).
+    c_e():
+        Calculates the carbon input from the extra-roots (kg ha-1).
+    grain_n():
+        Calculates the nitrogen content of the grain returned to the soil (kg N ha-1).
+    straw_n():
+        Calculates the nitrogen content of the straw returned to the soil (kg N ha-1).
+    root_n():
+        Calculates the nitrogen content of the root returned to the soil (kg N ha-1) 
+    exudate_n():
+        Calculates the nitrogen content of the exudates returned to the soil (kg N ha-1).
+    above_ground_residue_n():
+        Calculates the aboveground residue N (kg N ha-1).
+    below_ground_residue_n():
+        Calculates the belowground residue N (kg N ha-1).
+    n_crop_residue():
+        Calculates the nitrogen inputs from crop residue returned to soil (kg N).
+    above_ground_carbon_input():
+        Calculates the aboveground residue C input (kg ha-1).
+    below_ground_carbon_input():
+        Calculates the belowground residue C input (kg ha-1).
+    get_crop_residue():
+        Calculates and returns crop residue results.
+
+    Examples
+    --------
+    >>> data = {
+    ...     "farm_data": {"area": 10, "yield": 5000},
+    ...     "crop_group_params": {"group": "annual", "carbon_concentration": 0.45, "S_p": 30, "S_s": 20, "S_r": 10},
+    ...     "crop_parameters": {"moisture": 15, "R_p": 1.0, "R_s": 0.5, "R_r": 0.3, "R_e": 0.2, "N_p": 12, "N_s": 5, "N_r": 3, "N_e": 2}
+    ... }
+    >>> calc = CropResidueCalculator(data)
+    >>> calc.n_crop_residue()
+    25.166666666666668
+    >>> calc.get_crop_residue()
+    {'C_p': 1912.5, 'above_ground_carbon_input': 764.25, 'below_ground_carbon_input': 955.25, 'above_ground_residue_n': 17.77777777777778, 'below_ground_residue_n': 7.388888888888889, 'n_crop_residue': 25.166666666666668}
     """
 
     def __init__(self, data):
         """
         Initializes the CropResidueCalculator with the provided farm data.
 
-        Args:
-            farm_data (dict): A dictionary containing farm data.
+        Parameters
+        ----------
+        data : dict
+            A dictionary containing farm data.
         """
         
         self.validate_input(data)
@@ -64,11 +124,14 @@ class CropResidueCalculator:
 
             
     def c_p(self):
-        """
-        Calculates the carbon input to the soil.
+        """"
+        Calculates the plant carbon in agricultural product (kg ha-1).
+        Equation 2.1.2-1 in the Holos version 4.0 algorithm document.    
 
-        Returns:
-            float: The carbon input to the soil. 
+        Returns
+        -------
+        float
+            The plant carbon in agricultural product (kg ha-1).
         """
        
         if abs(self.S_p - 100) < 1e-5:
@@ -81,11 +144,13 @@ class CropResidueCalculator:
    
     def c_p_to_soil(self):
         """
-        Calculates the carbon input to the soil from the product.
-        Formula: C_p_to_soil = C_p * S_p / 100  
+        Calculates the carbon input from the product.
+        Equation 2.1.2-6, 2.1.2-10, 2.1.2-14 and 2.1.2-17 in the Holos version 4.0 algorithm document.  
 
-        Returns:
-            float: Carbon input to the soil from the product.
+        Returns
+        -------
+        float
+            Carbon input from the product (kg ha-1).
         """
        
         self.C_p_to_soil = self.c_p() * (self.S_p / 100)
@@ -94,11 +159,13 @@ class CropResidueCalculator:
    
     def c_s(self):
         """
-        Calculates the carbon input to the soil from the straw.
-        Formula: C_s = C_p * (R_s / R_p) * (S_s / 100)
+        Calculates the carbon input from the straw.
+        Equation 2.1.2-7 and 2.1.2-18 in the Holos version 4.0 algorithm document.  
 
-        Returns:
-            float: Carbon input to the soil from the straw.
+        Returns
+        -------
+        float
+            Carbon input from the straw (kg ha-1).
         """
         
         if abs(self.R_p) < 1e-6:
@@ -110,11 +177,13 @@ class CropResidueCalculator:
 
     def c_r(self):
         """
-        Calculates the carbon input to the soil from the roots.
-        Fomula: C_r = C_p * (R_r / R_p) * (S_r / 100)
-        
-        Returns:
-            float: Carbon input to the soil from the root.
+        Calculates the carbon input from the roots.
+        Equation 2.1.2-8, 2.1.2-11 and 2.1.2-15 in the Holos version 4.0 algorithm document.  
+
+        Returns
+        -------
+        float
+            Carbon input from the roots (kg ha-1).
         """
         
         if abs(self.R_p) < 1e-6:
@@ -126,11 +195,13 @@ class CropResidueCalculator:
     
     def c_e(self):
         """
-        Calculates the carbon input to the soil from the extra-roots.
-        Fomula: C_e = C_p * (R_e / R_p)
+        Calculates the carbon input from the extra-roots.
+        Equation 2.1.2-9, 2.1.2-12, 2.1.2-16 and 2.1.2-19 in the Holos version 4.0 algorithm document.  
 
-        Returns:
-            float: Carbon input to the soil from the extra-roots.
+        Returns
+        -------
+        float
+            Carbon input from the extra-roots (kg ha-1).
         """
         
         if abs(self.R_p) < 1e-6:
@@ -143,10 +214,12 @@ class CropResidueCalculator:
     def grain_n(self):
         """
         Calculates the nitrogen content of the grain returned to the soil.
-        Fomula: Grain_n = C_p_to_soil / 0.45 * N_p / 1000
+        Equation 2.5.6-2 in the Holos version 4.0 algorithm document.  
 
-        Returns:
-            float: The nitrogen content of the grain (kg N/ha).
+        Returns
+        -------
+        float
+            The nitrogen content of the grain (kg N ha -1).
         """
         
         self.Grain_N = (self.c_p_to_soil() / 0.45) * (self.N_p / 1000)
@@ -156,10 +229,12 @@ class CropResidueCalculator:
     def straw_n(self):
         """
         Calculates the nitrogen content of the straw returned to the soil.
-        Formula: Straw_n = C_s / 0.45 * N_s / 1000
+        Equation 2.5.6-3 in the Holos version 4.0 algorithm document.  
 
-        Returns:
-            float: The nitrogen content of the straw (kg N/ha).
+        Returns
+        -------
+        float
+            The nitrogen content of the straw (kg N ha -1).
         """
         
         self.Straw_N = (self.c_s() / 0.45) * (self.N_s / 1000)
@@ -169,10 +244,11 @@ class CropResidueCalculator:
     def root_n(self):
         """
         Calculates the nitrogen content of the roots returned to the soil.
-        Formula: Root_n = C_r / 0.45 * N_r / 1000
+        Equation 2.5.6-4 in the Holos version 4.0 algorithm document. 
 
-        Returns:
-            float: The nitrogen content of the roots (kg N/ha).
+        Returns
+        -------
+            float: The nitrogen content of the roots (kg N ha -1).
         """
         
         self.Root_N = (self.c_r() / 0.45) * (self.N_r / 1000)
@@ -182,10 +258,11 @@ class CropResidueCalculator:
     def exudate_n(self):
         """
         Calculates the nitrogen content of the exudates returned to the soil.
-        Formula: Exudate_n = C_e / 0.45 * N_e / 1000
+        Equation 2.5.6-5 in the Holos version 4.0 algorithm document. 
 
-        Returns:
-            float: The nitrogen content of the exudates (kg N/ha).
+        Returns
+        -------
+            float: The nitrogen content of the exudates (kg N ha -1).
         """
        
         self.Exudate_N = (self.c_e() / 0.45) * (self.N_e / 1000)
@@ -195,9 +272,11 @@ class CropResidueCalculator:
     def above_ground_residue_n(self):
         """
         Calculates the total nitrogen content of the above-ground residue.
+        Equation 2.5.6-6 in the Holos version 4.0 algorithm document. 
 
-        Returns:
-            float: The nitrogen content of the above-ground residue (kg N/ha).
+        Returns
+        -------
+            float: The nitrogen content of the above-ground residue (kg N ha-1).
         """
        
         if self.group in ["annual", "perennial"]:
@@ -214,9 +293,11 @@ class CropResidueCalculator:
     def below_ground_residue_n(self):
         """
         Calculates the total nitrogen content of the below-ground residue.
+        Equation 2.5.6-6 and 2.5.6-7 in the Holos version 4.0 algorithm document. 
 
-        Returns:
-            float: The nitrogen content of the below-ground residue (kg N/ha).
+        Returns
+        -------
+            float: The nitrogen content of the below-ground residue (kg N ha-1).
         """
        
         if self.group == "annual":
@@ -235,11 +316,10 @@ class CropResidueCalculator:
     def n_crop_residue(self):
         """
         Calculates the total nitrogen content of the crop residue.
+        Equation 2.5.6-9 in the Holos version 4.0 algorithm document. 
 
-        Formula:
-        N_crop_residue = (above_ground_residue_n + below_ground_residue_n) * area
-
-        Returns:
+        Returns
+        -------
             float: The total nitrogen content of the crop residue (kg N).
         """
         
@@ -251,9 +331,11 @@ class CropResidueCalculator:
     def above_ground_carbon_input(self):
         """
         Calculates the above ground carbon input.
+        Equation 2.1.2-2 and 2.1.2-4 in the Holos version 4.0 algorithm document. 
 
-        Returns:
-            float: Above ground carbon input.
+        Returns
+        -------
+            float: Above ground carbon input(kg N ha-1).
         """
 
         if self.group == "root":
@@ -268,9 +350,11 @@ class CropResidueCalculator:
     def below_ground_carbon_input(self):
         """
         Calculates the below ground carbon input.
+        Equation 2.1.2-3 and 2.1.2-5 in the Holos version 4.0 algorithm document. 
 
-        Returns:
-            float: Below ground carbon input.
+        Returns
+        -------
+            float: Below ground carbon input(kg N ha-1).
         """
         
         if self.group == "root":
@@ -282,18 +366,19 @@ class CropResidueCalculator:
 
     def get_crop_residue(self):
         """
-        Returns a dictionary containing crop residue results.
+        Get a dictionary containing crop residue results.
 
         Calculates and returns the following results:
-        - 'C_p': Carbon input to the soil.
-        - 'above_ground_carbon_input': Above-ground carbon input.
-        - 'below_ground_carbon_input': Below-ground carbon input.
-        - 'above_ground_residue_n': Nitrogen content of above-ground residue.
-        - 'below_ground_residue_n': Nitrogen content of below-ground residue.
-        - 'n_crop_residue': Total nitrogen content of the crop residue.
+        - 'C_p': plant carbon in agricultural product (kg ha-1).
+        - 'above_ground_carbon_input': Aboveground residue carbon input (kg ha-1).
+        - 'below_ground_carbon_input': Belowground residue carbon input (kg ha-1).
+        - 'above_ground_residue_n': Nitrogen content of above-ground residue (kg N ha-1).
+        - 'below_ground_residue_n': Nitrogen content of below-ground residue (kg N ha-1).
+        - 'n_crop_residue': Nitrogen content of the crop residue (kg N).
 
-    Returns:
-        dict: A dictionary containing the calculated crop residue metrics.
+        Returns
+        -------
+        dict: A dictionary containing the calculated crop residue.
         
         """
         
