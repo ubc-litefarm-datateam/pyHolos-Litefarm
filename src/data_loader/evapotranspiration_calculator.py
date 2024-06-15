@@ -1,12 +1,44 @@
+"""
+This module provides the EvapotranspirationCalculator class, which calculates reference
+evapotranspiration using the Turc method.
+"""
+
+
 class EvapotranspirationCalculator:
     """
-    Class to calculate reference evapotranspiration using the Turc method.
+    A class to calculate reference evapotranspiration using the Turc method.
 
-    Attributes:
-    mean_daily_temperature (float): Mean daily temperature in Celsius.
-    solar_radiation (float): Solar radiation in MJ m^-2 day^-1.
-    relative_humidity (float): Relative humidity in percent.
+    Parameters
+    ----------
+    mean_daily_temperature : float
+        Mean daily temperature in degrees Celsius.
+    solar_radiation : float
+        Solar radiation in MJ m^-2 day^-1.
+    relative_humidity : float
+        Relative humidity in percent.
+
+    Attributes
+    ----------
+    mean_daily_temperature : float
+        Mean daily temperature in degrees Celsius.
+    solar_radiation : float
+        Solar radiation in MJ m^-2 day^-1.
+    relative_humidity : float
+        Relative humidity in percent.
+
+    Methods
+    -------
+    calculate()
+        Calculates the reference evapotranspiration based on the Turc method
+        and initialized parameters.
+
+    Examples
+    --------
+    >>> et_calculator = EvapotranspirationCalculator(25.0, 5.0, 45)
+    >>> et_calculator.calculate()
+    1.47
     """
+
     def __init__(self, mean_daily_temperature, solar_radiation, relative_humidity):
         """
         Initialize the EvapotranspirationCalculator with required parameters.
@@ -17,18 +49,22 @@ class EvapotranspirationCalculator:
 
     def calculate(self):
         """
-        Calculate the reference evapotranspiration based on initialized parameters.
+        Calculate the reference evapotranspiration using the Turc method.
 
-        Returns:
-        float: Reference evapotranspiration in mm day^-1.
+        Returns
+        -------
+        float
+            Reference evapotranspiration in mm day^-1, computed according to the Turc method.
+            Returns 0 if conditions are such that evapotranspiration cannot occur
+            (e.g., freezing temperatures).
         """
         # Holos Technical Report V4, Page 22:
-            # Eq. 1.6.2-1
-            # Eq. 1.6.2-2
-                # Turc equation
+        # Eq. 1.6.2-1
+        # Eq. 1.6.2-2
+        # Turc equation
         # Holos Github code:
-            # https://github.com/holos-aafc/Holos/blob/afb61d2fe38e62a818c8b5932d308497da12a5da/H.Core/Calculators/Climate/EvapotranspirationCalculator.cs
-    
+        # https://github.com/holos-aafc/Holos/blob/afb61d2fe38e62a818c8b5932d308497da12a5da/H.Core/Calculators/Climate/EvapotranspirationCalculator.cs
+
         term1 = 0.013
 
         # Return 0 evapotranspiration if temperature is <= 0
@@ -54,3 +90,11 @@ class EvapotranspirationCalculator:
 
         return result
 
+
+if __name__ == "__main__":
+    # Example usage of the EvapotranspirationCalculator
+    calculator = EvapotranspirationCalculator(
+        mean_daily_temperature=25, solar_radiation=5.0, relative_humidity=45
+    )
+    et_value = calculator.calculate()
+    print(f"Calculated reference evapotranspiration: {et_value: .2f} mm day^-1")
