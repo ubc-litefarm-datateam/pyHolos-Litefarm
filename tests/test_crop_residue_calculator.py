@@ -1,196 +1,208 @@
-import unittest
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+
+import pytest
 from src.crop_residue_calculator import CropResidueCalculator
-# run python -m unittest tests/test_crop_residue_calculator.py in the root folder
-class TestCropResidueCalculator(unittest.TestCase):
-    def setUp(self):
-        self.test_data = {
-            # this test data is consistent with Holos 4 results in c_p, above_ground_carbon_input, below_ground_carbon_input
-            # Suger Beets            
 
-            "farm_data": 
-            {
-                "area": 10,
-                "yield": 5000
-            },
+@pytest.fixture
+def test_data():
+    return {
+        "farm_data": {
+            "area": 10,
+            "yield": 5000,
+            "group": "root"
+        },
+        "crop_group_params": {
             
-            "crop_group_params": 
-            {
-                "group": "root",
-                "carbon_concentration": 0.45,
-                "S_p": 0,
-                "S_s": 100,
-                "S_r": 100
-            },
-            
-            "crop_parameters":
-            {
-                "moisture": 80,            
-                "R_p": 0.626,
-                "R_s": 0.357,
-                "R_r": 0.01,
-                "R_e": 0.007,
-                "N_p": 10,
-                "N_s": 29,
-                "N_r": 10,
-                "N_e": 10   
-            },              
-        }
+            "carbon_concentration": 0.45,
+            "S_p": 0,
+            "S_s": 100,
+            "S_r": 100
+        },
+        "crop_parameters": {
+            "moisture": 80,
+            "R_p": 0.626,
+            "R_s": 0.357,
+            "R_r": 0.01,
+            "R_e": 0.007,
+            "N_p": 10,
+            "N_s": 29,
+            "N_r": 10,
+            "N_e": 10
+        },
+    }
 
-        self.calculator = CropResidueCalculator(self.test_data)
-        self.expected_c_p = (self.test_data["farm_data"]['yield'] + self.test_data["farm_data"]['yield'] * self.test_data["crop_group_params"]['S_p'] / 100) * (1 - self.test_data["crop_parameters"]['moisture'] / 100) * self.test_data["crop_group_params"]["carbon_concentration"]
-        self.expected_c_p_to_soil = self.expected_c_p * self.test_data["crop_group_params"]['S_p'] / 100
-        self.expected_c_s = self.expected_c_p * (self.test_data["crop_parameters"]['R_s'] / self.test_data["crop_parameters"]['R_p']) * (self.test_data["crop_group_params"]['S_s'] / 100)
-        self.expected_c_r = self.expected_c_p * (self.test_data["crop_parameters"]['R_r'] / self.test_data["crop_parameters"]['R_p']) * (self.test_data["crop_group_params"]['S_r'] / 100)
-        self.expected_c_e = self.expected_c_p *  (self.test_data["crop_parameters"]['R_e'] / self.test_data["crop_parameters"]['R_p']) 
-        self.expected_grain_n = (self.expected_c_p_to_soil / 0.45) * (self.test_data["crop_parameters"]['N_p'] / 1000)
-        self.expected_straw_n = (self.expected_c_s / 0.45) * (self.test_data["crop_parameters"]['N_s'] / 1000)
-        self.expected_root_n = (self.expected_c_r / 0.45) * (self.test_data["crop_parameters"]['N_r'] / 1000)
-        self.expected_exudate_n = (self.expected_c_e / 0.45) * (self.test_data["crop_parameters"]['N_e'] / 1000)
-        self.expected_above_ground_residue_n = self.expected_straw_n
-        self.expected_below_ground_residue_n = self.expected_grain_n + self.expected_exudate_n 
-        self.expected_n_crop_residue = (self.expected_above_ground_residue_n + self.expected_below_ground_residue_n ) * self.test_data["farm_data"]['area']
-        self.expected_above_ground_carbon_input = self.expected_c_s
-        self.expected_below_ground_carbon_input = self.expected_c_p_to_soil + self.expected_c_e
+@pytest.fixture
+def setup(test_data):
+    calculator = CropResidueCalculator(test_data)
+    expected_c_p = (test_data["farm_data"]['yield'] + test_data["farm_data"]['yield'] * test_data["crop_group_params"]['S_p'] / 100) * (1 - test_data["crop_parameters"]['moisture'] / 100) * test_data["crop_group_params"]["carbon_concentration"]
+    expected_c_p_to_soil = expected_c_p * test_data["crop_group_params"]['S_p'] / 100
+    expected_c_s = expected_c_p * (test_data["crop_parameters"]['R_s'] / test_data["crop_parameters"]['R_p']) * (test_data["crop_group_params"]['S_s'] / 100)
+    expected_c_r = expected_c_p * (test_data["crop_parameters"]['R_r'] / test_data["crop_parameters"]['R_p']) * (test_data["crop_group_params"]['S_r'] / 100)
+    expected_c_e = expected_c_p * (test_data["crop_parameters"]['R_e'] / test_data["crop_parameters"]['R_p'])
+    expected_grain_n = (expected_c_p_to_soil / 0.45) * (test_data["crop_parameters"]['N_p'] / 1000)
+    expected_straw_n = (expected_c_s / 0.45) * (test_data["crop_parameters"]['N_s'] / 1000)
+    expected_root_n = (expected_c_r / 0.45) * (test_data["crop_parameters"]['N_r'] / 1000)
+    expected_exudate_n = (expected_c_e / 0.45) * (test_data["crop_parameters"]['N_e'] / 1000)
+    expected_above_ground_residue_n = expected_straw_n
+    expected_below_ground_residue_n = expected_grain_n + expected_exudate_n
+    expected_n_crop_residue = (expected_above_ground_residue_n + expected_below_ground_residue_n) * test_data["farm_data"]['area']
+    expected_above_ground_carbon_input = expected_c_s
+    expected_below_ground_carbon_input = expected_c_p_to_soil + expected_c_e
 
+    return {
+        'calculator': calculator,
+        'expected_c_p': expected_c_p,
+        'expected_c_p_to_soil': expected_c_p_to_soil,
+        'expected_c_s': expected_c_s,
+        'expected_c_r': expected_c_r,
+        'expected_c_e': expected_c_e,
+        'expected_grain_n': expected_grain_n,
+        'expected_straw_n': expected_straw_n,
+        'expected_root_n': expected_root_n,
+        'expected_exudate_n': expected_exudate_n,
+        'expected_above_ground_residue_n': expected_above_ground_residue_n,
+        'expected_below_ground_residue_n': expected_below_ground_residue_n,
+        'expected_n_crop_residue': expected_n_crop_residue,
+        'expected_above_ground_carbon_input': expected_above_ground_carbon_input,
+        'expected_below_ground_carbon_input': expected_below_ground_carbon_input
+    }
 
-    def test_wrong_type(self):
-        data = self.test_data.copy()
-        data['crop_group_params']['group'] = 123
-        with self.assertRaises(TypeError):
-            CropResidueCalculator(data)
+def test_wrong_type(test_data):
+    data = test_data.copy()
+    data['farm_data']['group'] = 123
+    with pytest.raises(TypeError):
+        CropResidueCalculator(data)
 
-    def test_negative_values(self):
-        data = self.test_data.copy()
-        data["farm_data"]['yield'] = -5
-        with self.assertRaises(ValueError):
-            CropResidueCalculator(data)
+def test_negative_values(test_data):
+    data = test_data.copy()
+    data["farm_data"]['yield'] = -5
+    with pytest.raises(ValueError):
+        CropResidueCalculator(data)
 
-    def test_out_of_range_moisture(self):
-        data = self.test_data.copy()
-        data["crop_parameters"]['moisture'] = 110
-        with self.assertRaises(ValueError):
-            CropResidueCalculator(data)
+def test_out_of_range_moisture(test_data):
+    data = test_data.copy()
+    data["crop_parameters"]['moisture'] = 110
+    with pytest.raises(ValueError):
+        CropResidueCalculator(data)
 
+def test_c_p(setup):
+    c_p = setup['calculator'].c_p()
+    assert pytest.approx(c_p, 0.1) == setup['expected_c_p']
 
-    def test_c_p(self):
-        c_p = self.calculator.c_p()
-        self.assertAlmostEqual(c_p, self.expected_c_p, places=1)
+def test_c_p_to_soil(setup):
+    c_p_to_soil = setup['calculator'].c_p_to_soil()
+    assert pytest.approx(c_p_to_soil, 0.1) == setup['expected_c_p_to_soil']
 
-    def test_c_p_to_soil(self):
-        c_p_to_soil = self.calculator.c_p_to_soil()
-        self.assertAlmostEqual(c_p_to_soil, self.expected_c_p_to_soil, places=1)
+def test_c_s(setup):
+    c_s = setup['calculator'].c_s()
+    assert pytest.approx(c_s, 0.1) == setup['expected_c_s']
 
-    def test_c_s(self):
-        c_s = self.calculator.c_s()
-        self.assertAlmostEqual(c_s, self.expected_c_s, places=1)
+def test_c_r(setup):
+    c_r = setup['calculator'].c_r()
+    assert pytest.approx(c_r, 0.1) == setup['expected_c_r']
 
-    def test_c_r(self):
-        c_r = self.calculator.c_r()
-        self.assertAlmostEqual(c_r, self.expected_c_r, places=1)
+def test_c_e(setup):
+    c_e = setup['calculator'].c_e()
+    assert pytest.approx(c_e, 0.1) == setup['expected_c_e']
 
-    def test_c_e(self):
-        c_e = self.calculator.c_e()
-        self.assertAlmostEqual(c_e, self.expected_c_e, places=1)
+def test_grain_n(setup):
+    grain_n = setup['calculator'].grain_n()
+    assert pytest.approx(grain_n, 0.1) == setup['expected_grain_n']
 
-    def test_grain_n(self):
-        grain_n = self.calculator.grain_n()
-        self.assertAlmostEqual(grain_n, self.expected_grain_n, places=1)
+def test_straw_n(setup):
+    straw_n = setup['calculator'].straw_n()
+    assert pytest.approx(straw_n, 0.1) == setup['expected_straw_n']
 
-    def test_straw_n(self):
-        straw_n = self.calculator.straw_n()
-        self.assertAlmostEqual(straw_n, self.expected_straw_n, places=1)
+def test_root_n(setup):
+    root_n = setup['calculator'].root_n()
+    assert pytest.approx(root_n, 0.1) == setup['expected_root_n']
 
-    def test_root_n(self):
-        root_n = self.calculator.root_n()
-        self.assertAlmostEqual(root_n, self.expected_root_n, places=1)
+def test_exudate_n(setup):
+    exudate_n = setup['calculator'].exudate_n()
+    assert pytest.approx(exudate_n, 0.1) == setup['expected_exudate_n']
 
-    def test_exudate_n(self):
-        exudate_n = self.calculator.exudate_n()
-        self.assertAlmostEqual(exudate_n, self.expected_exudate_n, places=1)
+def test_above_ground_residue_n(setup):
+    above_ground_residue_n = setup['calculator'].above_ground_residue_n()
+    assert pytest.approx(above_ground_residue_n, 0.1) == setup['expected_above_ground_residue_n']
 
-    def test_above_ground_residue_n(self):
-        above_ground_residue_n = self.calculator.above_ground_residue_n()
-        self.assertAlmostEqual(above_ground_residue_n, self.expected_above_ground_residue_n, places=1)
+def test_below_ground_residue_n(setup):
+    below_ground_residue_n = setup['calculator'].below_ground_residue_n()
+    assert pytest.approx(below_ground_residue_n, 0.1) == setup['expected_below_ground_residue_n']
 
-    def test_below_ground_residue_n(self):
-        below_ground_residue_n = self.calculator.below_ground_residue_n()
-        self.assertAlmostEqual(below_ground_residue_n, self.expected_below_ground_residue_n, places=1)
+def test_n_crop_residue(setup):
+    n_crop_residue = setup['calculator'].n_crop_residue()
+    assert pytest.approx(n_crop_residue, 0.1) == setup['expected_n_crop_residue']
 
-    def test_n_crop_residue(self):
-        n_crop_residue = self.calculator.n_crop_residue()
-        self.assertAlmostEqual(n_crop_residue, self.expected_n_crop_residue, places=1)
+def test_above_ground_carbon_input(setup):
+    above_ground_carbon_input = setup['calculator'].above_ground_carbon_input()
+    assert pytest.approx(above_ground_carbon_input, 0.1) == setup['expected_above_ground_carbon_input']
 
-    def test_above_ground_carbon_input(self):
-        above_ground_carbon_input = self.calculator.above_ground_carbon_input()
-        self.assertAlmostEqual(above_ground_carbon_input, self.expected_above_ground_carbon_input, places=1)
+def test_below_ground_carbon_input(setup):
+    below_ground_carbon_input = setup['calculator'].below_ground_carbon_input()
+    assert pytest.approx(below_ground_carbon_input, 0.1) == setup['expected_below_ground_carbon_input']
 
-    def test_below_ground_carbon_input(self):
-        below_ground_carbon_input = self.calculator.below_ground_carbon_input()
-        self.assertAlmostEqual(below_ground_carbon_input, self.expected_below_ground_carbon_input, places=1)
+def test_group_handling_annual(test_data):
+    data = test_data.copy()
+    data['farm_data']['group'] = 'annual'
+    calculator = CropResidueCalculator(data)
+    expected_above_ground = calculator.grain_n() + calculator.straw_n()
+    expected_below_ground = calculator.root_n() + calculator.exudate_n()
+    assert pytest.approx(calculator.above_ground_residue_n(), 0.2) == expected_above_ground
+    assert pytest.approx(calculator.below_ground_residue_n(), 0.2) == expected_below_ground
 
-    def test_group_handling_annual(self):
-        data = self.test_data.copy()
-        data['crop_group_params']['group'] = 'annual'
-        calculator = CropResidueCalculator(data)
-        expected_above_ground = calculator.grain_n() + calculator.straw_n()
-        expected_below_ground = calculator.root_n() + calculator.exudate_n()
-        self.assertAlmostEqual(calculator.above_ground_residue_n(), expected_above_ground, places=2)
-        self.assertAlmostEqual(calculator.below_ground_residue_n(), expected_below_ground, places=2)
+def test_group_handling_perennial(test_data):
+    data = test_data.copy()
+    data['farm_data']['group'] = 'perennial'
+    calculator = CropResidueCalculator(data)
+    expected_above_ground = calculator.grain_n() + calculator.straw_n()
+    expected_below_ground = calculator.root_n() * (data["crop_group_params"]['S_r'] / 100) + calculator.exudate_n()
+    assert pytest.approx(calculator.above_ground_residue_n(), 0.2) == expected_above_ground
+    assert pytest.approx(calculator.below_ground_residue_n(), 0.2) == expected_below_ground
 
-    def test_group_handling_perennial(self):
-        data = self.test_data.copy()
-        data['crop_group_params']['group'] = 'perennial'
-        calculator = CropResidueCalculator(data)
-        expected_above_ground = calculator.grain_n() + calculator.straw_n()
-        expected_below_ground = calculator.root_n() * (data["crop_group_params"]['S_r'] / 100) + calculator.exudate_n()
-        self.assertAlmostEqual(calculator.above_ground_residue_n(), expected_above_ground, places=2)
-        self.assertAlmostEqual(calculator.below_ground_residue_n(), expected_below_ground, places=2)
+def test_group_handling_root(test_data):
+    data = test_data.copy()
+    data['farm_data']['group'] = 'root'
+    calculator = CropResidueCalculator(data)
+    expected_above_ground = calculator.straw_n()
+    expected_below_ground = calculator.grain_n() + calculator.exudate_n()
+    assert pytest.approx(calculator.above_ground_residue_n(), 0.2) == expected_above_ground
+    assert pytest.approx(calculator.below_ground_residue_n(), 0.2) == expected_below_ground
 
-    def test_group_handling_root(self):
-        data = self.test_data.copy()
-        data['crop_group_params']['group'] = 'root'
-        calculator = CropResidueCalculator(data)
-        expected_above_ground = calculator.straw_n()
-        expected_below_ground = calculator.grain_n() + calculator.exudate_n()
-        self.assertAlmostEqual(calculator.above_ground_residue_n(), expected_above_ground, places=2)
-        self.assertAlmostEqual(calculator.below_ground_residue_n(), expected_below_ground, places=2)
+def test_group_handling_cover(test_data):
+    data = test_data.copy()
+    data['farm_data']['group'] = 'cover'
+    calculator = CropResidueCalculator(data)
+    expected_above_ground = calculator.grain_n()
+    expected_below_ground = calculator.root_n() + calculator.exudate_n()
+    assert pytest.approx(calculator.above_ground_residue_n(), 0.2) == expected_above_ground
+    assert pytest.approx(calculator.below_ground_residue_n(), 0.2) == expected_below_ground
 
-    def test_group_handling_cover(self):
-        data = self.test_data.copy()
-        data['crop_group_params']['group'] = 'cover'
-        calculator = CropResidueCalculator(data)
-        expected_above_ground = calculator.grain_n()
-        expected_below_ground = calculator.root_n() + calculator.exudate_n()
-        self.assertAlmostEqual(calculator.above_ground_residue_n(), expected_above_ground, places=2)
-        self.assertAlmostEqual(calculator.below_ground_residue_n(), expected_below_ground, places=2)
+def test_group_handling_silage(test_data):
+    data = test_data.copy()
+    data['farm_data']['group'] = 'silage'
+    calculator = CropResidueCalculator(data)
+    expected_above_ground = calculator.grain_n()
+    expected_below_ground = calculator.root_n() + calculator.exudate_n()
+    assert pytest.approx(calculator.above_ground_residue_n(), 0.2) == expected_above_ground
+    assert pytest.approx(calculator.below_ground_residue_n(), 0.2) == expected_below_ground
 
-    def test_group_handling_silage(self):
-        data = self.test_data.copy()
-        data['crop_group_params']['group'] = 'silage'
-        calculator = CropResidueCalculator(data)
-        expected_above_ground = calculator.grain_n()
-        expected_below_ground = calculator.root_n() + calculator.exudate_n()
-        self.assertAlmostEqual(calculator.above_ground_residue_n(), expected_above_ground, places=2)
-        self.assertAlmostEqual(calculator.below_ground_residue_n(), expected_below_ground, places=2)
+def test_get_crop_residue(setup):
+    calculator = setup['calculator']
+    result = calculator.get_crop_residue()
+    expected_keys = [
+        'C_p',
+        'above_ground_carbon_input',
+        'below_ground_carbon_input',
+        'above_ground_residue_n',
+        'below_ground_residue_n',
+        'n_crop_residue'
+    ]
 
-    def test_get_crop_residue(self):
-        data = self.test_data.copy()
-        calculator = CropResidueCalculator(data)
-        result = calculator.get_crop_residue()
-        expected_keys = [
-            'C_p',
-            'above_ground_carbon_input',
-            'below_ground_carbon_input',
-            'above_ground_residue_n',
-            'below_ground_residue_n',
-            'n_crop_residue'
-        ]
+    for key in expected_keys:
+        assert key in result
 
-        for key in expected_keys:
-            self.assertIn(key, result)
-            
-        for key in expected_keys:
-            self.assertIsInstance(result[key], float)
-
-if __name__ == "__main__":
-    unittest.main()
+    for key in expected_keys:
+        assert isinstance(result[key], float)

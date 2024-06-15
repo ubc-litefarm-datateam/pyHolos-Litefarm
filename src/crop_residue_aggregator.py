@@ -169,9 +169,9 @@ class CropResidueAggregator:
         dict
             A dictionary containing the results of the crop residue calculations.
         """
-            if self.mode == 'farmer':
+        if self.mode == 'farmer':
                 return self.farmer_mode()
-            elif self.mode == 'scientific':
+        elif self.mode == 'scientific':
                 return self.scientific_mode()
 
     def farmer_mode(self):
