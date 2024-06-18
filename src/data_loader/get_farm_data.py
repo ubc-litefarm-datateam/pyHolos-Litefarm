@@ -206,7 +206,7 @@ if __name__ == "__main__":
     farm = FarmDataManager(input_file=input_file, farm_id=farm_id, crop="Potato")
     print(farm.farm_data)
 
-    input_file2 = 'data/test/user_input_farm.json'
-    farm_id2 = 'farm_0617'
-    farm2 = FarmDataManager(input_file=input_file2, farm_id=farm_id2, crop="Potato")
-    print(farm2.farm_data)
+    # input_file2 = 'data/test/user_input_farm.json'
+    # farm_id2 = 'farm_0617'
+    # farm2 = FarmDataManager(input_file=input_file2, farm_id=farm_id2, crop="Potato")
+    # print(farm2.farm_data)

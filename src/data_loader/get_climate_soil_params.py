@@ -4,12 +4,12 @@ import numpy as np
 import pandas as pd
 import geopandas as gpd
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from data_loader.get_external_climate_params import ExternalClimateDataFetcher
-from data_loader.get_external_soil_params import ExternalSoilTextureDataFetcher
-from data_loader.generate_random_points import generate_random_points, extract_lon_lat
-from data_loader.get_default_soil_texture import ModifierSoilTexture
-from data_loader.sampling_fr_topo import sampling_fr_topo
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+from src.data_loader.get_external_climate_params import ExternalClimateDataFetcher
+from src.data_loader.get_external_soil_params import ExternalSoilTextureDataFetcher
+from src.data_loader.generate_random_points import generate_random_points, extract_lon_lat
+from src.data_loader.get_default_soil_texture import ModifierSoilTexture
+from src.data_loader.sampling_fr_topo import sampling_fr_topo
 
 
 class ClimateSoilDataManager:

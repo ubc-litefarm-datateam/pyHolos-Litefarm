@@ -1,11 +1,7 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
-
 import numpy as np
 import pytest
-from crop_residue_calculator import CropResidueCalculator
-from crop_residue_aggregator import CropResidueAggregator
+from src.calculator.crop_residue_calculator import CropResidueCalculator
+from src.calculator.crop_residue_aggregator import CropResidueAggregator
 
 data_farm = {
     'farm_data': {

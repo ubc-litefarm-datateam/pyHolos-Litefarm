@@ -5,8 +5,8 @@ from datetime import datetime
 from multiprocessing import Pool
 import numpy as np
 import requests
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from data_loader.evapotranspiration_calculator import EvapotranspirationCalculator
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+from src.data_loader.evapotranspiration_calculator import EvapotranspirationCalculator
 
 
 class ExternalClimateDataFetcher:

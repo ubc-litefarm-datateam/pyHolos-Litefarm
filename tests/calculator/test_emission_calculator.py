@@ -1,5 +1,5 @@
 import pytest
-from src.emission_calculator import EmissionCalculator
+from src.calculator.emission_calculator import EmissionCalculator
 
 @pytest.fixture
 def valid_ef_data():

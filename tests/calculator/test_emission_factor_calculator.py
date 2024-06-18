@@ -1,6 +1,6 @@
 import pytest
 import math
-from src.emission_factor_calculator import EmissionFactorCalculator
+from src.calculator.emission_factor_calculator import EmissionFactorCalculator
 
 @pytest.fixture
 def valid_data():

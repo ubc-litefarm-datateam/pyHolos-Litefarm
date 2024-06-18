@@ -1,6 +1,8 @@
 """
 This module manages the recording and validation of farm data. Users can input data
-regarding farm details which is then validated and stored in JSON format.
+regarding farm details which is then validated and stored in JSON format. Customize 
+the output file name if necessary. The output path is pre-configured for consistency 
+and should not be modified.
 
 This script is designed for ease of use with interactive prompts for data entry and 
 has  robust error handling to guide the user towards correct input formats.

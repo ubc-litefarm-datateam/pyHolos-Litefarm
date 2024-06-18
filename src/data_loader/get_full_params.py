@@ -3,12 +3,12 @@ import os
 import json
 import numpy as np
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from data_loader.get_farm_data import FarmDataManager
-from data_loader.get_climate_soil_params import ClimateSoilDataManager
-from data_loader.get_modifiers import ModifiersManager
-from data_loader.get_crop_group_params import CropGroupManager
-from data_loader.get_crop_params import CropParametersManager
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+from src.data_loader.get_farm_data import FarmDataManager
+from src.data_loader.get_climate_soil_params import ClimateSoilDataManager
+from src.data_loader.get_modifiers import ModifiersManager
+from src.data_loader.get_crop_group_params import CropGroupManager
+from src.data_loader.get_crop_params import CropParametersManager
 
 
 class FarmDataHub:

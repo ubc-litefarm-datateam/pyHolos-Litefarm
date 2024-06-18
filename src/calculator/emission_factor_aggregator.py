@@ -1,5 +1,9 @@
+import sys
+import os
 import numpy as np
-from emission_factor_calculator import EmissionFactorCalculator
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+from src.calculator.emission_factor_calculator import EmissionFactorCalculator
 
 
 class EmissionFactorAggregator:

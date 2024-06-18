@@ -1,10 +1,5 @@
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
-
 import pytest
-from src.crop_residue_calculator import CropResidueCalculator
+from src.calculator.crop_residue_calculator import CropResidueCalculator
 
 @pytest.fixture
 def test_data():

@@ -1,13 +1,17 @@
+import sys
+import os
 import numpy as np
 import copy
 import warnings
-from crop_residue_calculator import CropResidueCalculator
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+from src.calculator.crop_residue_calculator import CropResidueCalculator
 
 
 class CropResidueAggregator:
     """
-    A class to handle dictionary of array inputs for the CropResidueCalculator, 
-    allowing for analysis with changes in multiple nested parameters. 
+    A class to handle dictionary of array inputs for the CropResidueCalculator,
+    allowing for analysis with changes in multiple nested parameters.
     Calculates variations for every parameter in the data automatically.
 
     Parameters
@@ -26,7 +30,7 @@ class CropResidueAggregator:
     target_data_group : list of str
         The list of target data groups to be processed.
     baseline_data : dict
-        The baseline data created by taking the first element of each numpy array 
+        The baseline data created by taking the first element of each numpy array
         in nested dictionaries.
     calculator : CropResidueCalculator
         An instance of CropResidueCalculator initialized with baseline data.
@@ -34,17 +38,17 @@ class CropResidueAggregator:
     Methods
     -------
     validate_mode_data_compatibility()
-        Checks that the length of arrays in data matches the expected length for 
+        Checks that the length of arrays in data matches the expected length for
         the selected mode.Raises an error or warning if there is a mismatch.
     get_baseline_data()
-        Creates baseline data by taking the first element of each numpy array in 
+        Creates baseline data by taking the first element of each numpy array in
         nested dictionaries.
     crop_analysis()
         Determines calculation mode and executes accordingly.
     farmer_mode()
         Handles the 'farmer' mode where only a single set of calculations.
     scientific_mode()
-        Handles the 'scientific' mode where variations for parameters with more 
+        Handles the 'scientific' mode where variations for parameters with more
         than one value are calculated.
 
     Examples
@@ -109,7 +113,7 @@ class CropResidueAggregator:
 
     def validate_mode_data_compatibility(self):
         """
-        Checks that the length of arrays in data matches the expected length for 
+        Checks that the length of arrays in data matches the expected length for
         the selected mode. Raises an error or warning if there is a mismatch.
         """
         all_single_value = True
@@ -143,8 +147,8 @@ class CropResidueAggregator:
 
     def get_baseline_data(self):
         """
-        Creates baseline data by taking the first element of each numpy array in nested 
-        dictionaries.  Specifically, extracts 'area' and 'yield' from 'farm_data' and the 
+        Creates baseline data by taking the first element of each numpy array in nested
+        dictionaries.  Specifically, extracts 'area' and 'yield' from 'farm_data' and the
         first element from 'crop_group_params' and 'crop_parameters'.
         """
         baseline = {}
@@ -189,7 +193,7 @@ class CropResidueAggregator:
 
     def farmer_mode(self):
         """
-        Handles the 'farmer' mode where only a single set of calculations based on 
+        Handles the 'farmer' mode where only a single set of calculations based on
         the baseline data is needed.
 
         Returns
@@ -217,7 +221,7 @@ class CropResidueAggregator:
 
     def scientific_mode(self):
         """
-        Handles the 'scientific' mode where variations for parameters with more than 
+        Handles the 'scientific' mode where variations for parameters with more than
         one value are calculated.
 
         Returns

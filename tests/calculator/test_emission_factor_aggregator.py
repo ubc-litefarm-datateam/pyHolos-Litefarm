@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from src.emission_factor_aggregator import EmissionFactorAggregator
+from src.calculator.emission_factor_aggregator import EmissionFactorAggregator
 
 @pytest.fixture
 def data_farmer():

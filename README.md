@@ -108,6 +108,22 @@ You can also view the help message for details about the command-line arguments 
 $ python src/main.py --help
 ```
 
+## 🧪 Testing
+
+To ensure that all components of the project are working correctly, you can run the tests provided in the `tests` directory. These tests check the functionality of various modules and ensure that changes do not break existing features.
+
+To run the tests, navigate to the root of the repository and execute the following command in your terminal:
+
+```bash
+pytest tests/*
+```
+
+To run the tests without displaying warnings, execute:
+
+```bash
+pytest tests/* -p no:warnings
+```
+
 ## 📚 Folder Structure  
 
 ```plaintext
@@ -152,7 +168,8 @@ LiteFarm-MDS-Capstone/
 └── environment.yml
 ```
 
-## 🪜 How to get support?
+## 🪜 How to get support?  
+
 Need help or feedback? Open an issue on our GitHub – we're ready to assist your journey towards informed actions for sustainable agriculture.
 
 ## 👥 Contributors  

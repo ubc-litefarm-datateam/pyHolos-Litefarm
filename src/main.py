@@ -3,9 +3,9 @@ import json
 import os
 import numpy as np
 from data_loader.get_full_params import FarmDataHub
-from crop_residue_aggregator import CropResidueAggregator
-from emission_factor_aggregator import EmissionFactorAggregator
-from emission_aggregator import EmissionAggregator
+from calculator.crop_residue_aggregator import CropResidueAggregator
+from calculator.emission_factor_aggregator import EmissionFactorAggregator
+from calculator.emission_aggregator import EmissionAggregator
 
 
 class NumpyEncoder(json.JSONEncoder):
