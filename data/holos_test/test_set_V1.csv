@@ -1,5 +1,0 @@
-crop_common_name,total_area_ha,estimated_yield_kg/ha,farm_id,lifecycle,moisture_%,ag_residue_n_conc_(kg N / kg),bg_residue_n_conc_(kg N / kg),yield_ratio,ag_ratio,bg_ratio
-Soybean,10,3500,F1,ANNUAL,14,0.006,0.01,0.3,0.45,0.25
-Soybean,100,3500,F2,ANNUAL,14,0.006,0.01,0.3,0.45,0.25
-Potatoes,18,2790,F3,ANNUAL,75,0.02,0.01,0.68,0.23,0.1
-Potatoes,180,2790,F4,ANNUAL,75,0.02,0.01,0.68,0.23,0.1
