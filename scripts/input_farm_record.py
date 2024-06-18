@@ -1,8 +1,47 @@
+"""
+This module manages the recording and validation of farm data. Users can input data
+regarding farm details which is then validated and stored in JSON format.
+
+This script is designed for ease of use with interactive prompts for data entry and 
+has  robust error handling to guide the user towards correct input formats.
+"""
+
 import os
 import json
 from datetime import datetime
 
-def validate_inputs(farm_id, common_crop_name, yield_kg, area, latitude, longitude, start_year, end_year):
+
+def validate_inputs(
+    farm_id, common_crop_name, yield_kg, area, latitude, longitude, start_year, end_year
+):
+    """
+    Validate the inputs provided for adding a new farm record. Checks include data type validation and
+    logical checks (e.g., year ranges).
+
+    Parameters
+    ----------
+    farm_id : str
+        Unique identifier for the farm.
+    common_crop_name : str
+        Name of the crop grown.
+    yield_kg : float
+        Yield of the crop in kilograms per square meter.
+    area : float
+        Area of the farm in square meters.
+    latitude : float
+        Geographic latitude of the farm.
+    longitude : float
+        Geographic longitude of the farm.
+    start_year : int
+        Starting year of the crop data record.
+    end_year : int
+        Ending year of the crop data record, must be less than the current year.
+
+    Returns
+    -------
+    list
+        A list of error messages, empty if no errors are found.
+    """
     current_year = datetime.now().year
     errors = []
     if not isinstance(farm_id, str):
@@ -24,8 +63,48 @@ def validate_inputs(farm_id, common_crop_name, yield_kg, area, latitude, longitu
 
     return errors
 
-def add_record(farm_id, common_crop_name, yield_kg, area, latitude, longitude, start_year, end_year):
-    errors = validate_inputs(farm_id, common_crop_name, yield_kg, area, latitude, longitude, start_year, end_year)
+
+def add_record(
+    farm_id, common_crop_name, yield_kg, area, latitude, longitude, start_year, end_year
+):
+    """
+    Add a farm record to the JSON file after validating the inputs. If errors are found 
+    in validation, they are returned and the record is not added.
+
+    Parameters
+    ----------
+    farm_id : str
+        Unique identifier for the farm.
+    common_crop_name : str
+        Name of the crop grown.
+    yield_kg : float
+        Yield of the crop in kilograms per square meter.
+    area : float
+        Area of the farm in square meters.
+    latitude : float
+        Geographic latitude of the farm.
+    longitude : float
+        Geographic longitude of the farm.
+    start_year : int
+        Starting year of the crop data record.
+    end_year : int
+        Ending year of the crop data record.
+
+    Returns
+    -------
+    str
+        Success message if the record is added successfully, otherwise returns error messages.
+    """
+    errors = validate_inputs(
+        farm_id,
+        common_crop_name,
+        yield_kg,
+        area,
+        latitude,
+        longitude,
+        start_year,
+        end_year,
+    )
     if errors:
         return "Error: " + "; ".join(errors)
 
@@ -36,11 +115,11 @@ def add_record(farm_id, common_crop_name, yield_kg, area, latitude, longitude, s
         "common_crop_name": common_crop_name,
         "yield_kg_per_m2": yield_kg,
         "start_year": start_year,
-        "end_year": end_year
+        "end_year": end_year,
     }
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    output_path = os.path.join(dir_path, '..', 'data', 'test', 'user_input_farm.json')
+    output_path = os.path.join(dir_path, "..", "data", "test", "user_input_farm.json")
 
     try:
         with open(output_path, "r+") as file:
@@ -54,7 +133,17 @@ def add_record(farm_id, common_crop_name, yield_kg, area, latitude, longitude, s
 
     return "Record added successfully."
 
+
 def main():
+    """
+    Main function to handle user interaction for entering farm data. It prompts the user 
+    for all required fields, handles conversion of input to appropriate data types, and 
+    provides feedback on the success or failure of data recording based on the validation.
+
+    Returns
+    -------
+    None
+    """
     print("Enter the farm data:")
     farm_id = input("Farm ID: ")
     common_crop_name = input("Common Crop Name: ")
@@ -65,10 +154,20 @@ def main():
         longitude = float(input("Longitude: "))
         start_year = int(input("Start Year: "))
         end_year = int(input("End Year: "))
-        result = add_record(farm_id, common_crop_name, yield_kg, area, latitude, longitude, start_year, end_year)
+        result = add_record(
+            farm_id,
+            common_crop_name,
+            yield_kg,
+            area,
+            latitude,
+            longitude,
+            start_year,
+            end_year,
+        )
         print(result)
     except ValueError as e:
         print(f"Invalid input, please enter the correct data types. {str(e)}")
+
 
 if __name__ == "__main__":
     main()

@@ -216,28 +216,28 @@ class ClimateSoilDataManager:
 
     def get_climate_soil_data(self):
         """
-        Retrieves and processes climate and soil data based on the specified source 
+        Retrieves and processes climate and soil data based on the specified source
         and operation mode.
-        
+
         This method initializes with default climate and soil data, then based on the c
-        onfiguration, it may fetch climate and soik data from external sources. 
-        In 'scientific' operation mode, additional random points within the farm's ecodistrict 
+        onfiguration, it may fetch climate and soik data from external sources.
+        In 'scientific' operation mode, additional random points within the farm's ecodistrict
         are processed to simulate a broader range of data.
 
         Returns
         -------
         dict
-            A dictionary containing processed climate and soil data which includes parameters 
-            precipitation ('P'), potential evapotranspiration ('PE'), soil texture, 
-            topographical features ('FR_Topo'), and the geographical locations of the data points. 
+            A dictionary containing processed climate and soil data which includes parameters
+            precipitation ('P'), potential evapotranspiration ('PE'), soil texture,
+            topographical features ('FR_Topo'), and the geographical locations of the data points.
             The dictionary is prepared based on the operation mode:
             - For 'farmer' mode, the data is specific to the farm's location.
-                - For 'default' source, the data is retrieved from Holos default values for the 
+                - For 'default' source, the data is retrieved from Holos default values for the
                   corresponding ecodistrict the farm is located in.
                 - For 'external' source, the data is retrived from external sources specific farm's
                   location.
-            - For 'scientific' mode, the data includes values from randomly generated points within 
-            the farm's ecodistrict as well as the farm's specific location (the first value of each 
+            - For 'scientific' mode, the data includes values from randomly generated points within
+            the farm's ecodistrict as well as the farm's specific location (the first value of each
             numpy array).
 
         Raises
@@ -247,9 +247,9 @@ class ClimateSoilDataManager:
 
         Notes
         -----
-        - The method assumes that the required paths to data files and configurations are 
+        - The method assumes that the required paths to data files and configurations are
           correctly set in the class.
-        - In 'scientific' mode, the FR Topo value for the farm point retains its default while 
+        - In 'scientific' mode, the FR Topo value for the farm point retains its default while
         values for randomly generated points are sampled using the `sampling_fr_topo` function.
         """
         if self.source == "default":
@@ -282,136 +282,14 @@ class ClimateSoilDataManager:
         print("Invalid source or operation mode.")
         return None
 
-    # def get_climate_data(self):
-    #     """
-    #     Retrieves and processes climate and soil data based on the specified source
-    #     and operation mode.
-
-    #     Returns
-    #     -------
-    #     dict
-    #         A dictionary containing processed climate and soil data.
-    #     """
-    #     # if using `default` data source, operation_mode is default as `farmer`
-    #     if self.source == "default":
-    #         self.extract_default_climate_soil_data()
-    #         return self.climate_soil_dict
-
-    #     # if using `exteranl` data source, operation_mode can be `farmer`,
-    #     # which returns location-specific soil and climate parameters
-    #     # or `scientific`, which returns arrays of soild and climate parameters
-    #     # based on farm-location and the randomly generated points within
-    #     # the corresponding ecodistrict
-    #     if self.source == "external" and self.operation_mode == "farmer":
-    #         # initialize the climate_soil_dict with default values
-    #         self.extract_default_climate_soil_data()
-
-    #         # get external soil texture
-    #         external_soil_texture_fetcher = ExternalSoilTextureDataFetcher(
-    #             [
-    #                 self.farm_point,
-    #             ]
-    #         )
-    #         soil_result = external_soil_texture_fetcher.get_soil_texture_values()
-
-    #         # get external climate data
-    #         external_climate_data_fetcher = ExternalClimateDataFetcher(
-    #             [
-    #                 self.farm_point,
-    #             ],
-    #             *self.year_range,
-    #         )
-    #         climate_result = external_climate_data_fetcher.process_points_over_years()
-    #         # Retrieve result for the specific point
-    #         climate_dict = climate_result[self.farm_point]
-
-    #         # Check if data retrieval was successful
-    #         if climate_dict["success"]:
-    #             # Append data if successfully fetched
-    #             self.climate_soil_dict["P"] = np.array([climate_dict["P"]])
-    #             self.climate_soil_dict["PE"] = np.array([climate_dict["PE"]])
-    #             self.climate_soil_dict["soil_texture"] = np.array(
-    #                 [soil_result[self.farm_point]]
-    #             )
-    #             self.climate_soil_dict["locations"] = np.array([self.farm_point])
-    #             return self.climate_soil_dict
-    #         # On error or if data is unavailable, log the error and use default data
-    #         print("Error in fetching or calculating precise P and PE. Using default.")
-    #         return self.climate_soil_dict
-
-    #     # if operation mode is scientific, then the data source must be 'external'
-    #     if self.operation_mode == "scientific":
-    #         # initialize the climate_soil_dict with default values
-    #         self.extract_default_climate_soil_data()
-
-    #         # generate random points
-    #         farm_ecodistrict_polygon = self.extract_farm_ecodistrict_polygon()
-    #         random_points = generate_random_points(
-    #             farm_ecodistrict_polygon, num_points=self.num_runs
-    #         )
-    #         points_list = extract_lon_lat(random_points)
-    #         # attach the farm location lon & lat as the first element in the point list
-    #         points_list.insert(0, self.farm_point)
-
-    #         # Fetch climate data
-    #         external_climate_data_fetcher = ExternalClimateDataFetcher(
-    #             points_list, *self.year_range
-    #         )
-    #         climate_results = external_climate_data_fetcher.process_points_over_years()
-
-    #         # get external soil textrue data
-    #         external_soil_texture_fetcher = ExternalSoilTextureDataFetcher(points_list)
-    #         soil_results = external_soil_texture_fetcher.get_soil_texture_values()
-
-    #         # Initialize lists for arrays
-    #         points_array = []
-    #         p_values = []
-    #         pe_values = []
-    #         soil_textures = []
-
-    #         # Process each point in the list
-    #         for point in points_list:
-    #             points_array.append(point)  # always add the point
-    #             climate_dict = climate_results[point]
-
-    #             # Check if data retrieval was successful
-    #             if climate_dict["success"]:
-    #                 # Append data if successfully fetched
-    #                 p_values.append(climate_dict["P"])
-    #                 pe_values.append(climate_dict["PE"])
-    #             else:
-    #                 # Append numpy.nan for P and PE if data fetching was unsuccessful
-    #                 p_values.append(np.nan)
-    #                 pe_values.append(np.nan)
-    #                 print(
-    #                     f"Error fetching climate data for point {point}: {climate_data['error']}"
-    #                 )
-
-    #             # Retrieve soil texture data
-    #             soil_textures.append(soil_results[point])
-
-            # # Sampling FR topo
-            # farm_ecod_fr_topo = self.climate_soil_dict["FR_Topo"]
-            # fr_topo_values = sampling_fr_topo(farm_ecod_fr_topo, self.num_runs)
-            # fr_topo_values = np.insert(fr_topo_values, 0, farm_ecod_fr_topo)
-
-    #         # Convert lists to NumPy arrays
-    #         self.climate_soil_dict["locations"] = np.array(points_array)
-    #         self.climate_soil_dict["P"] = np.array(p_values)
-    #         self.climate_soil_dict["PE"] = np.array(pe_values)
-    #         self.climate_soil_dict["soil_texture"] = np.array(soil_textures)
-    #         self.climate_soil_dict["FR_Topo"] = np.array(fr_topo_values)
-
-    #         return self.climate_soil_dict
-
 
 if __name__ == "__main__":
-    from data_loader.get_farm_data import FarmData
+    from data_loader.get_farm_data import FarmDataManager
 
     test_input_file = "data/test/litefarm_test.csv"
     test_farm_id = "0369f026-1f90-11ee-b788-0242ac150004"
     test_crop = "Soybean"
-    test_farm_data = FarmData(
+    test_farm_data = FarmDataManager(
         input_file=test_input_file, farm_id=test_farm_id, crop=test_crop
     )
     print(test_farm_data.farm_data)
@@ -442,5 +320,6 @@ if __name__ == "__main__":
     test_farm_data.farm_data["eco_id"] = eco_id
     print(test_farm_data.farm_data)
     print(
-        "Scientific mode, external P, PE and soil texture for 10 runs: ", climate_soil_data3
+        "Scientific mode, external P, PE and soil texture for 10 runs: ",
+        climate_soil_data3,
     )

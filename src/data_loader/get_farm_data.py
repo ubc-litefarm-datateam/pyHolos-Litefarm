@@ -8,6 +8,55 @@ from datetime import datetime
 
 
 class FarmDataManager:
+    """
+    A class to manage and process farm data for a specific farm and crop from provided file inputs.
+
+    Parameters
+    ----------
+    input_file : str
+        Path to the input file relative to the project root.
+    farm_id : str
+        Unique identifier for the farm.
+    crop : str
+        Name of the crop.
+
+    Attributes
+    ----------
+    farm_id : str
+        Unique identifier for the farm.
+    crop : str
+        Name of the crop.
+    dir : str
+        Directory of the script or module.
+    input_file_path : str
+        Absolute path to the input file.
+    crop_to_group_map_path : str
+        Path to the mapping of crops to their groups.
+    farm_data : dict
+        Processed farm data.
+    farm_gdf : GeoDataFrame
+        Geospatial data frame of the farm's location.
+    province : str
+        Province where the farm is located.
+    crop_group : str
+        Group to which the crop belongs.
+
+    Methods
+    -------
+    get_farm_data()
+        Retrieves and processes the farm data from the specified input file.
+    get_farm_gdf()
+        Creates a GeoDataFrame for the farm's location and joins it with province spatial data.
+    get_province()
+        Retrieves the province name for the farm location.
+    get_crop_group()
+        Maps the crop to its corresponding group using an external CSV file.
+    update_farm_dict()
+        Updates the farm data dictionary with province and crop group details.
+    validate_data()
+        Validates the processed farm data for type integrity and logical correctness.
+    """
+
     def __init__(self, input_file, farm_id, crop):
         self.farm_id = farm_id
         self.crop = crop
@@ -154,10 +203,10 @@ class FarmDataManager:
 if __name__ == "__main__":
     input_file = "data/test/litefarm_test.csv"
     farm_id = "0369f026-1f90-11ee-b788-0242ac150004"
-    farm = FarmData(input_file=input_file, farm_id=farm_id, crop="Potato")
+    farm = FarmDataManager(input_file=input_file, farm_id=farm_id, crop="Potato")
     print(farm.farm_data)
 
-    # input_file2 = 'data/test/user_input_farm.json'
-    # farm_id2 = 'farm123'
-    # farm2 = FarmData(input_file=input_file2, farm_id=farm_id2)
-    # print(farm2.farm_data)
+    input_file2 = 'data/test/user_input_farm.json'
+    farm_id2 = 'farm_0617'
+    farm2 = FarmDataManager(input_file=input_file2, farm_id=farm_id2, crop="Potato")
+    print(farm2.farm_data)

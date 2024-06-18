@@ -23,3 +23,5 @@ __pycache__/
 # Ignore Jupyter notebook checkpoints
 .ipynb_checkpoints/
 
+# Ignore logging file for batch processing
+scripts/error_index.txt

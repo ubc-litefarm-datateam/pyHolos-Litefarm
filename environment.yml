@@ -11,5 +11,5 @@ dependencies:
   - openpyxl
   - matplotlib
   - osmnx
-  - pip:
-    - shiny==0.9.0
+  - conda-forge::pytest
+prefix: /Users/yihan/miniconda3/envs/LiteFarmGHG
