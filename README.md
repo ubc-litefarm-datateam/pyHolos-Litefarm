@@ -45,7 +45,7 @@ Once the download is complete, unzip the file. You should have the following fou
 
 #### Place the Files in the Repository:  
 
-Navigate to the `data/HWSD2_RASTER` directory within the cloned repository. If this directory does not exist, create it. Move all extracted files into this directory.
+Navigate to the `data/external/HWSD2_RASTER` directory within the cloned repository. If this directory does not exist, create it. Move all extracted files into this directory.
 
 For more details about the dataset, including its structure and usage, visit the [Harmonized World Soil Database v2.0](https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/). By following these steps, you ensure that the project has the necessary data to perform analysis.
 
