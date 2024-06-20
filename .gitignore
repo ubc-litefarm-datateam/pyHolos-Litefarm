@@ -15,6 +15,7 @@ data/outputs/*
 data/temp/*
 
 # Except the folder itself
+!data/temp/.gitkeep
 !data/temp/
 
 # Ignore all .pyc files

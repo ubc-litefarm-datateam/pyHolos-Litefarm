@@ -3,13 +3,13 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.9
-  - jupyter
-  - pandas
-  - geopandas
-  - plotly
-  - openpyxl
-  - matplotlib
-  - osmnx
-  - conda-forge::pytest
+  - python=3.9.19
+  - jupyter=1.0.0
+  - pandas=2.2.2
+  - geopandas=0.14.4
+  - plotly=5.21.0
+  - openpyxl=3.1.2
+  - matplotlib=3.8.4
+  - osmnx=1.9.2
+  - conda-forge::pytest=8.2.2
 prefix: /Users/yihan/miniconda3/envs/LiteFarmGHG
