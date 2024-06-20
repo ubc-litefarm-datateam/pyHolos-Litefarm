@@ -1,4 +1,5 @@
 /.quarto/
+/notebooks/cache/
 data/external/HWSD2_RASTER/
 src/__pycache__/]
 
