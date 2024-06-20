@@ -138,7 +138,7 @@ class FarmDataManager:
 
         locations = [Point(x, y) for x, y in zip(longitudes, latitudes)]
         farm_point = gpd.GeoDataFrame({"geometry": locations}, crs="EPSG:4326")
-        province_shp_path = os.path.join(self.dir, "../../data/external/province_100m")
+        province_shp_path = os.path.join(self.dir, "../../data/external/province_10m")
         provinces = gpd.read_file(province_shp_path).to_crs("EPSG:4326")
         farm_province = gpd.sjoin(
             farm_point,
@@ -152,7 +152,7 @@ class FarmDataManager:
 
     def get_province(self):
         province = self.farm_gdf["province"].iloc[0]
-        if province is None:
+        if pd.isna(province):
             raise ValueError(
                 "Selected location is not in Canada, select a new location in Canada"
             )
@@ -201,8 +201,8 @@ class FarmDataManager:
 
 # Example usage
 if __name__ == "__main__":
-    input_file = "data/test/litefarm_test.csv"
-    farm_id = "0369f026-1f90-11ee-b788-0242ac150004"
+    input_file = "data/test/hypothetical_farm_data.csv"
+    farm_id = "farm1"
     farm = FarmDataManager(input_file=input_file, farm_id=farm_id, crop="Potato")
     print(farm.farm_data)
 

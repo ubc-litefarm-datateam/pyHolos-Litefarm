@@ -3,7 +3,7 @@ import pytest
 import numpy as np
 from src.data_loader.get_crop_group_params import (
     CropGroupManager,
-)  # Adjust the import according to your project structure
+) 
 
 
 # Fixtures for consistent test setup
@@ -32,7 +32,7 @@ def test_crop_group_parameters(crop_group_manager):
 
 # Test to check if the default sampled parameters array length is correct
 def test_default_sampled_parameters_length(crop_group_manager):
-    num_samples = 10  # Example number of samples
+    num_samples = 10
     sampled_params = crop_group_manager.sample_crop_group_parameters(
         num_samples=num_samples
     )
@@ -77,7 +77,7 @@ def test_key_error_for_missing_parameter(crop_group_manager):
             0.4,
             0.5
         ],
-        } # Assuming 'some_parameter' is not used by any method
+        } 
     }
     with patch.object(
         CropGroupManager, "load_user_distributions", return_value=mocked_distributions

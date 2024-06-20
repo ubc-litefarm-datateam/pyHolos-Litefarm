@@ -56,13 +56,13 @@ For more details about the dataset, including its structure and usage, visit the
 Run the calculator with default operation mode (farmer), source (default climate data at the ecodistrict level) with default output filename (output.json). The output file is stored in folder `data/outputs`:
 
 ```bash
-$ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee-b788-0242ac150004 --crop Soybean
+$ python src/main.py -i data/test/hypothetical_farm_data.csv --farm_id farm1 --crop Soybean
 ```
 
 Run the calculator with default operation mode (farmer) and external source (external sources for climate and soil data specific to farm location) with user-define file name. The output file is stored in folder `data/outputs`:
 
 ``` bash
-$ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee-b788-0242ac150004 --crop Soybean --operation_mode farmer --source external -o my_farm_precise_climate_data.json
+$ python src/main.py -i data/test/hypothetical_farm_data.csv --farm_id farm1 --crop Soybean --operation_mode farmer --source external -o my_farm_precise_climate_data.json
 ```
 
 ### 2. Running the N<sub>2</sub>O Emission Calculator - Scientific Mode
@@ -70,7 +70,7 @@ $ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee
 Run the calculator with sensitivity analysis settings. The output file is stored in folder `data/outputs`:
 
 ``` bash
-$ python src/main.py -i data/test/litefarm_test.csv --farm_id 0369f026-1f90-11ee-b788-0242ac150004 --crop Soybean --operation_mode scientific --source external --num_runs 100 -o farm_100_run_sci_mode.json 
+$ python src/main.py -i data/test/hypothetical_farm_data.csv --farm_id farm1 --crop Soybean --operation_mode scientific --source external --num_runs 100 -o farm_100_run_sci_mode.json
 ```
 
 ### Explanation of Command-Line Arguments

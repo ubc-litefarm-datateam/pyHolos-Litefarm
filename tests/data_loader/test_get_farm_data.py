@@ -8,14 +8,14 @@ from src.data_loader.get_farm_data import FarmDataManager
 
 @pytest.fixture
 def farm_manager():
-    input_file = "data/test/litefarm_test.csv"
-    farm_id = "0369f026-1f90-11ee-b788-0242ac150004"
+    input_file = "data/test/hypothetical_farm_data.csv"
+    farm_id = "farm1"
     crop = "Potato"
     return FarmDataManager(input_file=input_file, farm_id=farm_id, crop=crop)
 
 # Test initialization
 def test_initialization(farm_manager):
-    assert farm_manager.farm_id == "0369f026-1f90-11ee-b788-0242ac150004"
+    assert farm_manager.farm_id == "farm1"
     assert farm_manager.crop == "Potato"
     assert Path(farm_manager.input_file_path).exists()
 
@@ -62,7 +62,7 @@ def test_validate_data(farm_manager):
     ("end_year", 1990.5)
 ])
 def test_validate_data_incorrect_types(farm_manager, field, value):
-    farm_manager.farm_data[field] = value  # Corrected assignment to use dictionary access
+    farm_manager.farm_data[field] = value 
     with pytest.raises(TypeError):
         farm_manager.validate_data()
 
@@ -72,7 +72,7 @@ def test_validate_data_incorrect_types(farm_manager, field, value):
     ("area", -1)
 ])
 def test_validate_data_zero_negative(farm_manager, field, value):
-    farm_manager.farm_data[field] = value  # Corrected assignment to use dictionary access
+    farm_manager.farm_data[field] = value 
     with pytest.raises(ValueError):
         farm_manager.validate_data()
 
@@ -82,6 +82,6 @@ def test_validate_data_zero_negative(farm_manager, field, value):
     ("end_year", datetime.now().year + 1)
 ])
 def test_validate_data_invalid_year(farm_manager, field, value):
-    farm_manager.farm_data[field] = value  # Corrected assignment to use dictionary access
+    farm_manager.farm_data[field] = value  
     with pytest.raises(ValueError):
         farm_manager.validate_data()

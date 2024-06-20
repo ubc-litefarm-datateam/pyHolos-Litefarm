@@ -1,6 +1,5 @@
 /.quarto/
 data/external/HWSD2_RASTER/
-data/temp/
 src/__pycache__/]
 
 # Ignore everything in the data/outputs directory
@@ -12,6 +11,11 @@ data/outputs/*
 # However, do track the content within the sensitivity_analysis subdirectory
 !data/outputs/sensitivity_analysis/*
 
+# Ignore all files in data/temp/, storing example results
+data/temp/*
+
+# Except the folder itself
+!data/temp/
 
 # Ignore all .pyc files
 *.pyc

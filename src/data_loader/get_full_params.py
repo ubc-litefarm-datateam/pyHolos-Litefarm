@@ -226,8 +226,8 @@ class FarmDataHub:
 
 # Example usage
 if __name__ == "__main__":
-    test_input_file = "data/test/litefarm_test.csv"
-    test_farm_id = "0369f026-1f90-11ee-b788-0242ac150004"
+    test_input_file = "data/test/hypothetical_farm_data.csv"
+    test_farm_id = "farm1"
     test_crop = "Potato"
     farm_params = FarmDataHub(
         input_file=test_input_file,

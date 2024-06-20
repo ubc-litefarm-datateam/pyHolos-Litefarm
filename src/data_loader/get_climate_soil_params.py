@@ -284,10 +284,10 @@ class ClimateSoilDataManager:
 
 
 if __name__ == "__main__":
-    from data_loader.get_farm_data import FarmDataManager
+    from src.data_loader.get_farm_data import FarmDataManager
 
-    test_input_file = "data/test/litefarm_test.csv"
-    test_farm_id = "0369f026-1f90-11ee-b788-0242ac150004"
+    test_input_file = "data/test/hypothetical_farm_data.csv"
+    test_farm_id = "farm1"
     test_crop = "Soybean"
     test_farm_data = FarmDataManager(
         input_file=test_input_file, farm_id=test_farm_id, crop=test_crop

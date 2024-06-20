@@ -1,21 +1,26 @@
 import pytest
 from src.calculator.emission_calculator import EmissionCalculator
 
+
 @pytest.fixture
 def valid_ef_data():
-    return {'EF': 0.003286}
+    return {"EF": 0.003286}
+
 
 @pytest.fixture
 def valid_n_data():
-    return {'n_crop_residue': 560}
+    return {"n_crop_residue": 560}
+
 
 @pytest.fixture
 def invalid_ef_data_missing_key():
-    return {'EF_Topo': 0.0025}
+    return {"EF_Topo": 0.0025}
+
 
 @pytest.fixture
 def invalid_ef_data_wrong_type():
-    return {'EF': '0.003286'}
+    return {"EF": "0.003286"}
+
 
 def test_valid_data(valid_ef_data, valid_n_data):
     calculator = EmissionCalculator(valid_ef_data, valid_n_data)
@@ -29,18 +34,23 @@ def test_valid_data(valid_ef_data, valid_n_data):
     assert isinstance(no2_crop_direct, float)
     assert isinstance(co2_crop_direct, float)
 
+
 def test_missing_key(invalid_ef_data_missing_key, valid_n_data):
     with pytest.raises(ValueError):
         EmissionCalculator(invalid_ef_data_missing_key, valid_n_data)
+
 
 def test_wrong_type(invalid_ef_data_wrong_type, valid_n_data):
     with pytest.raises(TypeError):
         EmissionCalculator(invalid_ef_data_wrong_type, valid_n_data)
 
+
 def test_intermediate_steps(valid_ef_data, valid_n_data):
     calculator = EmissionCalculator(valid_ef_data, valid_n_data)
     n_crn_direct = calculator.calculate_n_crn_direct()
-    assert abs(n_crn_direct - valid_n_data['n_crop_residue'] * valid_ef_data['EF']) < 1e-5
+    assert (
+        abs(n_crn_direct - valid_n_data["n_crop_residue"] * valid_ef_data["EF"]) < 1e-5
+    )
 
     calculator.calculate_n_other_direct()
     assert calculator.n_sn_direct == 0
@@ -50,6 +60,7 @@ def test_intermediate_steps(valid_ef_data, valid_n_data):
     n_crop_direct = calculator.calculate_n_crop_direct()
     expected_n_crop_direct = 0 + 0 + 0 + n_crn_direct
     assert abs(n_crop_direct - expected_n_crop_direct) < 1e-5
+
 
 def test_final_emission_calculations(valid_ef_data, valid_n_data):
     calculator = EmissionCalculator(valid_ef_data, valid_n_data)

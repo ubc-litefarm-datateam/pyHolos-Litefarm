@@ -5,8 +5,8 @@ from src.data_loader.get_full_params import FarmDataHub
 
 @pytest.fixture
 def farm_data_hub():
-    test_input_file = "data/test/litefarm_test.csv"
-    test_farm_id = "0369f026-1f90-11ee-b788-0242ac150004"
+    test_input_file = "data/test/hypothetical_farm_data.csv"
+    test_farm_id = "farm1"
     test_crop = "Potato"
     return FarmDataHub(
         input_file=test_input_file,
@@ -59,8 +59,8 @@ def test_values_match_external_farmer_mode(farm_data_hub):
 
 @pytest.fixture
 def farm_data_hub_default():
-    test_input_file = "data/test/litefarm_test.csv"
-    test_farm_id = "0369f026-1f90-11ee-b788-0242ac150004"
+    test_input_file = "data/test/hypothetical_farm_data.csv"
+    test_farm_id = "farm1"
     test_crop = "Potato"
     return FarmDataHub(
         input_file=test_input_file,
@@ -73,9 +73,9 @@ def farm_data_hub_default():
 
 def test_default_mode_data_integrity(farm_data_hub_default):
     default_params = farm_data_hub_default.gather_all_data()
-    # Assuming expected default data has been defined elsewhere or hard-coded
+    
     expected_farm_data = np.array(
-        ["0369f026-1f90-11ee-b788-0242ac150004"], dtype="<U36"
+        ["farm1"], dtype="<U36"
     )
     assert np.array_equal(
         default_params["farm_data"]["farm_id"], expected_farm_data

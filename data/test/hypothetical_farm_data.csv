@@ -1,0 +1,4 @@
+﻿farm_id,common_crop_name,yield_kg_per_m2,area_in_m2,latitude,longitude,start_year,end_year
+farm1,Soybean,0.27,100000,49.99704167,-123.2373389,2021,2021
+farm1,Potato,3.1,100000,49.99704167,-123.2373389,2021,2021
+farm1,Wheat,0.4,100000,49.99704167,-123.2373389,2021,2021
