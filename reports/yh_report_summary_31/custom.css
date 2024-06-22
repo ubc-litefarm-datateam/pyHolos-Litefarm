@@ -1,0 +1,19 @@
+.content {
+  max-width: 100%;        /* Ensures the content does not exceed the width of its container */
+  overflow-x: auto;       /* Adds a horizontal scrollbar if the content exceeds the container's width */
+}
+
+table {
+  width: 100%;                    /* Ensures tables use the full width of their container */
+  border-collapse: collapse;      /* Merges table borders */
+  /* word-wrap: break-word;          /* Allows words to break and wrap onto the next line */ */
+}
+
+th, td {
+  /* padding: 8px;                   /* Adds padding inside cells for better readability */ */
+  border: 1px solid #ddd;         /* Adds a light border to each cell for clarity */
+  /* word-break: break-all;          /* Allows breaking words at any character to prevent overflow */ */
+  min-width: 60px;                /* Sets a minimum width for cells */
+  max-width: 600px;               /* Sets a maximum width for better control over cell width */
+}
+

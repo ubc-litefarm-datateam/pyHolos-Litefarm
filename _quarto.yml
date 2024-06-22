@@ -1,10 +1,11 @@
 project:
-  output-dir: reports/proposal/
+  output-dir: reports/yh_report_summary_31/
 
 toc: true
 number-sections: true
 bibliography: references.bib  
   
 format:
-  html: default
+  html: 
+      include-css: reports/yh_report_summary_31/custom.css
   pdf: default
