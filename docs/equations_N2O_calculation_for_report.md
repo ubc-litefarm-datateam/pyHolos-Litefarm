@@ -1,9 +1,9 @@
 
-## Equations
+## Equations for Crop Residue Nitrogen Calculation {#Equations-N2O-Calculation}
 
 The equations outdined are sourced from the [AAFC Technical Report: Holos V4.0 Algorithm Document REVIEW VERSION 22 Jan 2024](https://github.com/holos-aafc/Holos/raw/e33ea632053a7635589c245318bd3ad05939607b/AAFC_Technical_Report_Holos_V4.0_Algorithm_Document_REVIEWVERSION22Jan2024.docx). The numbers in parentheses following each equation indicate the specific equation numbers in the Holos documentation. Each equation includes a reference link to the corresponding line in the Holos code on GitHub.
 
-### Total Crop Residues
+### Total Crop Residues {#total-crop-residues}
 
 $$
 N_{crop\_residues} = (AboveGround_{residue\_N} + BelowGround_{residue\_N}) \times {area} \quad \text{(2.5.6-9)}
@@ -210,7 +210,7 @@ $$
 
 #### Calculate Emission Factor Adjustment Due to Position in Landscape/Topography
 
-For humid environments$P/PE \ > \ 1$:  
+For humid environments $P/PE \ > \ 1$:  
 
 $EF\\\_Topo_i = EF\\\_CT_{i, \ P \ > \ PE} \quad \text{(2.5.2-1)}$
 

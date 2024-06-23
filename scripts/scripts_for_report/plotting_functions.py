@@ -19,22 +19,22 @@ def plot_boxplot(data_raw):
     value_list = [x for x in value_list if x not in remove_list]
 
     variable_list = ['P', 'PE', 'soil_texture', 'RF_AM', 'RF_NS', 'S_r', 'moisture', 'R_p']
-    v_list = ['P', 'PE', 'SOIL_TX', 'RF_AM', 'RF_NS', 'S_r', 'Moisture', 'R_p']
+    v_list = ['P', 'PE', 'RF_TX', 'RF_AM', 'RF_NS', 'S_r', 'Moisture', 'R_p']
     data_boxplot = [np.array(emission_data[key]['co2_crop_direct']) for key in variable_list]
     filtered_data_boxplot = [data[~np.isnan(data)] for data in data_boxplot]
 
-    plt.figure(figsize=(13, 6))
+    plt.figure(figsize=(7, 3))
     plt.boxplot(filtered_data_boxplot, labels=v_list)
-    plt.ylabel(r'N$_2$O Direct Emission CO$_2$e', fontsize=21)
-    plt.title(r'N$_2$O Direct Emissions (CO$_2$e) Across Different Input Parameters', fontsize=23)
-    plt.axhline(y=baseline, color='blue', linestyle='--', linewidth=1, label='Farmer mode reference')
+    plt.ylabel(r'N$_2$O Direct Emission CO$_2$e', fontsize=10)
+    plt.title(r'Soybeans N$_2$O Direct Emissions (CO$_2$e) across Different Parameters', fontsize=11)
+    plt.axhline(y=baseline, color='blue', linestyle='--', linewidth=1, label='Farmer Mode reference')
 
     # Add vertical line to separate external and user-defined parameters
     plt.axvline(x=3.5, color='gray', linestyle='-.', linewidth=1)
-    plt.text(2, 1.1*plt.ylim()[0] - (plt.ylim()[1] /1000), 'External Database', horizontalalignment='center', fontsize=15, color='grey')
-    plt.text(6, 1.1*plt.ylim()[0] - (plt.ylim()[1] /1000), 'User Defined Distribution', horizontalalignment='center', fontsize=15, color='grey')
-    plt.tick_params(axis='both', labelsize=19)
-    plt.legend(fontsize=15)
+    plt.text(2.2, 1.1*plt.ylim()[0] - (plt.ylim()[1] /1000), 'External data', horizontalalignment='center', fontsize=10, color='grey')
+    plt.text(6, 1.1*plt.ylim()[0] - (plt.ylim()[1] /1000), 'User-defined distributions', horizontalalignment='center', fontsize=10, color='grey')
+    plt.tick_params(axis='both', labelsize=10)
+    plt.legend(fontsize=10)
     plt.show()
 
 
@@ -64,8 +64,8 @@ def plot_by_eco_id(df, variables):
         
             y_labels = [f'{eco_id}\n({min_vals[eco_id]:.1f}-{max_vals[eco_id]:.1f})' for eco_id in eco_ids]
             
-            ax.set_title(f'{crop_type} N2O Direct Emission - {var}', fontsize=22)
-            ax.set_xlabel(r'N$_2$O Direct Emission (CO2e)', fontsize=18)
+            ax.set_title(f'{crop_type} N$_2$0 Direct Emission - {var}', fontsize=22)
+            ax.set_xlabel(r'N$_2$O Direct Emission (CO$_2$e)', fontsize=18)
             if i == 0:
                 ax.set_ylabel('ECO ID', fontsize=18)
             ax.set_yticks(np.arange(1, len(eco_ids) + 1))
