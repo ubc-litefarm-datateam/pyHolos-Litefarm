@@ -1,5 +1,5 @@
 project:
-  output-dir: reports/yh_report_summary_31/
+  output-dir: reports/final_report
 
 toc: true
 number-sections: true
