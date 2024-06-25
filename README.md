@@ -177,7 +177,7 @@ Need help or feedback? Open an issue on our GitHub – we're ready to assist you
 
 ## 👥 Contributors  
 
--   Yi Han ([\@yhan178](https://github.com/yhan178))
+-   Yi Han [![orcid](https://img.shields.io/badge/orcid-0000--0001--7957--6042-brightgreen.svg)](https://orcid.org/0000-0001-7957-6042)
 -   Hancheng Qin ([\@hchqin](https://github.com/hchqin))
 -   He Ma ([\@hema2022ubc](https://github.com/hema2022ubc))
 
