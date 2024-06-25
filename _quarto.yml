@@ -1,5 +1,5 @@
 project:
-  output-dir: reports/final_report
+  output-dir: reports/final_report_static
 
 toc: true
 number-sections: true
@@ -7,4 +7,8 @@ bibliography: references.bib
   
 format:
   html: 
-      include-css: reports/yh_report_summary_31/custom.css
+      include-css: reports/final_report_static/custom.css
+      default-image-extension: svg
+  pdf:
+      documentclass: report
+      default-image-extension: tex

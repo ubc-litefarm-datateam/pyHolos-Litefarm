@@ -193,18 +193,18 @@ $$
 #### Calculate Base Emission Factor - Ecodistrict-level Emission Factor
 
 $$
-EF\\\_CT_{i,P>PE} = \exp^{0.00558 \times P_{i} - 7.7} \quad \text{(2.5.1-1)}
+EF\_CT_{i,P>PE} = \exp^{0.00558 \times P_{i} - 7.7} \quad \text{(2.5.1-1)}
 $$
 
 $$
-EF\\\_CT_{i,P\leqslant PE} = \exp^{0.00558 \times PE_{i} - 7.7} \quad \text{(2.5.1-2)}
+EF\_CT_{i,P\leqslant PE} = \exp^{0.00558 \times PE_{i} - 7.7} \quad \text{(2.5.1-2)}
 $$
 
 **Holos Code Reference**: [GitHub - Equation 2.5.1](https://github.com/holos-aafc/Holos/blob/6f24e78c7bd46ae35848906933475f077562cd0d/H.Core/Calculators/Nitrogen/N2OEmissionFactorCalculator.cs#L880)
 
 **Variables**:
 
-- $EF\\\_CT_i$: Ecodistrict-level emission factor ($kg \, N_2O\text{-}N \, (kg \, N)^{-1}$)
+- $EF\_CT_i$: Ecodistrict-level emission factor ($kg \, N_2O\text{-}N \, (kg \, N)^{-1}$)
 - $P_i$: Annual growing season precipitation (May – October), in ecodistrict “i” (mm)
 - $PE$: Growing season potential evapotranspiration, by ecodistrict (May – October) (mm)
 
@@ -212,41 +212,41 @@ $$
 
 For humid environments $P/PE \ > \ 1$:  
 
-$EF\\\_Topo_i = EF\\\_CT_{i, \ P \ > \ PE} \quad \text{(2.5.2-1)}$
+$EF\_Topo_i = EF\_CT_{i, \ P \ > \ PE} \quad \text{(2.5.2-1)}$
 
 For non-irrigated sites and dry environments $P/PE \leqslant 1$: 
 
-$EF\\\_Topo_i = (EF\\\_CT_{i,P<PE} \times FR\\\_Topo_i) + [EF\\\_CT_{i,\ P \ > \ PE} \times (1 - FR\\\_Topo_i)] \quad \text{(2.5.2-2)}$
+$EF\_Topo_i = (EF\_CT_{i,P<PE} \times FR\_Topo_i) + [EF\_CT_{i,\ P \ > \ PE} \times (1 - FR\_Topo_i)] \quad \text{(2.5.2-2)}$
 
 For irrigated sites and $P < PE$: 
 
-$EF\\\_Topo_i = EF\\\_CT_{i,\ P\leqslant PE} \quad \text{(2.5.2-3)}$
+$EF\_Topo_i = EF\_CT_{i,\ P\leqslant PE} \quad \text{(2.5.2-3)}$
 
 **Holos Code Reference**: [GitHub - Equation 2.5.2](https://github.com/holos-aafc/Holos/blob/6f24e78c7bd46ae35848906933475f077562cd0d/H.Core/Calculators/Nitrogen/N2OEmissionFactorCalculator.cs#L381)
 
 **Notes:**
 
-For non-irrigated sites and $P/PE \leqslant 1$, the fraction of low-lying land and depressions is calculated with the actual PE ($EF\\\_CT_{i,P\leqslant PE}$), and the remainder of the land with the standard EF ($EF\\\_CT_{i,P>PE}$).
+For non-irrigated sites and $P/PE \leqslant 1$, the fraction of low-lying land and depressions is calculated with the actual PE ($EF\_CT_{i,P\leqslant PE}$), and the remainder of the land with the standard EF ($EF\_CT_{i,P>PE}$).
 
 For irrigated sites, the assumption is that the irrigation amount is equal to $PE - P$, thus making $P = PE$.
 
 **Variables**:
 
-- $EF\\\_Topo_i$: $N_2O$ emission factor adjusted due to position in landscape and moisture regime ($kg \, N_2O\text{-}N$)
-- $FR\\\_Topo_i$: Fraction of land occupied by lower portions of the landscape
+- $EF\_Topo_i$: $N_2O$ emission factor adjusted due to position in landscape and moisture regime ($kg \, N_2O\text{-}N$)
+- $FR\_Topo_i$: Fraction of land occupied by lower portions of the landscape
 
 #### Calculate Emission Factor Adjustment Due to Soil Texture
 
 $$
-EF\\\_Base_i = (EF\\\_Topo_i \times RF\\\_TX_i) \times \frac{1}{0.645} \quad \text{(2.5.3-2)}
+EF\_Base_i = (EF\_Topo_i \times RF\_TX_i) \times \frac{1}{0.645} \quad \text{(2.5.3-2)}
 $$
 
 **Holos Code Reference**: [GitHub - Equation 2.5.3-2](https://github.com/holos-aafc/Holos/blob/6f24e78c7bd46ae35848906933475f077562cd0d/H.Core/Calculators/Nitrogen/N2OEmissionFactorCalculator.cs#L451)
 
 **Variables**:
 
-- $RF\\\_TX_i$: Weighted modifier which provides a correction of the $EF\_Topo$ in ecodistrict “i” based on the soil texture.
-- $EF\\\_Base_i$: A function of the three factors that create a base ecodistrict-specific value that accounts for the climatic, topographic, and edaphic characteristics of the spatial unit for lands.
+- $RF\_TX_i$: Weighted modifier which provides a correction of the $EF\_Topo$ in ecodistrict “i” based on the soil texture.
+- $EF\_Base_i$: A function of the three factors that create a base ecodistrict-specific value that accounts for the climatic, topographic, and edaphic characteristics of the spatial unit for lands.
 - $\frac{1}{0.645}$: Fraction of growing season emissions of total annual emissions (Pelster et al. 2022, in prep.).
 
 #### Calculate Emission Factor
@@ -274,7 +274,7 @@ $$
 
 **Variables**:
 
-- $N_2O - N_{CRNdirect(t,field,n)}$: Direct N₂O emissions ($kg \, N_2O\text{-}N \, ha^{-1}$) resulting from crop residues and N mineralization on field n in year t.
+- $N_2O - N_{CRNdirect(t,field,n)}$: Direct $N_2O$ emissions ($kg \, N_2O\text{-}N \, ha^{-1}$) resulting from crop residues and N mineralization on field n in year t.
 - $N_{CropResidues(t,field,n)}$: Amount of crop residues on field n in year t.
 - $EF_{i,CRN,l,m,n}$: Emission factor for crop residue nitrogen specific to the conditions i, l, m, and n.
 
@@ -290,12 +290,12 @@ Currently, only Nitrogen Direct Emission from crop residues is calculated, as th
 
 **Variables**:
 
-- $N_2O - N_{SNdirect}$: N₂O emissions ($kg \, N_2O\text{-}N \, kg^{-1} \, N \, ha^{-1}$) resulting from fertilizer application
-- $N_2O - N_{CRNdirect}$: N₂O emissions ($kg \, N_2O\text{-}N \, kg^{-1} \, N \, ha^{-1}$) resulting from crop residues and N mineralization
-- $N_2O - N_{CRNmindirect}$: N₂O emissions ($kg \, N_2O\text{-}N \, kg^{-1} \, N \, ha^{-1}$) resulting from N mineralization
-- $N_2O - N_{ONdirect}$: N₂O emissions ($kg \, N_2O\text{-}N \, kg^{-1} \, N \, ha^{-1}$) resulting from organic fertilizers
+- $N_2O - N_{SNdirect}$: $N_2O$ emissions ($kg \, N_2O\text{-}N \, kg^{-1} \, N \, ha^{-1}$) resulting from fertilizer application
+- $N_2O - N_{CRNdirect}$: $N_2O$ emissions ($kg \, N_2O\text{-}N \, kg^{-1} \, N \, ha^{-1}$) resulting from crop residues and N mineralization
+- $N_2O - N_{CRNmindirect}$: $N_2O$ emissions ($kg \, N_2O\text{-}N \, kg^{-1} \, N \, ha^{-1}$) resulting from N mineralization
+- $N_2O - N_{ONdirect}$: $N_2O$ emissions ($kg \, N_2O\text{-}N \, kg^{-1} \, N \, ha^{-1}$) resulting from organic fertilizers
 
-#### Convert N₂O - N to N₂O
+#### Convert $N_2O$-N to $N_2O$
 
 $$
 N_2O = N_2O - N \times \frac{44}{28}
@@ -303,9 +303,9 @@ $$
 
 **Variables**:
 
-- $\frac{44}{28}$: Conversion factor from N₂O-N to N₂O based on molecular mass
+- $\frac{44}{28}$: Conversion factor from $N_2O$-N to $N_2O$ based on molecular mass
 
-#### Calculate CO₂ Equivalent of N₂O Emissions
+#### Calculate $CO_2$ Equivalent of $N_2O$ Emissions
 
 $$
 CO_2e = N_2O \times 273
@@ -313,8 +313,8 @@ $$
 
 **Notes:**
 
-Holos uses 273 as the Global Warming Potential value for N₂O. [Holos Reference](https://github.com/holos-aafc/Holos/blob/6f24e78c7bd46ae35848906933475f077562cd0d/H.Core/CoreConstants.cs#L135)
+Holos uses 273 as the Global Warming Potential value for $N_2O$. [Holos Reference](https://github.com/holos-aafc/Holos/blob/6f24e78c7bd46ae35848906933475f077562cd0d/H.Core/CoreConstants.cs#L135)
 
 **Variables**:
 
-- $273$: Global Warming Potential for N₂O compared to CO₂
+- $273$: Global Warming Potential for $N_2O$ compared to $CO_2$

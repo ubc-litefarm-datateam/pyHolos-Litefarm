@@ -1,0 +1,94 @@
+/* Main title styles */
+.title {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: left;
+    color: #003366;  /* Dark blue for the title */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#title-block-header.quarto-title-block.default .quarto-title-meta-heading {
+    text-transform: uppercase;
+    margin-top: 1em;
+    font-size: 1.2em;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+#title-block-header.quarto-title-block.default .quarto-title-meta-contents {
+    font-size: 1.1em;
+}
+
+h1 {
+    font-size: 22px;  /* Adjust size as necessary */
+    font-weight: bold;
+    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Section header styles */
+h2 {
+    font-size: 20px;  /* Adjust size as necessary */
+    font-weight: semibold;
+    text-align: left;
+    margin-top: 18px;
+    margin-bottom: 18px;
+}
+
+/* Subsection header styles */
+h3 {
+    font-size: 18px;  /* Smaller than h2 for sub-sections */
+    font-weight: semibold;
+    text-align: left;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+/* Subsection header styles */
+h4 {
+    font-size: 16px;  /* Smaller than h2 for sub-sections */
+    font-weight: semibold;
+    text-align: left;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+/* Body text styles */
+body {
+    font-size: 14px;
+    line-height: 1.6;  /* Adjust line spacing for readability */
+    color: #333333;  /* Dark grey for better readability */
+}
+
+figcaption {
+    font-size: 13px; /* Set your desired font size */
+    color: #333; /* Optional: Change the text color */
+    text-align: left; /* Optional: Center-align the caption */
+    margin-top: 10px; /* Optional: Adjust space above the caption */
+    margin-bottom: 18px; /* Optional: Adjust space below the caption */
+}
+
+.content {
+  max-width: 100%;        /* Ensures the content does not exceed the width of its container */
+  overflow-x: auto;       /* Adds a horizontal scrollbar if the content exceeds the container's width */
+}
+
+.appendix {
+  font-size: 0.9em; /* Adjust this value as needed */
+}
+
+.acknowledgements {
+  font-size: 0.9em; /* Adjust this value as needed */
+}
+
+#refs {
+  font-size: 0.9em; /* Adjust this value as needed */
+}
+
+.table {
+  width: 100%;                    /* Ensures tables use the full width of their container */
+  border-collapse: collapse;      /* Merges table borders */
+  /* word-wrap: break-word;          /* Allows words to break and wrap onto the next line */ */
+}
