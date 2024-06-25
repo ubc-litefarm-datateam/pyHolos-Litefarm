@@ -8,7 +8,7 @@ Climate change remains a pressing global issue, with agriculture significantly c
 
 PyHolos is an initiative to enhance the Holos model developed in Python, focusing on calculation of nitrous oxide ($N_2O$) emissions from crop residues. Our project enhances the original Holos model by offering cross-platform compatibility and the ability to integrate external data inputs and user-defined parameters. Additionally, PyHolos introduces features for conducting sensitivity analysis to assess uncertainties and identify research opportunities, enhancing the accuracy of emission estimates. Designed for both agricultural researchers and practitioners, PyHolos equips users with reliable, actionable data for informed decision-making in sustainable agriculture.  
 
-For more detailed information on the development and capabilities of PyHolos, please refer to our [final report](https://github.com/yhan178/LiteFarm-MDS-Capstone/tree/main/reports/final_report).
+For more detailed information on the development and capabilities of PyHolos, please refer to our [final report](https://github.com/yhan178/LiteFarm-MDS-Capstone/blob/main/reports/final_report_static/final_report.pdf).
 
 
 ## 📖 Installation
