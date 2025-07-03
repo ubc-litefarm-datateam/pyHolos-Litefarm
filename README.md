@@ -1,4 +1,4 @@
-# 🌿 LiteFarm-MDS-Capstone
+# 🌿 LiteFarm-MDS-Capstone 2024
 
 ## 👀 Challenge and Our vision  
 
